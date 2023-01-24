@@ -1,8 +1,8 @@
 package it.unicam.cs.pa.scacchiera.list.player;
 
-public class HumanPlayer extends Player {
+public class BotPlayer extends Player{
 
-    public HumanPlayer(String name) {
+    public BotPlayer(String name) {
         super(name);
     }
 
