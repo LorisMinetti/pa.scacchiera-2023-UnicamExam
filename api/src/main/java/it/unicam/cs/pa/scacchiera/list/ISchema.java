@@ -3,12 +3,15 @@ package it.unicam.cs.pa.scacchiera.list;
 import java.util.List;
 import java.util.Map;
 
-public interface ISchema<P> {
+public interface ISchema {
 
     /**
-     * Ritorna una lista di elementi.
-     * @return
+     * Ritorna una schema completo di gioco partendo da due schemi.
+     * @param first giocatore 1
+     * @param second giocatore 2
+     * @return schema completo di pezzi
      */
-    List<P> getCurrentSchema( );
+    Schema buildStage(Schema first, Schema second);
+
 
 }

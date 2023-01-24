@@ -1,5 +1,7 @@
 package it.unicam.cs.pa.scacchiera.list;
 
+import it.unicam.cs.pa.scacchiera.list.Pieces.Piece;
+
 import java.util.List;
 
 /**
@@ -7,8 +9,10 @@ import java.util.List;
  * tenere traccia di ogni pezzo e della sua posizione in un momento specifico del gioco, ed anche del momento precedente.
  */
 public class Schema {
+    /**
+     * Lista contenente un numero di pezzi sulla scacchiera.
+     */
     private List<Piece> currentSchema;
-
 
     public Schema(List<Piece> currentSchema){
         this.currentSchema = currentSchema;
