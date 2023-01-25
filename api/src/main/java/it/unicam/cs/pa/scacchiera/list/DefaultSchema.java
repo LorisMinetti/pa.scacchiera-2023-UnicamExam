@@ -8,7 +8,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-public class DefaultSchema implements ISchema{
+public class DefaultSchema extends Schema implements ISchema{
 
     private List<Piece> DEFAULT_PIECES_PLAYER1 =
             new ArrayList<>( List.of(
@@ -47,7 +47,8 @@ public class DefaultSchema implements ISchema{
     private Schema player2 = new Schema(DEFAULT_PIECES_PLAYER2);
 
     public DefaultSchema() {
-        buildStage(this.player1, this.player2);
+        super();
+        buildStage(player1, player2);
     }
 
 
@@ -71,5 +72,10 @@ public class DefaultSchema implements ISchema{
                 e.getMessage();
             }
         return new Schema(allPieces);
+    }
+
+    @Override
+    public String toString(){
+        return player1.toString() + "\n" + player2.toString();
     }
 }
