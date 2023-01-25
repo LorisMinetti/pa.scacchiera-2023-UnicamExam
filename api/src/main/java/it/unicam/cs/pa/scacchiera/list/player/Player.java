@@ -5,8 +5,8 @@ package it.unicam.cs.pa.scacchiera.list.player;
  * Questa classe identifica un giocatore generico con un nome.
  */
 public abstract class Player {
-    private String name;
-    private int score;
+    private final String name;
+    private static int score;
 
     /**
     * Costruttore della classe Player.
@@ -15,7 +15,7 @@ public abstract class Player {
      */
     public Player(String name) {
         this.name = name;
-        this.score = 0;
+        score = 0;
     }
 
     public String getName() {
@@ -23,4 +23,8 @@ public abstract class Player {
     }
 
     public int getScore() { return score; }
+
+    public void updateScore(int s) {
+        score += s;
+    }
 }

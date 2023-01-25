@@ -1,5 +1,6 @@
-package it.unicam.cs.pa.scacchiera.list;
+package it.unicam.cs.pa.scacchiera.list.Pieces;
 
+import it.unicam.cs.pa.scacchiera.list.Cell;
 import it.unicam.cs.pa.scacchiera.list.player.Player;
 
 /**
@@ -12,9 +13,9 @@ public abstract class Piece{
 
     private int value;             //  Potrebbe non essere utile
     private Cell cellLocation;     // Posizione del pezzo nella scacchiera
-    private final Player owner;          // un pezzo è di uno specifico giocatore
+    private final int owner;          // un pezzo è di uno specifico giocatore
 
-    public Piece(Player owner, Cell cellLocation) {
+    public Piece(int owner, Cell cellLocation) {
         this.cellLocation = cellLocation;
         this.owner = owner;
     }
@@ -23,6 +24,12 @@ public abstract class Piece{
         return this.cellLocation;
     }
 
-    public Player getOwner() { return this.owner; }
+    public int getOwner() { return this.owner; }
+
+    @Override
+    public String toString() {
+        return "[" + cellLocation.getColumn() + "," + cellLocation.getRow() +
+                " ]";
+    }
 
 }
