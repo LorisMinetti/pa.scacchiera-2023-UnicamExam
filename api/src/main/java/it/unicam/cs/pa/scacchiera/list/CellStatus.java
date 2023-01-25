@@ -13,6 +13,10 @@ public enum CellStatus {
 
     public boolean isOccupied() {  return this == OCCUPIED;  }
 
+    public CellStatus getValue(){
+        return this;
+    }
+
     /**
      * Metodo per aggiornare lo stato la cella.
      * @return the status of the cell that has been changed to the opposite.
