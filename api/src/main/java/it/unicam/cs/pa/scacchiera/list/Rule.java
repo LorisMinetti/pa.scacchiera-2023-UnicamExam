@@ -1,7 +1,6 @@
 package it.unicam.cs.pa.scacchiera.list;
 
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 
 /**
@@ -13,10 +12,11 @@ import java.util.Optional;
 public interface Rule<C> {
 
     /**
-     *
-     * @param cell
-     * @param neighboorsCell
+     * Metodo che applica una regola ad una cella considerata la lista delle sue vicine e ritorna uno schema della scacchiera, che (se andata a buon fine) rappresenterà
+     * lo schema aggiornato dopo la mossa
+     * @param cell cella al quale applicare la regola
+     * @param neighboorsCell lista di celle vicine
      * @return the status of the cell after the method is applied, it can return null if the rule is not applyible
      */
-    Optional<GameState> apply(C cell, List<C> neighboorsCell);
+    Optional<Schema> apply(C cell, List<C> neighboorsCell);
 }

@@ -1,5 +1,6 @@
 package it.unicam.cs.pa.scacchiera.list;
 
+import it.unicam.cs.pa.scacchiera.list.Errors.IllegalMovementException;
 import it.unicam.cs.pa.scacchiera.list.player.Player;
 
 import java.util.List;
@@ -14,11 +15,11 @@ public interface Move<C> extends Neighboorhood<C> {
 
     /**
      * Metodo che permette di capire se una mossa è valida o no.
-     * @param cell
-     * @param neighborsCells
-     * @return
+     * @param cell cella da verificare
+     * @param neighborsCells lista di celle vicine
+     * @return ritorna true se la mossa è valida, altrimenti false
      */
-    boolean isLegal(C cell, List<C> neighborsCells);
+    boolean isLegal(C cell, List<C> neighborsCells) throws IllegalMovementException;
 
     /**
      * Metodo che restituisce il giocatore che ha effettuato la mossa
@@ -27,5 +28,4 @@ public interface Move<C> extends Neighboorhood<C> {
      */
     Player movedBy(Move move);
 
-    boolean addSomeCOdells(List<C> cells);
 }
