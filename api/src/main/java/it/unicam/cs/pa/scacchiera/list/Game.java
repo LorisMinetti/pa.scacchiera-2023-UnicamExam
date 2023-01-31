@@ -1,7 +1,9 @@
 package it.unicam.cs.pa.scacchiera.list;
-import it.unicam.cs.pa.scacchiera.list.Pieces.Piece;
 import it.unicam.cs.pa.scacchiera.list.player.Player;
-import java.util.Optional;
+
+import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 
 public class Game implements Board, GameObserver {
@@ -10,7 +12,7 @@ public class Game implements Board, GameObserver {
     private static int turn;
     //Si considera ogni gioco fatto su scacchiera con una scacchiera 8x8ù
     private int boardSize;
-    private Piece[][] pieces;
+    private Cell[][] cells;
 
     /*
     TODO: capire come implementare il concetto di Scacchiera qui, un Game infatti deve avere una scacchiera sul quale
@@ -28,8 +30,9 @@ public class Game implements Board, GameObserver {
     public Game(int boardSize) {
         //Creo lo schema di default della scacchiera al turno 0
         this.boardSize = boardSize;
-        this.pieces = new Piece[boardSize][boardSize];
+        this.cells = new Cell[boardSize][boardSize];
         this.turn = 0;
+        buildStage();
 
     }
 
@@ -41,7 +44,7 @@ public class Game implements Board, GameObserver {
     public Player getPlayer2() {
         return player2;
     }
-    public Piece[][] getPieces() { return this.pieces; }
+    public Cell[][] getCells() { return this.cells; }
     public int getBoardSize() { return this.boardSize; }
     public Schema getDefaultSchema() { return this.defaultSchema; }
 
@@ -87,20 +90,7 @@ public class Game implements Board, GameObserver {
 //
 //    }
 
-    @Override
-    public Optional<Piece> getP(Cell cell) {
-        Optional<Piece> p = Optional.empty();
-        for(int i = 0; i < this.boardSize; i++){
-            if(i==cell.getRow()){                               //Controllo se sono alla riga giusta
-                for(int j = 0; j < this.boardSize; j++){
-                    if(j==cell.getColumn()){                    //Controllo se sono alla colonna giusta
-                        p = Optional.of(this.pieces[i][j]);
-                    }
-                }
-            }
-        }
-        return p;
-    }
+
 
 //    public void setPiece(Cell cell, Piece p) throws BoardGameException {
 //        if(cell != null && p!= null){
@@ -110,13 +100,41 @@ public class Game implements Board, GameObserver {
 //        }
 //    }
 
+    public void buildStage() {
+        for (int i = 0; i < this.boardSize; i++) {
+            for (int j = 0; j < this.boardSize; j++) {
+               cells[i][j] = new Cell(i, j);
+            }
+        }
+    }
+
+    public Schema buildCheckersStage(DefaultSchema schema) {
+        List<Cell> finalStage = schema
+                .buildStage(schema.getDefaultPlayer1(), schema.getDefaultPlayer2())
+                .getCurrentSchema();
+        Schema emptyCellsStage = new Schema();
+        for (int i = 0; i < this.boardSize; i++) {
+            for (int j = 0; j < this.boardSize; j++) {
+                if (this.cells[i][j].getStatus().isEmpty()) {
+                    emptyCellsStage.setSchema(
+                            List.of(new Cell(i, j))
+                    );
+                }
+            }
+        }
+        finalStage = Stream.concat( finalStage.stream(), emptyCellsStage.getCurrentSchema().stream() ).collect(Collectors.toList());
+        Schema ret = new Schema();
+        ret.setSchema(finalStage);
+        return ret;
+    }
+
     @Override
     public String toString() {
         String s = "";
         for(int i = 0; i < this.boardSize; i++){
             for(int j = 0; j < this.boardSize; j++){
-                if(this.pieces[i][j]!= null){
-                    s += "[ " +this.pieces[i][j].toString()+ " ]";
+                if(this.cells[i][j]!= null){
+                    s += "[ " +this.cells[i][j].toString()+ " ]";
                 }
             }
             s += "\n";

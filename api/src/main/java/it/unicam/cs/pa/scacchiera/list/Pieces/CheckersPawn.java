@@ -1,11 +1,9 @@
-package it.unicam.cs.pa.scacchiera.list.Pieces;
-
-import it.unicam.cs.pa.scacchiera.list.Cell;
+package it.unicam.cs.pa.scacchiera.list.pieces;
 
 public class CheckersPawn extends Piece{
 
-    public CheckersPawn(int owner, Cell cell) {
-        super(owner, cell);
+    public CheckersPawn(int owner) {
+        super(owner);
     }
 
 }

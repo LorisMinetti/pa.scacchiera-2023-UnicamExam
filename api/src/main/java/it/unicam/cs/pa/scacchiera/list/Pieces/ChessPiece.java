@@ -1,4 +1,4 @@
-package it.unicam.cs.pa.scacchiera.list.Pieces;
+package it.unicam.cs.pa.scacchiera.list.pieces;
 
 public enum ChessPiece {
     ROOK,
