@@ -1,7 +1,10 @@
 package it.unicam.cs.pa.scacchiera.list;
 
 
+import it.unicam.cs.pa.scacchiera.list.pieces.Piece;
+
 import java.util.Objects;
+import java.util.Optional;
 
 /**
  * Responsabilità: Creare una singola cella della scacchiera, che avrà una coppia di coordinate
@@ -9,10 +12,10 @@ import java.util.Objects;
  */
 public class Cell {
 
-    private int row;
-    private int column;
-    private CellStatus status;   //EMPTY, OCCUPIED
-
+    private final int row;
+    private final int column;
+    private final CellStatus status;   //EMPTY, OCCUPIED
+    private Piece piece;
     /**
      * Create board cell at specific row and column.
      * @param row riga
@@ -22,7 +25,8 @@ public class Cell {
      *               se la logica sarà quella di costruire pezzo per pezzo (dunque anche quelli pieni), servirà
      *               specificare lo stato del pezzo pieno e di quello vuoto singolarmente.
      */
-    public Cell(int row, int column, CellStatus status) {
+
+    public Cell(int row, int column, CellStatus status, Piece piece) {
         this.row=row;
         this.column=column;
         /*
@@ -30,22 +34,41 @@ public class Cell {
         verrà lasciata altrove
          */
         this.status=status;
+        this.piece=piece;
+    }
+    public Cell(int row, int column){
+        this.row=row;
+        this.column=column;
+        this.status=CellStatus.EMPTY;
+        this.piece=null;
     }
 
     /**
-     *
-     * @return
+     * Getter per la riga
+     * @return int riga
      */
     public int getRow(){
         return row;
     }
 
     /**
-     *
-     * @return
+     * Getter per la colonna
+     * @return int colonna
      */
     public int getColumn(){
         return column;
+    }
+
+    /**
+     * Metodo che restituisce il pezzo della cella.
+     * @return Ritorna l'oggetto se questo esiste altrimenti un optional NUll se questo è empty
+     */
+    public Optional<Piece> getPiece(){
+        return Optional.ofNullable(piece);
+    }
+
+    public void setPiece(Piece piece){
+        this.piece=piece;
     }
 
     @Override
