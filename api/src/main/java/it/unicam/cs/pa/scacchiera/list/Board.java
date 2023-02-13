@@ -1,41 +1,148 @@
 package it.unicam.cs.pa.scacchiera.list;
 
-import it.unicam.cs.pa.scacchiera.list.Pieces.Piece;
-import it.unicam.cs.pa.scacchiera.list.player.Player;
+import it.unicam.cs.pa.scacchiera.list.pieces.Colour;
+import it.unicam.cs.pa.scacchiera.list.pieces.Piece;
 
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
+import java.util.stream.Collectors;
 
-/**
- * Gestisce la scacchiera. Ci saranno già determinati pezzi in determinate posizioni una volta scelto a
- * che gioco giocare.
- */
-public interface Board {
+import static it.unicam.cs.pa.scacchiera.list.LocationStatus.OCCUPIED;
 
+public class Board implements IBoard<Moveable, Piece, ILocation> {
+
+    private final int DEFAULT_BOARD_ROW_SIZE;
+    private final int DEFAULT_BOARD_COLUMN_SIZE;
+    private final Set<ILocation> locations;
+    private List<Piece> onBoardPiece;     //pezzi presenti sulla scacchiera
+
+    /**
+     * Costruttore di una scacchiera che prende in input il valore che andrà a definire
+     * numero di righe e numero di colonne.
+     */
+    public Board(int row, int column) {
+        DEFAULT_BOARD_ROW_SIZE = row;          //Assegno un valore sia a row che a column nel caso in cui la scacchiera possa essere anche NON quadrata.
+        DEFAULT_BOARD_COLUMN_SIZE = column;
+        this.locations = initializeBoardLocations();
+        this.onBoardPiece = getAllPieces();
+    }
+
+    public Set<ILocation> getLocations() {
+        return this.locations;
+    }
+    public int getDEFAULT_BOARD_ROW_SIZE(){
+        return this.DEFAULT_BOARD_ROW_SIZE;
+    }
+    public int getDEFAULT_BOARD_COLUMN_SIZE() {
+        return this.DEFAULT_BOARD_COLUMN_SIZE;
+    }
     /**
      * Metodo che controlla se una determinata cella rientra nelle coordinate della scacchiera.
-     * @param c cella da controllare
-     * @return true se la cella rientra nelle coordinate della scacchiera, false oppure
+     *
+     * @param loc@return true se la cella rientra nelle coordinate della scacchiera, false oppure
      */
-    boolean isValid(Cell c);
+    @Override
+    public boolean isValid(ILocation loc) {
+        return (loc.getX() < DEFAULT_BOARD_ROW_SIZE && loc.getX() > 0) && ((loc.getY() < DEFAULT_BOARD_COLUMN_SIZE && loc.getY() > 0));
+    }
 
     /**
-     * Dato un giocatore, il suo schema momentaneo dei pezzi che ha, ed il pezzo che vuole muovere, questo
-     * metodo restituisce la lista di tutte le celle che possono essere occupate, deve quindi verificare
-     * le possibilità di movimento del pezzo e che la cella di destinazione sia libera.
-     * @param actaul schema dei pezzi momentaneo
-     * @param pz pezzo da muovere
-     * @param p giocatore
-     * @return Lista di possibili celle di destinazione
-     */
-//    List<Cell> possibleMoves(Schema actaul, Piece pz, Player p);
-//
-    /**
      * Restituisce il pezzo presente in una determinata casella.
-     * @param cell la cella data
+     *
      * @return P pezzo desiderato
      */
-    Optional<Piece> getP(Cell cell);
+    @Override
+    public Optional<Piece> getP(ILocation loc) {
+        return loc.getPiece();
+    }
+
+
+    /**
+     * Restituisce l'insieme di tutte le possibili mosse che un pezzo può fare.
+     *
+     * @param piece pezzo da prendere in considerazione.
+     * @return Set delle locazioni possibili nel quale il pezzo può finire.
+     */
+    @Override
+    public Set<ILocation> getAvailableMovesOfPiece(Piece piece) {
+        Set<ILocation> availableMoves = new HashSet<>();
+        if(piece != null){
+            for(ILocation loc : piece.possibleMoves()){
+                if(isValid(loc)){
+                    availableMoves.add(loc);
+                }
+            }
+            return availableMoves;
+        } else
+            throw new NullPointerException("Pezzo nullo.");
+    }
+
+    /**
+     * Restituisce true se il pezzo viene rimosso dalla cella, false altrimenti.
+     *
+     * @param iLocation locazione dal quale eliminare il pezzo
+     * @return true se l'eliminazione và a buon fine, false altrimenti.
+     */
+    @Override
+    public boolean removePieceFrom(ILocation iLocation) {
+        if (iLocation.getStatus() == OCCUPIED) {
+            iLocation.getStatus().swapStatus();
+            return true;
+        } else return false;
+    }
+
+    /**
+     * Restituisce tutti i pezzi presenti sulla scacchiera
+     *
+     * @return un set contenente tutti i pezzi presenti sulla scacchiera
+     */
+    @Override
+    public List<Piece> getAllPieces() {
+        return this.locations
+                .stream()
+                .filter(x -> x.getStatus() == OCCUPIED)
+                .map(x -> x.getPiece().orElse(null))
+                .collect(Collectors.toList());
+    }
+
+
+    /**
+     * Meotodo che inzializza le celle della Board. Tiene conto della coordianta ed imposta in base a quella il colore.
+     * i.e. una coordinata con entrambe i numeri pari ( 0,0  0,2  6,4  etc..) nella dama e negli scacchi avranno un colore opposto.
+     * Ma la certezza è chè questa caratteristica della coordinata (la coppia di indici), ovvero se entrambe pari o entrambe dispari può esseere applicabile
+     * come pattern per assegnare i colori di ogni cella.
+     *
+     * @return tutte le celle necessarie.
+     */
+    //TODO: fare in modo che l'inizializzazione del colore venga gestita in base al gioco considerato (scacchi, dama, reversi).
+    // Basterebbe inserire un costruttore di Location che non inizializza il colore. e poi estenderlo al controller del game in questione.
+    // in modo da poter sovraccaricare questo stesso metodo e customizzarlo in base al gioco.
+    public Set<ILocation> initializeBoardLocations() {
+        HashSet<ILocation> locations = new HashSet<>();
+        for (int i = 0; i < DEFAULT_BOARD_ROW_SIZE; i++) {
+            for (int j = 0; j < DEFAULT_BOARD_COLUMN_SIZE; j++) {
+                initializeLocation(locations, i, j);
+            }
+        }
+        return locations;
+    }
+
+    static void initializeLocation(HashSet<ILocation> locations, int i, int j) {
+        if (i % 2 == 0 && j % 2 == 0) {
+            locations.add(
+                    new Location(i, j, LocationStatus.FREE, Colour.BLACK));
+        }
+        if (i % 2 != 0 && j % 2 != 0) {
+            locations.add(
+                    new Location(i, j, LocationStatus.FREE, Colour.WHITE));
+        }
+    }
+
+    public void eat(Piece piece){
+        if(piece != null && getAllPieces().contains(piece)) {
+            getAllPieces().remove(piece);
+        } else throw new IllegalArgumentException("Pezzo nullo o non presente nella lista dei pezzi");
+    }
+
 
 
 

@@ -1,20 +1,33 @@
 package it.unicam.cs.pa.scacchiera.list.pieces;
 
-/**
- * @author Loris Minetti
- * Questa classe è la classe base che definisce un pezzo. Ovvero l'entità principale per poter
- * giocare a qualsiasi gioco da scacchiera. Qesto avrà un valore, in alcuni casi serve per determinare quando un pezzo
- * vale più di un'altro, una posizione nella scacchiera
- */
-public abstract class Piece{
+import it.unicam.cs.pa.scacchiera.list.ILocation;
+import it.unicam.cs.pa.scacchiera.list.player.Player;
 
-    private int value;             //  Potrebbe non essere utile
-    private final int owner;          // un pezzo è di uno specifico giocatore
+import java.util.Set;
 
-    public Piece(int owner) {
-        this.owner = owner;
-    }
+public interface Piece {
 
-    public int getOwner() { return this.owner; }
+    /**
+     * @return Colore del pezzo [Black or White]
+     */
+    Colour getColour();
+
+    /**
+     * @return il giocatore propietario del pezzo
+     */
+    Player getPlayer();
+
+    /**
+     * @return la locazione del pezzo in questione.
+     */
+    ILocation getLocation();
+
+    /**
+     * Ritorna il possibile movimento di un pezzo.
+     * Questo però non terrà conto di tutte le reali destinazioni. Di questo dovrà occuparsene una futura scacchiera poichè le dimensioni e le regole di un gioco
+     * sono streattamente dipendenti dal gioco e dalle dimensioni della scacchiera.
+     * @return Insieme delle destinazioni.
+     */
+    Set<ILocation> possibleMoves();
 
 }

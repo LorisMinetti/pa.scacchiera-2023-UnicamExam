@@ -14,7 +14,7 @@ public class Cell {
 
     private final int row;
     private final int column;
-    private final CellStatus status;   //EMPTY, OCCUPIED
+    private final LocationStatus status;   //EMPTY, OCCUPIED
     private Piece piece;
     /**
      * Create board cell at specific row and column.
@@ -26,7 +26,7 @@ public class Cell {
      *               specificare lo stato del pezzo pieno e di quello vuoto singolarmente.
      */
 
-    public Cell(int row, int column, CellStatus status, Piece piece) {
+    public Cell(int row, int column, LocationStatus status, Piece piece) {
         this.row=row;
         this.column=column;
         /*
@@ -39,7 +39,7 @@ public class Cell {
     public Cell(int row, int column){
         this.row=row;
         this.column=column;
-        this.status=CellStatus.EMPTY;
+        this.status= LocationStatus.FREE;
         this.piece=null;
     }
 
@@ -95,7 +95,7 @@ public class Cell {
      * Method for getting the cell status information
      * @return the EMPTY or OCCUPIED status of this cell
      */
-    public CellStatus getStatus() {
+    public LocationStatus getStatus() {
         return this.status;
     }
 

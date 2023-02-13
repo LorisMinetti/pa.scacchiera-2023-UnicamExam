@@ -1,19 +1,21 @@
 package it.unicam.cs.pa.scacchiera.list;
 
-public enum CellStatus {
+import java.util.Optional;
 
-    EMPTY,
+public enum LocationStatus {
+
+    FREE,
     OCCUPIED;
 
     /**
      *
      * @return true if the cell is empty, false otherwise
      */
-    public boolean isEmpty() {  return this == EMPTY;  }
+    public boolean isEmpty() {  return this == FREE;  }
 
     public boolean isOccupied() {  return this == OCCUPIED;  }
 
-    public CellStatus getValue(){
+    public LocationStatus getValue(){
         return this;
     }
 
@@ -21,9 +23,7 @@ public enum CellStatus {
      * Metodo per aggiornare lo stato la cella.
      * @return the status of the cell that has been changed to the opposite.
      */
-    private CellStatus changeState(){
-        CellStatus newState;
-        newState = (this == EMPTY)? OCCUPIED : EMPTY;
-        return newState;
+    public LocationStatus swapStatus(){
+        return (this == FREE) ? OCCUPIED : FREE;
     }
 }
