@@ -12,7 +12,7 @@ public class Board implements IBoard<Moveable, Piece, ILocation> {
 
     private final int DEFAULT_BOARD_ROW_SIZE;
     private final int DEFAULT_BOARD_COLUMN_SIZE;
-    private final Set<ILocation> locations;
+    private final List<ILocation> locations;
     private List<Piece> onBoardPiece;     //pezzi presenti sulla scacchiera
 
     /**
@@ -26,7 +26,7 @@ public class Board implements IBoard<Moveable, Piece, ILocation> {
         this.onBoardPiece = getAllPieces();
     }
 
-    public Set<ILocation> getLocations() {
+    public List<ILocation> getLocations() {
         return this.locations;
     }
     public int getDEFAULT_BOARD_ROW_SIZE(){
@@ -76,6 +76,9 @@ public class Board implements IBoard<Moveable, Piece, ILocation> {
             throw new NullPointerException("Pezzo nullo.");
     }
 
+    //TODO: rimossi i metodi getALlPieces e 'eat' probabilmente vanno assegnati come responsabilità al controllore della
+    //scacchiera.
+
     /**
      * Restituisce true se il pezzo viene rimosso dalla cella, false altrimenti.
      *
@@ -90,20 +93,6 @@ public class Board implements IBoard<Moveable, Piece, ILocation> {
         } else return false;
     }
 
-    /**
-     * Restituisce tutti i pezzi presenti sulla scacchiera
-     *
-     * @return un set contenente tutti i pezzi presenti sulla scacchiera
-     */
-    @Override
-    public List<Piece> getAllPieces() {
-        return this.locations
-                .stream()
-                .filter(x -> x.getStatus() == OCCUPIED)
-                .map(x -> x.getPiece().orElse(null))
-                .collect(Collectors.toList());
-    }
-
 
     /**
      * Meotodo che inzializza le celle della Board. Tiene conto della coordianta ed imposta in base a quella il colore.
@@ -116,11 +105,11 @@ public class Board implements IBoard<Moveable, Piece, ILocation> {
     //TODO: fare in modo che l'inizializzazione del colore venga gestita in base al gioco considerato (scacchi, dama, reversi).
     // Basterebbe inserire un costruttore di Location che non inizializza il colore. e poi estenderlo al controller del game in questione.
     // in modo da poter sovraccaricare questo stesso metodo e customizzarlo in base al gioco.
-    public Set<ILocation> initializeBoardLocations() {
-        HashSet<ILocation> locations = new HashSet<>();
+    public List<ILocation> initializeBoardLocations() {
+        List<ILocation> locations = new ArrayList<>();
         for (int i = 0; i < DEFAULT_BOARD_ROW_SIZE; i++) {
             for (int j = 0; j < DEFAULT_BOARD_COLUMN_SIZE; j++) {
-                initializeLocation(locations, i, j);
+                new Location(i, j);
             }
         }
         return locations;
@@ -137,13 +126,17 @@ public class Board implements IBoard<Moveable, Piece, ILocation> {
         }
     }
 
-    public void eat(Piece piece){
-        if(piece != null && getAllPieces().contains(piece)) {
-            getAllPieces().remove(piece);
-        } else throw new IllegalArgumentException("Pezzo nullo o non presente nella lista dei pezzi");
+
+    @Override
+    public String toString() {
+        StringBuilder a = new StringBuilder();
+        for(int i = 0; i < getDEFAULT_BOARD_COLUMN_SIZE(); i++){
+            for(int j = 0; j < getDEFAULT_BOARD_ROW_SIZE(); j++){
+                Location loc = (Location) locations.toArray()[j];
+                a.append(loc);
+            }
+            System.out.println();
+        }
+        return a.toString();
     }
-
-
-
-
 }

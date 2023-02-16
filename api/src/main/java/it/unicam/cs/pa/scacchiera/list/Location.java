@@ -38,6 +38,7 @@ public class Location implements ILocation{
     public Location(int x, int y){
         this.x = x;
         this.y = y;
+        this.status = LocationStatus.FREE;
     }
 
 
@@ -90,6 +91,11 @@ public class Location implements ILocation{
         if(piece != null){
             this.piece = piece;
         }
+    }
+
+    @Override
+    public String toString() {
+        return "[" +x+", "+y+" ] ";
     }
 
 }

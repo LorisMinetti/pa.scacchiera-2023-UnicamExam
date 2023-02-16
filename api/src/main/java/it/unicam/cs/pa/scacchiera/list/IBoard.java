@@ -42,10 +42,4 @@ public interface IBoard<Moveable, Piece, ILocation> {
      */
     boolean removePieceFrom(ILocation location);
 
-    /**
-     * Restituisce tutti i pezzi presenti sulla scacchiera
-     * @return un set contenente tutti i pezzi presenti sulla scacchiera
-     */
-    List<Piece> getAllPieces();
-
 }
