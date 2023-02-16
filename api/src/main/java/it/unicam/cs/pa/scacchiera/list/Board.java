@@ -12,7 +12,7 @@ public class Board implements IBoard<Moveable, Piece, ILocation> {
 
     private final int DEFAULT_BOARD_ROW_SIZE;
     private final int DEFAULT_BOARD_COLUMN_SIZE;
-    private final List<ILocation> locations;
+    private final ILocation[][] locations;
     private List<Piece> onBoardPiece;     //pezzi presenti sulla scacchiera
 
     /**
@@ -23,10 +23,9 @@ public class Board implements IBoard<Moveable, Piece, ILocation> {
         DEFAULT_BOARD_ROW_SIZE = row;          //Assegno un valore sia a row che a column nel caso in cui la scacchiera possa essere anche NON quadrata.
         DEFAULT_BOARD_COLUMN_SIZE = column;
         this.locations = initializeBoardLocations();
-        this.onBoardPiece = getAllPieces();
     }
 
-    public List<ILocation> getLocations() {
+    public ILocation[][] getLocations() {
         return this.locations;
     }
     public int getDEFAULT_BOARD_ROW_SIZE(){
@@ -105,8 +104,8 @@ public class Board implements IBoard<Moveable, Piece, ILocation> {
     //TODO: fare in modo che l'inizializzazione del colore venga gestita in base al gioco considerato (scacchi, dama, reversi).
     // Basterebbe inserire un costruttore di Location che non inizializza il colore. e poi estenderlo al controller del game in questione.
     // in modo da poter sovraccaricare questo stesso metodo e customizzarlo in base al gioco.
-    public List<ILocation> initializeBoardLocations() {
-        List<ILocation> locations = new ArrayList<>();
+    public ILocation[][] initializeBoardLocations() {
+        ILocation[][] locations = new ILocation[DEFAULT_BOARD_ROW_SIZE][DEFAULT_BOARD_COLUMN_SIZE];
         for (int i = 0; i < DEFAULT_BOARD_ROW_SIZE; i++) {
             for (int j = 0; j < DEFAULT_BOARD_COLUMN_SIZE; j++) {
                 new Location(i, j);
@@ -132,8 +131,7 @@ public class Board implements IBoard<Moveable, Piece, ILocation> {
         StringBuilder a = new StringBuilder();
         for(int i = 0; i < getDEFAULT_BOARD_COLUMN_SIZE(); i++){
             for(int j = 0; j < getDEFAULT_BOARD_ROW_SIZE(); j++){
-                Location loc = (Location) locations.toArray()[j];
-                a.append(loc);
+                a.append(locations[i][j]);
             }
             System.out.println();
         }

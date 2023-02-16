@@ -44,7 +44,7 @@ public class Location implements ILocation{
 
 
     /**
-     * @return lo stato dello cella presa in consiederazione.
+     * @return lo stato della cella presa in consiederazione.
      */
     @Override
     public LocationStatus getStatus() {
