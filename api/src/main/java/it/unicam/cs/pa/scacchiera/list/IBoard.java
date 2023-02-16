@@ -12,7 +12,7 @@ import java.util.Set;
  * Gestisce la scacchiera. Ci saranno già determinati pezzi in determinate posizioni una volta scelto a
  * che gioco giocare.
  */
-public interface IBoard<Moveable, Piece, ILocation> {
+public interface IBoard<Move, Piece, ILocation> {
 
     /**
      * Metodo che controlla se una determinata cella rientra nelle coordinate della scacchiera.
@@ -33,7 +33,7 @@ public interface IBoard<Moveable, Piece, ILocation> {
      * @param piece pezzo da prendere in considerazione.
      * @return Set delle locazioni possibili nel quale il pezzo può finire.
      */
-    Set<ILocation> getAvailableMovesOfPiece(Piece piece);
+    Set<ILocation> getAvailableMovesOfPiece(Piece piece) throws Exception;
 
     /**
      * Restituisce true se il pezzo viene rimosso dalla cella, false altrimenti.

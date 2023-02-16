@@ -2,7 +2,6 @@ package it.unicam.cs.pa.scacchiera.list.pieces;
 
 import it.unicam.cs.pa.scacchiera.list.ILocation;
 import it.unicam.cs.pa.scacchiera.list.Location;
-import it.unicam.cs.pa.scacchiera.list.Moveable;
 import it.unicam.cs.pa.scacchiera.list.player.Player;
 
 import java.util.HashSet;

@@ -3,12 +3,13 @@ package it.unicam.cs.pa.scacchiera.list;
 import it.unicam.cs.pa.scacchiera.list.pieces.Colour;
 import it.unicam.cs.pa.scacchiera.list.pieces.Piece;
 
+import javax.swing.text.BadLocationException;
 import java.util.*;
 import java.util.stream.Collectors;
 
 import static it.unicam.cs.pa.scacchiera.list.LocationStatus.OCCUPIED;
 
-public class Board implements IBoard<Moveable, Piece, ILocation> {
+public class Board implements IBoard<Move, Piece, ILocation> {
 
     private final int DEFAULT_BOARD_ROW_SIZE;
     private final int DEFAULT_BOARD_COLUMN_SIZE;
@@ -62,12 +63,14 @@ public class Board implements IBoard<Moveable, Piece, ILocation> {
      * @return Set delle locazioni possibili nel quale il pezzo può finire.
      */
     @Override
-    public Set<ILocation> getAvailableMovesOfPiece(Piece piece) {
+    public Set<ILocation> getAvailableMovesOfPiece(Piece piece) throws Exception {
         Set<ILocation> availableMoves = new HashSet<>();
         if(piece != null){
             for(ILocation loc : piece.possibleMoves()){
                 if(isValid(loc)){
                     availableMoves.add(loc);
+                } else {
+                    throw new Exception("Invalid move");
                 }
             }
             return availableMoves;

@@ -3,6 +3,7 @@ package it.unicam.cs.pa.scacchiera.list.pieces;
 import it.unicam.cs.pa.scacchiera.list.ILocation;
 import it.unicam.cs.pa.scacchiera.list.player.Player;
 
+import java.util.List;
 import java.util.Set;
 
 public interface Piece {
