@@ -1,30 +1,27 @@
 package it.unicam.cs.pa.scacchiera.list.player;
 
+import it.unicam.cs.pa.scacchiera.list.Colour;
+
 /**
  * @author Loris Minetti
  * Questa classe identifica un giocatore generico con un nome.
  */
-public abstract class Player {
+public class Player {
     private final String name;
-    private static int score;
-
+    private Colour colour;
     /**
     * Costruttore della classe Player.
      * @param name Nome del giocatore.
      * Il punteggio viene inizializzato a 0.
      */
-    public Player(String name) {
+    public Player(String name, Colour colour) {
         this.name = name;
-        score = 0;
+        this.colour = colour;
     }
 
     public String getName() {
         return name;
     }
 
-    public int getScore() { return score; }
-
-    public void updateScore(int s) {
-        score += s;
-    }
+    public Colour getColour() { return colour; }
 }

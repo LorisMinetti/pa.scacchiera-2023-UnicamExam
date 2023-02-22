@@ -3,24 +3,16 @@
  */
 package it.unicam.cs.pa.scacchiera.app;
 
-import static it.unicam.cs.pa.scacchiera.utilities.StringUtils.join;
-import static it.unicam.cs.pa.scacchiera.utilities.StringUtils.split;
-import static it.unicam.cs.pa.scacchiera.app.MessageUtils.getMessage;
 
-import org.apache.commons.text.WordUtils;
-
-import java.util.LinkedList;
+import it.unicam.cs.pa.scacchiera.list.Board;
+import it.unicam.cs.pa.scacchiera.list.BoardImpl;
 
 public class App {
-    public static void main(String[] args) {
-        LinkedList tokens;
-        tokens = split(getMessage());
-        String result = join(tokens);
-        System.out.println(WordUtils.capitalize(result));
+    public static void main(String[] args) throws Exception {
+        Board b = new BoardImpl(8,8);
 
 
-        Table mine = new Table();
-        System.out.print(mine);
+
     }
 
 

@@ -1,7 +1,11 @@
-package it.unicam.cs.pa.scacchiera.list.Pieces;
+package it.unicam.cs.pa.scacchiera.list.pieces;
 
-import it.unicam.cs.pa.scacchiera.list.Cell;
-import it.unicam.cs.pa.scacchiera.list.player.Player;
+import it.unicam.cs.pa.scacchiera.list.Board;
+import it.unicam.cs.pa.scacchiera.list.Colour;
+import it.unicam.cs.pa.scacchiera.list.Location;
+import it.unicam.cs.pa.scacchiera.list.Move;
+
+import java.util.List;
 
 /**
  * @author Loris Minetti
@@ -9,27 +13,22 @@ import it.unicam.cs.pa.scacchiera.list.player.Player;
  * giocare a qualsiasi gioco da scacchiera. Qesto avrà un valore, in alcuni casi serve per determinare quando un pezzo
  * vale più di un'altro, una posizione nella scacchiera
  */
-public abstract class Piece{
+public interface Piece{
 
-    private int value;             //  Potrebbe non essere utile
-    private Cell cellLocation;     // Posizione del pezzo nella scacchiera
-    private final int owner;          // un pezzo è di uno specifico giocatore
+    /**
+     * @return Piece's Location
+     */
+    Location getLocation();
 
-    public Piece(int owner, Cell cellLocation) {
-        this.cellLocation = cellLocation;
-        this.owner = owner;
-    }
+    /**
+     * Setta la Locazione passata in input al pezzo in questione
+     * @param loc location
+     */
+    void setLocatoion(Location loc);
 
-    public Cell getCellLocation() {
-        return this.cellLocation;
-    }
-
-    public int getOwner() { return this.owner; }
-
-    @Override
-    public String toString() {
-        return "[" + cellLocation.getColumn() + "," + cellLocation.getRow() +
-                " ]";
-    }
+    /**
+     * @return Piece's player colour
+     */
+    Colour getColour();
 
 }
