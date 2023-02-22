@@ -9,43 +9,30 @@ import it.unicam.cs.pa.scacchiera.list.pieces.Piece;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Pawn implements Piece {
+public class Pawn extends Piece {
 
 
     private Location location;
     private Colour playerColour;
-    boolean isKing;
+    boolean king;
 
     public Pawn(Location location, Colour colour){
         this.location = location;
         playerColour = colour;
-        isKing = false;
+        king = false;
     }
 
-
-    /**
-     * @return Piece's Location
-     */
-    @Override
-    public Location getLocation() {
-        return null;
+    /* Pedina della dama può essere anche una Dama */
+    public boolean isKing() {
+        return king;
     }
 
     /**
-     * Setta la Locazione passata in input al pezzo in questione
-     * @param loc locazione da settare
+     * Cambia lo stato della pedina facendola diventare Dama.
      */
-    @Override
-    public void setLocatoion(Location loc) {
-
+    public void becomeKing() {
+        if(!king){
+            this.king = true;
+        }
     }
-
-    /**
-     * @return Piece's player colour
-     */
-    @Override
-    public Colour getColour() {
-        return null;
-    }
-
 }

@@ -6,10 +6,12 @@ package it.unicam.cs.pa.scacchiera.app;
 
 import it.unicam.cs.pa.scacchiera.list.Board;
 import it.unicam.cs.pa.scacchiera.list.BoardImpl;
+import it.unicam.cs.pa.scacchiera.list.Checkers.CheckersBoard;
 
 public class App {
     public static void main(String[] args) throws Exception {
-        Board b = new BoardImpl(8,8);
+        Board b = new CheckersBoard(8,8);
+
         System.out.println("000-------------------------000");
         System.out.println(b);
 

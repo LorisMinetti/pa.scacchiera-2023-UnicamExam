@@ -6,6 +6,8 @@ import java.util.Optional;
 
 public class LocationImpl implements Location{
 
+    public enum BackgroundColor{ DARK, LIGHT};
+    private BackgroundColor bgColor;
     private int x;
     private int y;
     private boolean free;
@@ -17,11 +19,17 @@ public class LocationImpl implements Location{
         piece = null;
         free = true;
     }
-    public LocationImpl(int x, int y, Piece piece, boolean free) {
+    public LocationImpl(int x, int y, BackgroundColor color) {
         this.x = x;
         this.y = y;
-        this.piece = piece;
-        this.free = free;
+        bgColor = color;
+        piece = null;
+        free = true;
+    }
+    public LocationImpl(int x, int y, Piece piece) {
+        this.x = x;
+        this.y = y;
+        this.setPiece(piece);
     }
 
     /**
@@ -48,14 +56,6 @@ public class LocationImpl implements Location{
         return true;
     }
 
-    /**
-     * Setta il valore del flag nel caso cambiasse.
-     * @param free
-     */
-    @Override
-    public void setFree(boolean free) {
-        this.free = free;
-    }
 
     /**
      * Get the piece inside this location
@@ -65,4 +65,27 @@ public class LocationImpl implements Location{
     public Piece getPiece(){
         return piece;
     }
+
+
+    public void setPiece(Piece piece){
+        if(piece != null){
+            this.piece = piece;
+            free = false;
+        } else {
+            this.piece = null;
+            free = true;
+        }
+    }
+
+
+    @Override
+    public String toString() {
+        return "LocationImpl{" +
+                "x=" + x +
+                ", y=" + y +
+                ", free=" + free +
+                ", piece=" + piece +
+                '}';
+    }
+
 }

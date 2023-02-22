@@ -7,13 +7,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 
-public class GameStateImpl implements GameState{
-    private GameState future, previous;
+public class GameFrameImpl implements GameFrame {
+    private GameFrame future, previous;
     private Colour actualTurn;
     private List<Piece> piecesList;
     private BoardImpl theBoard;
 
-    private GameStateImpl(GameState next, GameState prev, Colour turn){
+    private GameFrameImpl(GameFrame next, GameFrame prev, Colour turn){
         actualTurn = turn;
         future = next;
         previous = prev;
@@ -32,7 +32,7 @@ public class GameStateImpl implements GameState{
         return result;
     }
 
-    public GameState getFuture() {
+    public GameFrame getFuture() {
         return future;
     }
 
@@ -44,7 +44,7 @@ public class GameStateImpl implements GameState{
      * @return Lista delle mosse effettuabili da un pezzo.
      */
     @Override
-    public List<Move> allPieceMoves(GameState state, Colour col, Piece piece) {
+    public List<Move> allPieceMoves(GameFrame state, Colour col, Piece piece) {
         List<Move> moveList = new ArrayList<>();
         List<Location> diagonalSpots = theBoard.getDiagonalAdjacentLocationsOfPiece(piece);
         for (Location loc : diagonalSpots) {
@@ -69,7 +69,7 @@ public class GameStateImpl implements GameState{
      * @return lista delle mosse possibili.
      */
     @Override
-    public List<Move> allPossibleMoves(GameState state, Colour colour) {
+    public List<Move> allPossibleMoves(GameFrame state, Colour colour) {
         List<Move> possibleMoves = new ArrayList<>();
         for (Location loc : theBoard.getAllLocationsOfPlayer(colour)) {
             Piece pz = loc.getPiece();
@@ -79,15 +79,15 @@ public class GameStateImpl implements GameState{
         return possibleMoves;
     }
 
-    public void setFuture(GameState future) {
+    public void setFuture(GameFrame future) {
         this.future = future;
     }
 
-    public GameState getPrevious() {
+    public GameFrame getPrevious() {
         return previous;
     }
 
-    public void setPrevious(GameState previous) {
+    public void setPrevious(GameFrame previous) {
         this.previous = previous;
     }
 

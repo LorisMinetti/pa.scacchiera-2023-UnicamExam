@@ -1,6 +1,6 @@
 package it.unicam.cs.pa.scacchiera.list;
 
-public interface Game<GameState> {
+public interface Game {
 
 
 //    /**

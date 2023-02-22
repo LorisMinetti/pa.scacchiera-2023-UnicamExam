@@ -22,20 +22,12 @@ public interface Board<P, L, M> {
     List<L> allLocations();
 
 
-
-
     /**
      * Restituisce il pezzo presente in una determinata casella.
      * @param location la locazione data
      * @return P pezzo desiderato
      */
     P getPiece(Location location);
-
-    /**
-     * @param piece pezzo
-     * @return Locazione L
-     */
-    L getPieceLocation(P piece);
 
     /**
      *

@@ -1,34 +1,27 @@
 package it.unicam.cs.pa.scacchiera.list.pieces;
 
-import it.unicam.cs.pa.scacchiera.list.Board;
 import it.unicam.cs.pa.scacchiera.list.Colour;
 import it.unicam.cs.pa.scacchiera.list.Location;
-import it.unicam.cs.pa.scacchiera.list.Move;
 
-import java.util.List;
+public abstract class Piece {
 
-/**
- * @author Loris Minetti
- * Questa classe è la classe base che definisce un pezzo. Ovvero l'entità principale per poter
- * giocare a qualsiasi gioco da scacchiera. Qesto avrà un valore, in alcuni casi serve per determinare quando un pezzo
- * vale più di un'altro, una posizione nella scacchiera
- */
-public interface Piece{
+    private Location location;
+    private Colour colour;
 
-    /**
-     * @return Piece's Location
-     */
-    Location getLocation();
+    public Piece(){};
 
-    /**
-     * Setta la Locazione passata in input al pezzo in questione
-     * @param loc location
-     */
-    void setLocatoion(Location loc);
+    public Location getLocation(){
+        return this.location;
+    }
+    public Colour getColour(){
+        return this.colour;
+    }
 
-    /**
-     * @return Piece's player colour
-     */
-    Colour getColour();
+    public void setLocation(Location loc) {
+        this.location = location;
+    }
 
+    public void setColour(Colour colour) {
+        this.colour = colour;
+    }
 }

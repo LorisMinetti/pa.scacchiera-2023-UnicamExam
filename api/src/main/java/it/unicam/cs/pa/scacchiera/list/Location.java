@@ -20,10 +20,15 @@ public interface Location {
      */
     boolean isFree();
 
-    void setFree(boolean free);
 
     /**
      * @return il pezzo presente, se presente.
      */
     Piece getPiece();
+
+    /**
+     * setta il pezzo specificato nella posizione corrente
+     * @param piece pezzo da settare
+     */
+    void setPiece(Piece piece);
 }

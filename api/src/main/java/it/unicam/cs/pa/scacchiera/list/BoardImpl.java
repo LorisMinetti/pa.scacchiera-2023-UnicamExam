@@ -6,7 +6,7 @@ import java.util.List;
 
 
 public class BoardImpl implements Board<Piece, Location, Move> {
-    private final Piece[][] schema;
+    private final Location[][] schema;
     private final int ROW_VALUE, COLUMN_VALUE;
 
     public BoardImpl(int row, int column) throws Exception {
@@ -16,7 +16,7 @@ public class BoardImpl implements Board<Piece, Location, Move> {
         ROW_VALUE = row;
         COLUMN_VALUE = column;
 
-        schema = new Piece[ROW_VALUE][COLUMN_VALUE];
+        schema = new Location[ROW_VALUE][COLUMN_VALUE];
     }
 
 
@@ -87,17 +87,17 @@ public class BoardImpl implements Board<Piece, Location, Move> {
      */
     private void isDiagonallyAdjacent(Piece piece, List<Location> adjacents, Location loc) {
         if (piece == loc.getPiece()) {
-            if (isInsideBoard(this.schema[loc.getX() + 1][loc.getY() + 1].getLocation())) {
-                adjacents.add(this.schema[loc.getX() + 1][loc.getY() + 1].getLocation());
+            if (isInsideBoard(this.schema[loc.getX() + 1][loc.getY() + 1])) {
+                adjacents.add(this.schema[loc.getX() + 1][loc.getY() + 1]);
             }
-            if (isInsideBoard(this.schema[loc.getX() + 1][loc.getY() - 1].getLocation())) {
-                adjacents.add(this.schema[loc.getX() + 1][loc.getY() - 1].getLocation());
+            if (isInsideBoard(this.schema[loc.getX() + 1][loc.getY() - 1])) {
+                adjacents.add(this.schema[loc.getX() + 1][loc.getY() - 1]);
             }
-            if (isInsideBoard(this.schema[loc.getX() - 1][loc.getY() + 1].getLocation())) {
-                adjacents.add(this.schema[loc.getX() - 1][loc.getY() + 1].getLocation());
+            if (isInsideBoard(this.schema[loc.getX() - 1][loc.getY() + 1])) {
+                adjacents.add(this.schema[loc.getX() - 1][loc.getY() + 1]);
             }
-            if (isInsideBoard(this.schema[loc.getX() - 1][loc.getY() - 1].getLocation())) {
-                adjacents.add(this.schema[loc.getX() - 1][loc.getY() - 1].getLocation());
+            if (isInsideBoard(this.schema[loc.getX() - 1][loc.getY() - 1])) {
+                adjacents.add(this.schema[loc.getX() - 1][loc.getY() - 1]);
             }
         }
     }
@@ -110,17 +110,9 @@ public class BoardImpl implements Board<Piece, Location, Move> {
      */
     @Override
     public Piece getPiece(Location location) {
-        return this.schema[location.getX()][location.getY()];
+        return this.schema[location.getX()][location.getY()].getPiece();
     }
 
-    /**
-     * @param piece
-     * @return
-     */
-    @Override
-    public Location getPieceLocation(Piece piece) {
-        return piece.getLocation();
-    }
 
     /**
      * @param location
@@ -133,12 +125,8 @@ public class BoardImpl implements Board<Piece, Location, Move> {
 
             /* Toglie il pezzo dalla posizione di partenza */
             this.schema[old.getX()][old.getY()] = null;
-            this.schema[old.getX()][old.getY()].getLocation().setFree(true);
-
             /* Setta il pezzo nella nuova posizione */
-            this.schema[location.getX()][location.getY()] = piece;
-            this.schema[location.getX()][location.getY()].getLocation().setFree(false);
-
+            this.schema[location.getX()][location.getY()].setPiece(piece);
         } else
             throw new Exception("locazione non definita, o fuori i range della scacchiera.");
     }
@@ -159,12 +147,14 @@ public class BoardImpl implements Board<Piece, Location, Move> {
         int deltaY = diagonallyAdjacent.getY() + y;
         Location nextDiagonal = new LocationImpl(deltaX, deltaY);
         if (isInsideBoard(nextDiagonal)) {
-            return this.schema[deltaX][deltaY].getLocation();
+            return this.schema[deltaX][deltaY];
         }
         return null;
     }
 
-
+    public Location[][] getSchema() {
+        return schema;
+    }
 
     /**
      * Applica una determinata mossa.

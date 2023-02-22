@@ -1,10 +1,21 @@
 package it.unicam.cs.pa.scacchiera.list;
 
+import it.unicam.cs.pa.scacchiera.list.player.Player;
+
 import java.util.LinkedList;
 
-public class GameImpl implements Game<GameState>{
+public class GameImpl implements Game{
 
-    private LinkedList<GameStateImpl> gameSnapshots;
+    private Player player1;
+    private Player player2;
+    private enum GameState { RUNNING, DRAW, PLAYER_1_WINS, PLAYER_2_WINS, ERROR}
+    private BoardImpl board;
+    private LinkedList<GameFrameImpl> gameFrames;
+
+    public GameImpl(Player player1, Player player2, BoardImpl board){
+
+    }
+
 
 //    /**
 //     * Check sulla presenza di almeno un pezzo per uno dei due giocatori.
