@@ -202,7 +202,7 @@ public class BoardImpl implements Board<Piece, Location, Move> {
     public String toString() {
         return "BoardImpl{" +
                 "schema=" + Arrays.toString(schema) +
-                ", ROW_VALUE=" + ROW_VALUE +
+                ",\n ROW_VALUE=" + ROW_VALUE +
                 ", COLUMN_VALUE=" + COLUMN_VALUE +
                 '}';
     }

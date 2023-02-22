@@ -8,10 +8,10 @@ public interface GameState {
 
     /**
      * Tutte le mosse di uno specifico pezzo di un determinato giocatore.
-     * @param state
-     * @param col
-     * @param piece
-     * @return
+     * @param state momento attuale del gioco
+     * @param col giocatore
+     * @param piece pezzo considerato
+     * @return lista delle mosse che può eseguire quel pezzo
      */
     List<Move> allPieceMoves(GameState state, Colour col, Piece piece);
 

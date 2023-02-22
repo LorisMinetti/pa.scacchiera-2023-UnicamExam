@@ -1,6 +1,11 @@
 package it.unicam.cs.pa.scacchiera.list;
 
+import java.util.LinkedList;
+
 public class GameImpl implements Game<GameState>{
+
+    private LinkedList<GameStateImpl> gameSnapshots;
+
 //    /**
 //     * Check sulla presenza di almeno un pezzo per uno dei due giocatori.
 //     * Un giocatore senza pezzi, equivale al termine della partita con conseguente vittoria del giocatore avversario.
