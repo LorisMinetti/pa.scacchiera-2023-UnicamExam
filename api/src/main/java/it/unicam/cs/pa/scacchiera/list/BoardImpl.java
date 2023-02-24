@@ -63,44 +63,86 @@ public class BoardImpl implements Board<Piece, Location> {
         return locations;
     }
 
+
+    /**
+     * Locazione intermedia in un movimento con un displacement diagonale uguale a 2.
+     * @param loc1 locazione di partenza
+     * @param loc2 locazione di destinazione distante 2
+     * @return locazione intermedia
+     */
+    @Override
+    public Location getIntermediateLocation(Location loc1, Location loc2) {
+        if(!isDiagonal(loc1, loc2)){
+            throw new IllegalArgumentException("Le due posizioni fornite non sono diagonalmente adiacenti tra loro.");
+        }
+        int dx = Math.abs(loc2.getX() - loc1.getX());
+        int dy = Math.abs(loc2.getY() - loc1.getY());
+
+        //TODO: considerare il caso di dover rimuovere questa eccezione. Potrebbe bastare controllare il caso opposto
+        if(dx != 2 || dy != 2){
+            throw new IllegalArgumentException("Le due posizioni fornite non hanno un displacement diagonale di 2");
+        }
+
+        int x = (loc1.getX() + loc2.getX()) / 2;
+        int y = (loc1.getY() + loc2.getY()) / 2;
+
+        return new LocationImpl(x, y);
+    }
+
+    /**
+     * Locazione è diagonalmente adiacente ad un'altra locazione
+     * @param loc locazione
+     * @param check locazione su cui verificare adiacenza
+     * @return true se locazioni sono diagonali
+     */
+    @Override
+    public boolean isDiagonal(Location loc, Location check){
+        int xDiff = Math.abs(loc.getX() - check.getX());
+        int yDiff = Math.abs(loc.getY() - check.getY());
+        return xDiff == yDiff;
+    }
+
     /**
      * Lista delle posizioni diagonali ed adiacenti ad uno specifico pezzo.
      * @param piece
      * @return Lista
      */
-    public List<Location> getDiagonalAdjacentLocationsOfPiece(Piece piece) {
+    @Override
+    public List<Location> getDiagonalAdjacentLocationsOfPiece(Piece piece){
         List<Location> adjacents = new ArrayList<>();
-        if (piece != null) {
-            for (Location loc : allLocations()) {
-                isDiagonallyAdjacent(piece, adjacents, loc);
+        for(Location loc : allLocations()) {
+            Location pieceLocum = piece.getLocation();
+            if(isDiagonal(pieceLocum, loc) && isInsideBoard(loc)){
+                adjacents.add(pieceLocum);
             }
         }
         return adjacents;
     }
 
-    /**
-     * Metodo di comodo per definire l'adiacenza diagonale di una cella rispetto ad un'altra, tenendo conto della
-     * sua appartenenza all'interno delle coordinate della scacchiera.
-     * @param piece
-     * @param adjacents
-     * @param loc
-     */
-    private void isDiagonallyAdjacent(Piece piece, List<Location> adjacents, Location loc) {
-        if (piece == loc.getPiece()) {
-            if (isInsideBoard(this.schema[loc.getX() + 1][loc.getY() + 1])) {
-                adjacents.add(this.schema[loc.getX() + 1][loc.getY() + 1]);
-            }
-            if (isInsideBoard(this.schema[loc.getX() + 1][loc.getY() - 1])) {
-                adjacents.add(this.schema[loc.getX() + 1][loc.getY() - 1]);
-            }
-            if (isInsideBoard(this.schema[loc.getX() - 1][loc.getY() + 1])) {
-                adjacents.add(this.schema[loc.getX() - 1][loc.getY() + 1]);
-            }
-            if (isInsideBoard(this.schema[loc.getX() - 1][loc.getY() - 1])) {
-                adjacents.add(this.schema[loc.getX() - 1][loc.getY() - 1]);
-            }
-        }
-    }
+
+//    /**
+//     * Metodo di comodo per definire l'adiacenza diagonale di una cella rispetto ad un'altra, tenendo conto della
+//     * sua appartenenza all'interno delle coordinate della scacchiera.
+//     * @param piece
+//     * @param adjacents
+//     * @param loc
+//     */
+//    private void isDiagonallyAdjacent(Piece piece, List<Location> adjacents, Location loc) {
+//        if (piece == loc.getPiece()) {
+//            if (isInsideBoard(this.schema[loc.getX() + 1][loc.getY() + 1])) {
+//                adjacents.add(this.schema[loc.getX() + 1][loc.getY() + 1]);
+//            }
+//            if (isInsideBoard(this.schema[loc.getX() + 1][loc.getY() - 1])) {
+//                adjacents.add(this.schema[loc.getX() + 1][loc.getY() - 1]);
+//            }
+//            if (isInsideBoard(this.schema[loc.getX() - 1][loc.getY() + 1])) {
+//                adjacents.add(this.schema[loc.getX() - 1][loc.getY() + 1]);
+//            }
+//            if (isInsideBoard(this.schema[loc.getX() - 1][loc.getY() - 1])) {
+//                adjacents.add(this.schema[loc.getX() - 1][loc.getY() - 1]);
+//            }
+//        }
+//    }
 
 
     /**
@@ -158,9 +200,9 @@ public class BoardImpl implements Board<Piece, Location> {
 
     /**
      * Applica una determinata mossa.
-     *
      * @param move mossa da applicare.
      * @throws Exception se la mossa non può essere applicabile
+     * @return true se la mossa ha un displacement maggiore di 1.
      */
     public boolean apply(Move move) throws Exception {
         boolean captureMove = false;

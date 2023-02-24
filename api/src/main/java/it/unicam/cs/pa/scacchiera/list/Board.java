@@ -44,6 +44,22 @@ public interface Board<P extends Piece, L extends Location> {
      */
     List<Location> getAllLocationsOfPlayer(Colour colour);
 
+    /**
+     * Locazione intermedia in un movimento con un displacement diagonale uguale a 2.
+     * @param loc1 locazione di partenza
+     * @param loc2 locazione di destinazione distante 2
+     * @return locazione intermedia
+     */
+    Location getIntermediateLocation(Location loc1, Location loc2);
+
+    /**
+     * Locazione è diagonalmente adiacente ad un'altra locazione
+     * @param loc locazione
+     * @param check locazione su cui verificare adiacenza
+     * @return true se locazioni sono diagonali
+     */
+    boolean isDiagonal(Location loc, Location check);
+
 
     /**
      * Restituisce il pezzo presente in una determinata casella.
