@@ -28,7 +28,8 @@ public interface GameFrame<P, L> {
     void setPrevious(GameFrame<P, L> previous);
     Colour getActualTurn();
     void setActualTurn(Colour actualTurn);
-
+    List<Piece> getBlackPieces();
+    List<Piece> getWhitePieces();
     Board<Piece, Location> getTheBoard();
     void setTheBoard(Board<Piece, Location> theBoard);
 }

@@ -56,14 +56,9 @@ public class GameImpl implements Game{
         } else throw new Exception("Il pezzo che stai provando a muovere non appartiene al giocatore corrente.");
         //sposto la pedina
         if( board.apply(move) ){
-            gameFrameCorrente.getTheBoard().allLocations().remove(pezzo);
+            Piece captured = gameFrameCorrente.getTheBoard().getIntermediateLocation(move.getStart(), move.getDestination()).getPiece();
+            capturePieceWithPiece(pezzo, captured);
         }
-
-
-        /*devo fare tutti gli aggiornamenti sulle strutture dati
-        * - Rimuovere il pezzo se qualcosa è stato mangiato.
-        *
-        * */
 
         //aggiorno lo stato del gioco
         this.updateStatus();
@@ -73,6 +68,14 @@ public class GameImpl implements Game{
         GameFrame<Piece, Location> nuovoGameFrame = new GameFrameImpl(gameFrameCorrente, turn, board);
         gameFrameCorrente.setFuture(nuovoGameFrame);
         gameFrameCorrente = nuovoGameFrame;
+    }
+
+    public void capturePieceWithPiece(Piece pezzo, Piece captured) {
+        if(captured.getColour() == Colour.BLACK && pezzo.getColour() == Colour.WHITE){
+            gameFrameCorrente.getBlackPieces().remove(captured);
+        } else if(captured.getColour() == Colour.WHITE && pezzo.getColour() == Colour.BLACK) {
+            gameFrameCorrente.getWhitePieces().remove(captured);
+        }
     }
 
     @Override
