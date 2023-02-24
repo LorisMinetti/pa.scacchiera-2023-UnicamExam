@@ -5,7 +5,6 @@ import it.unicam.cs.pa.scacchiera.list.Colour;
 import it.unicam.cs.pa.scacchiera.list.Location;
 import it.unicam.cs.pa.scacchiera.list.LocationImpl;
 import it.unicam.cs.pa.scacchiera.list.LocationImpl.*;
-import it.unicam.cs.pa.scacchiera.list.pieces.Piece;
 
 
 /**
@@ -22,34 +21,25 @@ public class CheckersBoard extends BoardImpl {
         boolean lastColor = false;
         for(int i = 0; i < row; i++) {
             for (int j = 0; j < column; j++) {
+
+                boolean darkRowsPlayer = i == 0 || i == 1 || i==2;
+                boolean lightRowsPlayer = i == 5 || i == 6 || i == 7;
                 if (lastColor) {
-                    superSchema[i][j] = new LocationImpl(i, j, BackgroundColor.DARK);
+                    superSchema[i][j] = new LocationImpl(i, j, BackgroundColor.DARK);       /* Nelle celle di colore scuro ci saranno tutti i pezzi*/
+                    if(darkRowsPlayer){
+                        superSchema[i][j].setPiece(new Pawn( superSchema[i][j], Colour.BLACK));     //I pezzi scuri dell'avversario saranno nelle prime tre righe dall'alto
+                    }
+                    if(lightRowsPlayer){
+                        superSchema[i][j].setPiece(new Pawn( superSchema[i][j], Colour.WHITE));     // I pezzi chiari del giocatore principale saranno nelle prime tre righe dal basso.
+                    }
                 } else {
-                    superSchema[i][j] = new LocationImpl(i, j, BackgroundColor.LIGHT);
+                    superSchema[i][j] = new LocationImpl(i, j, BackgroundColor.LIGHT);    // Celle bianche che non verranno mai occupate durante la partita.
                 }
                 /* Toggle per il colore della casella adiacente */
                 lastColor = !lastColor;
             }
             /*Shifta di 1 il colore per la riga successiva*/
             lastColor = !lastColor;
-        }
-        int[] defaultBlackRows = {0,1,2};
-        int[] defaultWhiteRows = {5,6,7};
-
-        for(int i : defaultBlackRows){        /* Inizializzo le celle nere del giocatore avversario alle righe 0 1 2 */
-            for(int j=0; j < column; j++){
-                if(superSchema[i][j].getBgColor() == BackgroundColor.DARK){
-                    superSchema[i][j].setPiece(new Pawn( superSchema[i][j], Colour.BLACK));
-                }
-            }
-        }
-        for(int i : defaultWhiteRows){        /* Inizializzo le celle nere del giocatore avversario alle righe 0 1 2 */
-            for(int j=0; j < column; j++){
-                if(superSchema[i][j].getBgColor() == BackgroundColor.DARK){
-                    superSchema[i][j].setPiece(new Pawn( superSchema[i][j], Colour.BLACK));
-                }
-
-            }
         }
     }
 }
