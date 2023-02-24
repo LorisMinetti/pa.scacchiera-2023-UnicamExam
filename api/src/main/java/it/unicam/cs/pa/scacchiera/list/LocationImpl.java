@@ -48,6 +48,11 @@ public class LocationImpl implements Location{
         return this.y;
     }
 
+    @Override
+    public BackgroundColor getBgColor() {
+        return bgColor;
+    }
+
     /**
      * @return true se la location in questione è occupata
      */

@@ -5,7 +5,7 @@ import java.util.*;
 import java.util.List;
 
 
-public class BoardImpl implements Board<Piece, Location, Move> {
+public class BoardImpl implements Board<Piece, Location> {
     private final Location[][] schema;
     private final int ROW_VALUE, COLUMN_VALUE;
 
@@ -140,7 +140,7 @@ public class BoardImpl implements Board<Piece, Location, Move> {
      * @param diagonallyAdjacent
      * @return
      */
-    protected Location getNextDiagonalSpot(Location current, Location diagonallyAdjacent) {
+    public Location getNextDiagonalSpot(Location current, Location diagonallyAdjacent) {
         int x = diagonallyAdjacent.getX() - current.getX();
         int y = diagonallyAdjacent.getY() - current.getY();
         int deltaX = diagonallyAdjacent.getX() + x;
@@ -162,13 +162,35 @@ public class BoardImpl implements Board<Piece, Location, Move> {
      * @param move mossa da applicare.
      * @throws Exception se la mossa non può essere applicabile
      */
-    public void apply(Move move) throws Exception {
+    public boolean apply(Move move) throws Exception {
+        boolean captureMove = false;
         if (move != null && move.belongsToBoard(this)) {
             /* Controllo se il pezzo che voglio muovere esiste */
             if (move.getStart().getPiece() != null) {
                 setPiece(move.getDestination(), move.getStart().getPiece());
             }
+            if(this.getMoveDisplacement(move) > 1){
+                captureMove = true;
+            }
         }
+        return captureMove;
+    }
+
+    /**
+     * Metodo che ritorna il massimo displacement di una mossa.
+     * @param move mossa da considerare
+     * @return displacement massimo dello spostamento tra due locazioni
+     */
+    public int getMoveDisplacement(Move move) {
+        int startRow = move.getStart().getX();
+        int endRow = move.getDestination().getX();
+        int startColumn = move.getStart().getY();
+        int endColumn = move.getDestination().getY();
+
+        int displacementRow = Math.abs( endRow - startRow );
+        int displacementColumn = Math.abs( endColumn - startColumn );
+
+        return Math.max( displacementRow, displacementColumn );
     }
 
     @Override

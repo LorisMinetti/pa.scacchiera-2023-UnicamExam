@@ -7,7 +7,7 @@ import java.util.List;
  * Gestisce la scacchiera. Ci saranno già determinati pezzi in determinate posizioni una volta scelto a
  * che gioco giocare.
  */
-public interface Board<P, L, M> {
+public interface Board<P extends Piece, L extends Location> {
 
     /**
      * Metodo che controlla se una determinata locazione rientra nelle coordinate della scacchiera.
@@ -21,6 +21,29 @@ public interface Board<P, L, M> {
      */
     List<L> allLocations();
 
+    /**
+     * Le quattro locazioni diagonali al pezzo passato in input
+     * @param piece pezzo considerato
+     * @return locazioni diagonali
+     */
+    List<Location> getDiagonalAdjacentLocationsOfPiece(Piece piece);
+
+    /**
+     * Ritorna la locazione diagonale subito dopo la locazione diagonale trovata rispetto ad una locazione.
+     * Si fa dunque un salto distanza 2 dalla locazione 'current'.
+     * @param current
+     * @param diagonallyAdjacent
+     * @return
+     */
+    Location getNextDiagonalSpot(Location current, Location diagonallyAdjacent);
+
+    /**
+     * Restituisce tutte le locazioni di uno specifico giocatore nel quale è presente un pezzo.
+     * @param colour
+     * @return
+     */
+    List<Location> getAllLocationsOfPlayer(Colour colour);
+
 
     /**
      * Restituisce il pezzo presente in una determinata casella.
@@ -28,6 +51,13 @@ public interface Board<P, L, M> {
      * @return P pezzo desiderato
      */
     P getPiece(Location location);
+
+    /**
+     * Applica una mossa.
+     * @param move mossa
+     * @return true se la mossa mangia una pedina avversaria, false altrimenti
+     */
+    boolean apply(Move move) throws Exception;
 
     /**
      *
