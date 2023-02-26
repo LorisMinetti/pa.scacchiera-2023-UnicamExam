@@ -7,7 +7,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 
-public class GameFrameImpl implements GameFrame<Piece, Location> {
+public abstract class GameFrameImpl implements GameFrame<Piece, Location> {
     private GameFrame future, previous;
     private Colour actualTurn;
     private List<Piece> whitePieces, blackPieces;
@@ -49,24 +49,7 @@ public class GameFrameImpl implements GameFrame<Piece, Location> {
      * @return Lista delle mosse effettuabili da un pezzo.
      */
     @Override
-    public List<Move> allPieceMoves(GameFrame<Piece, Location> state, Colour col, Piece piece) {
-        List<Move> moveList = new ArrayList<>();
-        List<Location> diagonalSpots = theBoard.getDiagonalAdjacentLocationsOfPiece(piece);
-        for (Location loc : diagonalSpots) {
-            Piece pz = loc.getPiece();
-            /* Check nella cell destinataria c'è un pezzo avversario */
-            if (pz != null && pz.getColour() != col) {
-
-                Location nextDiagonalSpot = theBoard.getNextDiagonalSpot(piece.getLocation(), loc);
-                moveList.add(new Move(piece.getLocation(), nextDiagonalSpot));
-            }
-            /* Check se la casella destinataria è vuota ed è nella scacchiera */
-            else if (pz == null && theBoard.isInsideBoard(loc)) {
-                moveList.add(new Move(piece.getLocation(), loc));
-            }
-        }
-        return moveList;
-    }
+    public abstract List<Move> allPieceMoves(GameFrame<Piece, Location> state, Colour col, Piece piece);
 
     /**
      * Tutte le possibili mosse per un giocatore durante un determinato momento della partita.
@@ -75,15 +58,8 @@ public class GameFrameImpl implements GameFrame<Piece, Location> {
      * @return lista delle mosse possibili.
      */
     @Override
-    public List<Move> allPossibleMoves(GameFrame<Piece, Location> state, Colour colour) {
-        List<Move> possibleMoves = new ArrayList<>();
-        for (Location loc : theBoard.getAllLocationsOfPlayer(colour)) {
-            Piece pz = loc.getPiece();
-            /* Concateno tutte le mosse per ogni pezzo per ottenere tutte le mosse di uno specifico giocatore */
-            possibleMoves.addAll(allPieceMoves(this, colour, pz));
-        }
-        return possibleMoves;
-    }
+    public abstract List<Move> allPossibleMoves(GameFrame<Piece, Location> state, Colour colour);
+
 
     public void setFuture(GameFrame<Piece, Location> future) {
         this.future = future;
