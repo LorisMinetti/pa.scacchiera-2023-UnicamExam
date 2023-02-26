@@ -83,4 +83,7 @@ public interface Board<P extends Piece, L extends Location> {
     void setPiece(L location, P newPiece) throws Exception;
 
 
+    int getROW_VALUE();
+    int getCOLUMN_VALUE();
+
 }

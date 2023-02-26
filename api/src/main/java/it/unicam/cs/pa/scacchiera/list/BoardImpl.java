@@ -253,6 +253,15 @@ public class BoardImpl implements Board<Piece, Location> {
     }
 
     @Override
+    public int getROW_VALUE() {
+        return ROW_VALUE;
+    }
+    @Override
+    public int getCOLUMN_VALUE() {
+        return COLUMN_VALUE;
+    }
+
+    @Override
     public String toString() {
         return "BoardImpl{" +
                 "schema=" + Arrays.toString(schema) +
