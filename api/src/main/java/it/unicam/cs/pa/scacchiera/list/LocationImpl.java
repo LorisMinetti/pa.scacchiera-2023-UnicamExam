@@ -1,15 +1,14 @@
 package it.unicam.cs.pa.scacchiera.list;
 
 import it.unicam.cs.pa.scacchiera.list.pieces.Piece;
+import it.unicam.cs.pa.scacchiera.list.util.BackgroundColor;
 
-import java.util.Optional;
 
 public class LocationImpl implements Location{
 
-    public enum BackgroundColor{ DARK, LIGHT};
     private BackgroundColor bgColor;
-    private int x;
-    private int y;
+    private final int x;
+    private final int y;
     private boolean free;
     private Piece piece;
 

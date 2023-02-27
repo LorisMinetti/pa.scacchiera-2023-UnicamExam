@@ -1,9 +1,7 @@
 package it.unicam.cs.pa.scacchiera.list;
 
 import it.unicam.cs.pa.scacchiera.list.pieces.Piece;
-
-
-import java.util.Optional;
+import it.unicam.cs.pa.scacchiera.list.util.BackgroundColor;
 
 public interface Location {
     /**
@@ -36,5 +34,5 @@ public interface Location {
     /**
      * @return il colore di backGround di quella casella.
      */
-    LocationImpl.BackgroundColor getBgColor();
+    BackgroundColor getBgColor();
 }
