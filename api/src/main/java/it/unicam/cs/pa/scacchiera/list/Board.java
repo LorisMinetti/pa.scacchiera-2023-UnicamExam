@@ -1,6 +1,8 @@
 package it.unicam.cs.pa.scacchiera.list;
 
 import it.unicam.cs.pa.scacchiera.list.pieces.Piece;
+import it.unicam.cs.pa.scacchiera.list.util.Colour;
+
 import java.util.List;
 
 /**
@@ -86,4 +88,5 @@ public interface Board<P extends Piece, L extends Location> {
     int getROW_VALUE();
     int getCOLUMN_VALUE();
 
+    P getPiece(int row, int col);
 }
