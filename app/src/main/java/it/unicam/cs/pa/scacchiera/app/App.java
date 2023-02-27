@@ -4,16 +4,39 @@
 package it.unicam.cs.pa.scacchiera.app;
 
 
-import it.unicam.cs.pa.scacchiera.list.Board;
-import it.unicam.cs.pa.scacchiera.list.BoardImpl;
-import it.unicam.cs.pa.scacchiera.list.Checkers.CheckersBoard;
+import it.unicam.cs.pa.scacchiera.list.*;
+import it.unicam.cs.pa.scacchiera.list.pieces.Piece;
+import it.unicam.cs.pa.scacchiera.list.player.Player;
+import it.unicam.cs.pa.scacchiera.list.util.Colour;
+
+import java.util.Scanner;
+
+import static it.unicam.cs.pa.scacchiera.list.util.Colour.WHITE;
 
 public class App {
+    static final int ROW = 8;
+    static final int COLUMN = 8;
+
     public static void main(String[] args) throws Exception {
-        Board b = new CheckersBoard(8,8);
+        Board<Piece, Location> board = new CheckersBoard(ROW,COLUMN);
+        Player p1 = new Player("p1", Colour.WHITE);
+        Player p2 = new Player("p2", Colour.BLACK);
+        GameFrame<Piece, Location> first = new CheckersFrame(null, WHITE, board);
+        Game game = new CheckersGame(p1, p2, board, first);
+
+        Scanner sc = new Scanner(System.in);
+
+        //affinchè il gioco non è terminale
+        while (!game.isTerminal()){
+            System.out.println("Turno di "+game.getGameFrame().getActualTurn());
+            System.out.println("----------------------");
+//            game.getGameFrame().printBoardFrame();
+        }
+
+
 
         System.out.println("000-------------------------000");
-        System.out.println(b);
+        System.out.println(game.getGameFrame().printBoardFrame());
 
 
 
