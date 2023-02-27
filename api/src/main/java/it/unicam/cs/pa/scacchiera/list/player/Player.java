@@ -1,6 +1,6 @@
 package it.unicam.cs.pa.scacchiera.list.player;
 
-import it.unicam.cs.pa.scacchiera.list.Colour;
+import it.unicam.cs.pa.scacchiera.list.util.Colour;
 
 /**
  * @author Loris Minetti

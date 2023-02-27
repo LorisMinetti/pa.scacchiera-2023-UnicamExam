@@ -278,11 +278,6 @@ public class CheckersBoard implements Board<Piece, Location> {
     }
 
     @Override
-    public Location[][] getSchema(){
-        return this.schema;
-    }
-
-    @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();
         sb.append("   1 2 3 4 5 6 7 8\n");  // Indica le colonne

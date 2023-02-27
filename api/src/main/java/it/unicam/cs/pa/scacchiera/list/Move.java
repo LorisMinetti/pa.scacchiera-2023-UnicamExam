@@ -1,7 +1,5 @@
 package it.unicam.cs.pa.scacchiera.list;
 
-import it.unicam.cs.pa.scacchiera.list.pieces.Piece;
-
 public class Move {
 
     private Location start, destination;
