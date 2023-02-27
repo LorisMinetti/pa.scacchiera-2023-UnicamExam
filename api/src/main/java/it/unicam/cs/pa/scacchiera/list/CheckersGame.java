@@ -2,14 +2,14 @@ package it.unicam.cs.pa.scacchiera.list;
 
 import it.unicam.cs.pa.scacchiera.list.pieces.Piece;
 import it.unicam.cs.pa.scacchiera.list.player.Player;
+import it.unicam.cs.pa.scacchiera.list.util.Colour;
+import it.unicam.cs.pa.scacchiera.list.util.GameState;
 
-import java.util.LinkedList;
 import java.util.List;
 
-public class GameImpl implements Game{
+public class CheckersGame implements Game{
 
     private Player player1, player2;
-    private enum GameState { RUNNING, DRAW, PLAYER_1_WINS, PLAYER_2_WINS, ERROR}
     private GameState status;
     private Board<Piece, Location> board;
     private Colour turn;
@@ -17,8 +17,14 @@ public class GameImpl implements Game{
 
 
     /* Quando creo un gioco lo faccio partire già da uno stato RUNNING */
-    public GameImpl(Player player1, Player player2, Board<Piece, Location> board){
+    public CheckersGame(Player player1, Player player2, Board<Piece, Location> board, GameFrame<Piece, Location> frame){
         status= GameState.RUNNING;
+        this.board = board;
+        this.player1 = player1;
+        this.player2 = player2;
+        turn = Colour.WHITE;
+        gameFrameCorrente = frame;
+
     }
 
 
@@ -41,6 +47,7 @@ public class GameImpl implements Game{
         return !whiteFound || !blackFound;
     }
 
+
     public void move(Move move) throws Exception {
         if(status != GameState.RUNNING){
             throw new Exception("Partita terminata. Impossibile effettuare alcuna mossa.");
@@ -58,14 +65,15 @@ public class GameImpl implements Game{
         if( board.apply(move) ){
             Piece captured = gameFrameCorrente.getTheBoard().getIntermediateLocation(move.getStart(), move.getDestination()).getPiece();
             capturePieceWithPiece(pezzo, captured);
+            gameFrameCorrente.kingify(pezzo);
         }
 
         //aggiorno lo stato del gioco
         this.updateStatus();
         //cambio turno
-        turn = turn.opponent();
+        this.turn = turn.opponent();
         //nuovo game frame
-        GameFrame<Piece, Location> nuovoGameFrame = new GameFrameImpl(gameFrameCorrente, turn, board);
+        GameFrame<Piece, Location> nuovoGameFrame = new CheckersFrame(gameFrameCorrente, turn, board);
         gameFrameCorrente.setFuture(nuovoGameFrame);
         gameFrameCorrente = nuovoGameFrame;
     }
@@ -87,6 +95,15 @@ public class GameImpl implements Game{
                 status = GameState.PLAYER_2_WINS;
             }
         }
+    }
+
+    /**
+     * Frazione di gioco corrente.
+     * @return
+     */
+    @Override
+    public GameFrame<Piece, Location> getGameFrame() {
+        return this.gameFrameCorrente;
     }
 
 

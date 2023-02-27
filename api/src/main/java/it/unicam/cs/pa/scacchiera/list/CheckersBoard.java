@@ -1,15 +1,23 @@
 package it.unicam.cs.pa.scacchiera.list;
 
+import it.unicam.cs.pa.scacchiera.list.Checkers.Pawn;
 import it.unicam.cs.pa.scacchiera.list.pieces.Piece;
+import it.unicam.cs.pa.scacchiera.list.util.BackgroundColor;
+import it.unicam.cs.pa.scacchiera.list.util.Colour;
+
 import java.util.*;
 import java.util.List;
 
 
-public class BoardImpl implements Board<Piece, Location> {
+public class CheckersBoard implements Board<Piece, Location> {
     private final Location[][] schema;
     private final int ROW_VALUE, COLUMN_VALUE;
 
-    public BoardImpl(int row, int column) throws Exception {
+    /**
+     * Damiera che inizializza già un campo da gioco abile di avere le caselle con il colore di
+     * background adatto al gioco della dama italiana.
+     */
+    public CheckersBoard(int row, int column) throws Exception {
         if (row < 0 || column < 0) {
             throw new Exception("Dimensioni della tabella negative.");
         }
@@ -17,6 +25,31 @@ public class BoardImpl implements Board<Piece, Location> {
         COLUMN_VALUE = column;
 
         schema = new Location[ROW_VALUE][COLUMN_VALUE];
+
+        /* Creare la scacchiera della Dama con colori alternati */
+        boolean lastColor = false;
+        for(int i = 0; i < row; i++) {
+            for (int j = 0; j < column; j++) {
+
+                boolean darkRowsPlayer = i == 0 || i == 1 || i==2;
+                boolean lightRowsPlayer = i == 5 || i == 6 || i == 7;
+                if (lastColor) {
+                    schema[i][j] = new LocationImpl(i, j, BackgroundColor.DARK);       /* Nelle celle di colore scuro ci saranno tutti i pezzi*/
+                    if(darkRowsPlayer){
+                        schema[i][j].setPiece(new Pawn( schema[i][j], Colour.BLACK));     //I pezzi scuri dell'avversario saranno nelle prime tre righe dall'alto
+                    }
+                    if(lightRowsPlayer){
+                        schema[i][j].setPiece(new Pawn( schema[i][j], Colour.WHITE));     // I pezzi chiari del giocatore principale saranno nelle prime tre righe dal basso.
+                    }
+                } else {
+                    schema[i][j] = new LocationImpl(i, j, BackgroundColor.LIGHT);    // Celle bianche che non verranno mai occupate durante la partita.
+                }
+                /* Toggle per il colore della casella adiacente */
+                lastColor = !lastColor;
+            }
+            /*Shifta di 1 il colore per la riga successiva*/
+            lastColor = !lastColor;
+        }
     }
 
 
@@ -49,6 +82,7 @@ public class BoardImpl implements Board<Piece, Location> {
 
     /**
      * Lista delle locazioni contenenti pezzi di uno specifico giocatore.
+     *
      * @param colour il giocatore desiderato
      * @return lista delle locazioni
      */
@@ -66,20 +100,21 @@ public class BoardImpl implements Board<Piece, Location> {
 
     /**
      * Locazione intermedia in un movimento con un displacement diagonale uguale a 2.
+     *
      * @param loc1 locazione di partenza
      * @param loc2 locazione di destinazione distante 2
      * @return locazione intermedia
      */
     @Override
     public Location getIntermediateLocation(Location loc1, Location loc2) {
-        if(!isDiagonal(loc1, loc2)){
+        if (!isDiagonal(loc1, loc2)) {
             throw new IllegalArgumentException("Le due posizioni fornite non sono diagonalmente adiacenti tra loro.");
         }
         int dx = Math.abs(loc2.getX() - loc1.getX());
         int dy = Math.abs(loc2.getY() - loc1.getY());
 
         //TODO: considerare il caso di dover rimuovere questa eccezione. Potrebbe bastare controllare il caso opposto
-        if(dx != 2 || dy != 2){
+        if (dx != 2 || dy != 2) {
             throw new IllegalArgumentException("Le due posizioni fornite non hanno un displacement diagonale di 2");
         }
 
@@ -91,12 +126,13 @@ public class BoardImpl implements Board<Piece, Location> {
 
     /**
      * Locazione è diagonalmente adiacente ad un'altra locazione
-     * @param loc locazione
+     *
+     * @param loc   locazione
      * @param check locazione su cui verificare adiacenza
      * @return true se locazioni sono diagonali
      */
     @Override
-    public boolean isDiagonal(Location loc, Location check){
+    public boolean isDiagonal(Location loc, Location check) {
         int xDiff = Math.abs(loc.getX() - check.getX());
         int yDiff = Math.abs(loc.getY() - check.getY());
         return xDiff == yDiff;
@@ -104,49 +140,25 @@ public class BoardImpl implements Board<Piece, Location> {
 
     /**
      * Lista delle posizioni diagonali ed adiacenti ad uno specifico pezzo.
+     *
      * @param piece
      * @return Lista
      */
     @Override
-    public List<Location> getDiagonalAdjacentLocationsOfPiece(Piece piece){
+    public List<Location> getDiagonalAdjacentLocationsOfPiece(Piece piece) {
         List<Location> adjacents = new ArrayList<>();
-        for(Location loc : allLocations()) {
+        for (Location loc : allLocations()) {
             Location pieceLocum = piece.getLocation();
-            if(isDiagonal(pieceLocum, loc) && isInsideBoard(loc)){
+            if (isDiagonal(pieceLocum, loc) && isInsideBoard(loc)) {
                 adjacents.add(pieceLocum);
             }
         }
         return adjacents;
     }
 
-
-//    /**
-//     * Metodo di comodo per definire l'adiacenza diagonale di una cella rispetto ad un'altra, tenendo conto della
-//     * sua appartenenza all'interno delle coordinate della scacchiera.
-//     * @param piece
-//     * @param adjacents
-//     * @param loc
-//     */
-//    private void isDiagonallyAdjacent(Piece piece, List<Location> adjacents, Location loc) {
-//        if (piece == loc.getPiece()) {
-//            if (isInsideBoard(this.schema[loc.getX() + 1][loc.getY() + 1])) {
-//                adjacents.add(this.schema[loc.getX() + 1][loc.getY() + 1]);
-//            }
-//            if (isInsideBoard(this.schema[loc.getX() + 1][loc.getY() - 1])) {
-//                adjacents.add(this.schema[loc.getX() + 1][loc.getY() - 1]);
-//            }
-//            if (isInsideBoard(this.schema[loc.getX() - 1][loc.getY() + 1])) {
-//                adjacents.add(this.schema[loc.getX() - 1][loc.getY() + 1]);
-//            }
-//            if (isInsideBoard(this.schema[loc.getX() - 1][loc.getY() - 1])) {
-//                adjacents.add(this.schema[loc.getX() - 1][loc.getY() - 1]);
-//            }
-//        }
-//    }
-
-
     /**
      * Restituisce il pezzo presente in una determinata casella.
+     *
      * @param location la locazione data
      * @return P pezzo desiderato
      */
@@ -180,7 +192,7 @@ public class BoardImpl implements Board<Piece, Location> {
      *
      * @param current
      * @param diagonallyAdjacent
-     * @return
+     * @return locazione diagonalmente successiva alla diagonale considerata
      */
     public Location getNextDiagonalSpot(Location current, Location diagonallyAdjacent) {
         int x = diagonallyAdjacent.getX() - current.getX();
@@ -194,15 +206,12 @@ public class BoardImpl implements Board<Piece, Location> {
         return null;
     }
 
-    public Location[][] getSchema() {
-        return schema;
-    }
-
     /**
      * Applica una determinata mossa.
+     *
      * @param move mossa da applicare.
-     * @throws Exception se la mossa non può essere applicabile
      * @return true se la mossa ha un displacement maggiore di 1.
+     * @throws Exception se la mossa non può essere applicabile
      */
     public boolean apply(Move move) throws Exception {
         boolean captureMove = false;
@@ -211,7 +220,7 @@ public class BoardImpl implements Board<Piece, Location> {
             if (move.getStart().getPiece() != null) {
                 setPiece(move.getDestination(), move.getStart().getPiece());
             }
-            if(this.getMoveDisplacement(move) > 1){
+            if (this.getMoveDisplacement(move) > 1) {
                 captureMove = true;
             }
         }
@@ -220,6 +229,7 @@ public class BoardImpl implements Board<Piece, Location> {
 
     /**
      * Metodo che ritorna il massimo displacement di una mossa.
+     *
      * @param move mossa da considerare
      * @return displacement massimo dello spostamento tra due locazioni
      */
@@ -229,17 +239,17 @@ public class BoardImpl implements Board<Piece, Location> {
         int startColumn = move.getStart().getY();
         int endColumn = move.getDestination().getY();
 
-        int displacementRow = Math.abs( endRow - startRow );
-        int displacementColumn = Math.abs( endColumn - startColumn );
+        int displacementRow = Math.abs(endRow - startRow);
+        int displacementColumn = Math.abs(endColumn - startColumn);
 
-        return Math.max( displacementRow, displacementColumn );
+        return Math.max(displacementRow, displacementColumn);
     }
 
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (!(o instanceof BoardImpl)) return false;
-        BoardImpl board = (BoardImpl) o;
+        if (!(o instanceof CheckersBoard)) return false;
+        CheckersBoard board = (CheckersBoard) o;
         return ROW_VALUE == board.ROW_VALUE &&
                 COLUMN_VALUE == board.COLUMN_VALUE &&
                 Arrays.equals(schema, board.schema);
@@ -256,18 +266,50 @@ public class BoardImpl implements Board<Piece, Location> {
     public int getROW_VALUE() {
         return ROW_VALUE;
     }
+
     @Override
     public int getCOLUMN_VALUE() {
         return COLUMN_VALUE;
     }
 
     @Override
+    public Piece getPiece(int row, int col) {
+        return this.schema[row][col].getPiece();
+    }
+
+    @Override
+    public Location[][] getSchema(){
+        return this.schema;
+    }
+
+    @Override
     public String toString() {
-        return "BoardImpl{" +
-                "schema=" + Arrays.toString(schema) +
-                ",\n ROW_VALUE=" + ROW_VALUE +
-                ", COLUMN_VALUE=" + COLUMN_VALUE +
-                '}';
+        StringBuilder sb = new StringBuilder();
+        sb.append("   1 2 3 4 5 6 7 8\n");  // Indica le colonne
+        sb.append(" +-----------------+\n");
+
+        // Ciclo sulle righe della scacchiera
+        for (int row = 0; row < ROW_VALUE; row++) {
+            sb.append(row + 1 + "| ");  // Indica la riga
+
+            // Ciclo sulle colonne della scacchiera
+            for (int col = 0; col < COLUMN_VALUE; col++) {
+                Piece piece = getPiece(row, col);
+
+                // Aggiunge alla stringa il simbolo della pedina (X per le pedine nere, O per le pedine bianche)
+                if (piece != null) {
+                    sb.append(piece.getColour() == Colour.BLACK ? "X " : "O ");
+                } else {
+                    sb.append("  ");
+                }
+            }
+
+            sb.append("|\n");
+        }
+
+        sb.append(" +-----------------+\n");
+
+        return sb.toString();
     }
 }
 
