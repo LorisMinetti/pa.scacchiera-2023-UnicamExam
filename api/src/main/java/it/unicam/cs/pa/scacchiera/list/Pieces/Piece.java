@@ -1,27 +1,15 @@
 package it.unicam.cs.pa.scacchiera.list.pieces;
 
-import it.unicam.cs.pa.scacchiera.list.Colour;
+import it.unicam.cs.pa.scacchiera.list.util.Colour;
 import it.unicam.cs.pa.scacchiera.list.Location;
 
-public abstract class Piece {
+public interface Piece {
 
-    private Location location;
-    private Colour colour;
+    Location getLocation();
 
-    public Piece(){};
+    Colour getColour();
 
-    public Location getLocation(){
-        return this.location;
-    }
-    public Colour getColour(){
-        return this.colour;
-    }
+    void setLocation(Location loc);
 
-    public void setLocation(Location loc) {
-        this.location = location;
-    }
-
-    public void setColour(Colour colour) {
-        this.colour = colour;
-    }
+    void setColour(Colour colour);
 }
