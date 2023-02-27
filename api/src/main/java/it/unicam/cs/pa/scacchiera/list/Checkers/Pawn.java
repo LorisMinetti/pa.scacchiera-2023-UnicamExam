@@ -1,24 +1,18 @@
 package it.unicam.cs.pa.scacchiera.list.Checkers;
 
-import it.unicam.cs.pa.scacchiera.list.Board;
-import it.unicam.cs.pa.scacchiera.list.Colour;
+import it.unicam.cs.pa.scacchiera.list.util.Colour;
 import it.unicam.cs.pa.scacchiera.list.Location;
-import it.unicam.cs.pa.scacchiera.list.Move;
 import it.unicam.cs.pa.scacchiera.list.pieces.Piece;
 
-import java.util.ArrayList;
-import java.util.List;
-
-public class Pawn extends Piece {
-
+public class Pawn implements Piece {
 
     private Location location;
-    private Colour playerColour;
+    private Colour colour;
     boolean king;
 
     public Pawn(Location location, Colour colour){
         this.location = location;
-        playerColour = colour;
+        this.colour = colour;
         king = false;
     }
 
@@ -34,5 +28,25 @@ public class Pawn extends Piece {
         if(!king){
             this.king = true;
         }
+    }
+
+    @Override
+    public Location getLocation() {
+        return this.location;
+    }
+
+    @Override
+    public Colour getColour() {
+        return this.colour;
+    }
+
+    @Override
+    public void setLocation(Location loc) {
+        this.location=loc;
+    }
+
+    @Override
+    public void setColour(Colour colour) {
+        this.colour=colour;
     }
 }
