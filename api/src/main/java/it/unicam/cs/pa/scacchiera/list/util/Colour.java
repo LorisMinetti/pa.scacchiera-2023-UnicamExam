@@ -1,4 +1,4 @@
-package it.unicam.cs.pa.scacchiera.list;
+package it.unicam.cs.pa.scacchiera.list.util;
 
 public enum Colour {
     WHITE, BLACK;
