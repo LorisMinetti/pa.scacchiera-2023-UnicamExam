@@ -1,5 +1,7 @@
 package it.unicam.cs.pa.scacchiera.list;
 
+import it.unicam.cs.pa.scacchiera.list.pieces.Piece;
+
 public interface Game {
 
 
@@ -14,4 +16,18 @@ public interface Game {
      * Aggiornamento del gioco che cambia turno se lo stato non è ancora terminale.
      */
     void updateStatus();
+
+
+    /**
+     * Frazione di gioco corrente.
+     * @return
+     */
+    GameFrame<Piece, Location> getGameFrame();
+
+    /**
+     * Muove una pedina e ne gestisce tutte le possibili conseguenze.
+     * @param move
+     * @throws Exception
+     */
+    void move(Move move) throws Exception;
 }
