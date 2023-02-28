@@ -59,8 +59,13 @@ public class CheckersFrame implements GameFrame<Piece, Location> {
     public List<Move> allPieceMoves(GameFrame<Piece, Location> state, Colour col, Piece piece) {
         List<Move> moveList = new ArrayList<>();
         List<Location> diagonalSpots = getTheBoard().getDiagonalAdjacentLocationsOfPiece(piece);
+        Pawn pawn = new Pawn(piece.getLocation(), piece.getColour());
+        pawnOrKing(col, moveList, diagonalSpots, pawn);
+        return moveList;
+    }
+
+    private void pawnOrKing(Colour col, List<Move> moveList, List<Location> diagonalSpots, Pawn pawn) {
         for (Location loc : diagonalSpots) {
-            Pawn pawn = new Pawn(piece.getLocation(), piece.getColour());
             /* Check nella cell destinataria c'è un pezzo avversario */
             if (pawn.getColour() != col) {
                 if(pawn.isKing()) {     /* Caso in cui la pedina è un re. Può muovere ovunque senza restrizioni*/
@@ -118,6 +123,39 @@ public class CheckersFrame implements GameFrame<Piece, Location> {
             possibleMoves.addAll(allPieceMoves(this, colour, pz));
         }
         return possibleMoves;
+    }
+
+    /**
+     * Metodo che restituisce la lista dei pezzi non bloccati.
+     * @return Lista di pezzi non bloccati
+     */
+    @Override
+    public List<Piece> unblockedPieces(){
+        List<Piece> unblockedPieces = new ArrayList<>();
+        List<Piece> cycle = getActualTurn() == Colour.WHITE ? whitePieces : blackPieces;
+
+        for(Piece piece : cycle){
+            if(allPieceMoves(this, getActualTurn(), piece).size() > 0){
+                unblockedPieces.add(piece);
+            } else {
+                System.out.println("Il pezzo " + piece + " è bloccato");
+            }
+        }
+        return unblockedPieces;
+    }
+
+    /**
+     * Stampa a console i pezzi non bloccati.
+     * @return pezzi non bloccati
+     */
+    @Override
+    public String printUnblockedPieces(){
+        StringBuilder sb = new StringBuilder();
+        sb.append("Pezzi disponibili da muovere: ");
+        for(Piece piece : unblockedPieces()){
+            sb.append(piece + " - ");
+        }
+        return sb.toString();
     }
 
     /**
