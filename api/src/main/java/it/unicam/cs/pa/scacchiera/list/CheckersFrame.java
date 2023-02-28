@@ -2,13 +2,10 @@ package it.unicam.cs.pa.scacchiera.list;
 
 import it.unicam.cs.pa.scacchiera.list.Checkers.Pawn;
 import it.unicam.cs.pa.scacchiera.list.pieces.Piece;
-import it.unicam.cs.pa.scacchiera.list.util.BackgroundColor;
 import it.unicam.cs.pa.scacchiera.list.util.Colour;
-
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 
 public class CheckersFrame implements GameFrame<Piece, Location> {
@@ -42,7 +39,6 @@ public class CheckersFrame implements GameFrame<Piece, Location> {
         }
         return result;
     }
-
 
     public GameFrame<Piece, Location> getFuture() {
         return future;
@@ -78,9 +74,7 @@ public class CheckersFrame implements GameFrame<Piece, Location> {
             }
             /* Check se la casella destinataria è vuota ed è nella scacchiera */
                 moveList.add(new Move(pawn.getLocation(), loc));
-
         }
-        return moveList;
     }
 
     /**
@@ -89,18 +83,18 @@ public class CheckersFrame implements GameFrame<Piece, Location> {
      * @param loc
      * @param pawn
      */
-    public void unidriectionalPawnMove(List<Move> moveList, Location loc, Pawn pawn) {
+    private void unidriectionalPawnMove(List<Move> moveList, Location loc, Pawn pawn) {
         int increment = (pawn.getColour() == Colour.BLACK) ? 1 : -1;         /* costante che incrementa o decrementa la riga in base al colore */
         int eatIncrement = (pawn.getColour() == Colour.BLACK) ? 2 : -2;      /* costante di controllo per una cattura */
         if(pawn.getColour() == Colour.BLACK){                                       /* Se è nera può solo andare verso il basso*/
-            boolean canMove = ((loc.getY() - pawn.getLocation().getY()) == increment )    /* Check se l'incremento verticale */
-                    || ((loc.getY() - pawn.getLocation().getY()) == eatIncrement );
+            boolean canMove = ((loc.getRow() - pawn.getLocation().getRow()) == increment )    /* Check se l'incremento verticale */
+                    || ((loc.getRow() - pawn.getLocation().getRow()) == eatIncrement );
             if(canMove && getTheBoard().isInsideBoard(loc)){                    /* Se la distanza tra le due coordinate  */
                 moveList.add(new Move(pawn.getLocation(), loc));
             }
         } else if( pawn.getColour() == Colour.WHITE){   /* Se è bianca può solo andare verso l'alto */
-            boolean canMove = (loc.getY() - pawn.getLocation().getY()) == increment
-                    || ((loc.getY() - pawn.getLocation().getY()) == eatIncrement );
+            boolean canMove = (loc.getRow() - pawn.getLocation().getRow()) == increment
+                    || ((loc.getRow() - pawn.getLocation().getRow()) == eatIncrement );
             if(canMove && getTheBoard().isInsideBoard(loc)){
                 moveList.add(new Move(pawn.getLocation(), loc));
             }

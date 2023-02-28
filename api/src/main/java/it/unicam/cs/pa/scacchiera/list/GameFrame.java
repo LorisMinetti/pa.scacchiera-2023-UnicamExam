@@ -49,7 +49,11 @@ public interface GameFrame<P, L> {
 
     Board<Piece, Location> getTheBoard();
 
+    String printUnblockedPieces();
+
     void setTheBoard(Board<Piece, Location> theBoard);
+
+    List<Piece> unblockedPieces();
 
     void kingify(P pezzo);
 }
