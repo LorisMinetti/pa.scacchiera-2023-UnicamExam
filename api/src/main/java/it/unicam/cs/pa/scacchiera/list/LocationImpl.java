@@ -7,27 +7,27 @@ import it.unicam.cs.pa.scacchiera.list.util.BackgroundColor;
 public class LocationImpl implements Location{
 
     private BackgroundColor bgColor;
-    private final int x;
-    private final int y;
+    private final int column;
+    private final int row;
     private boolean free;
     private Piece piece;
 
-    public LocationImpl(int x, int y) {
-        this.x = x;
-        this.y = y;
+    public LocationImpl(int row, int column) {
+        this.column = column;
+        this.row = row;
         piece = null;
         free = true;
     }
-    public LocationImpl(int x, int y, BackgroundColor color) {
-        this.x = x;
-        this.y = y;
+    public LocationImpl(int row, int column, BackgroundColor color) {
+        this.column = column;
+        this.row = row;
         bgColor = color;
         piece = null;
         free = true;
     }
-    public LocationImpl(int x, int y, Piece piece) {
-        this.x = x;
-        this.y = y;
+    public LocationImpl(int row, int column, Piece piece) {
+        this.column = column;
+        this.row = row;
         this.setPiece(piece);
     }
 
@@ -35,16 +35,16 @@ public class LocationImpl implements Location{
      * @return row
      */
     @Override
-    public int getX() {
-        return this.x;
+    public int getColumn() {
+        return this.column;
     }
 
     /**
      * @return column
      */
     @Override
-    public int getY() {
-        return this.y;
+    public int getRow() {
+        return this.row;
     }
 
     @Override
@@ -67,7 +67,11 @@ public class LocationImpl implements Location{
      */
     @Override
     public Piece getPiece(){
-        return piece;
+        try{
+            return piece;
+        } catch (Exception e){
+            throw e;
+        }
     }
 
 
@@ -85,8 +89,8 @@ public class LocationImpl implements Location{
     @Override
     public String toString() {
         return "LocationImpl{" +
-                "x=" + x +
-                ", y=" + y +
+                "column=" + column +
+                ", row=" + row +
                 ", free=" + free +
                 ", piece=" + piece +
                 '}';

@@ -3,16 +3,16 @@ package it.unicam.cs.pa.scacchiera.list;
 import it.unicam.cs.pa.scacchiera.list.pieces.Piece;
 import it.unicam.cs.pa.scacchiera.list.util.BackgroundColor;
 
-public interface Location {
+public interface  Location {
     /**
      * @return row
      */
-    int getX();
+    int getColumn();
 
     /**
      * @return column
      */
-    int getY();
+    int getRow();
 
     /**
      * @return true se la location in questione è occupata
