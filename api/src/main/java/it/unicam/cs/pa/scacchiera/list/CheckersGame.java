@@ -37,20 +37,28 @@ public class CheckersGame implements Game{
     public boolean isTerminal() {
         boolean whiteFound = false;
         boolean blackFound = false;
-        for (Location location : board.allLocations()) {
-            if (location.getPiece() != null && location.getPiece().getColour() == Colour.BLACK) {
-                blackFound = true;
-            } else if (location.getPiece() != null && location.getPiece().getColour() == Colour.WHITE) {
-                whiteFound = true;
+        for(int i=0; i< board.getROW_VALUE(); i++){
+            for(int j=0; j< board.getCOLUMN_VALUE(); j++){
+                Location location = board.getSchema()[i][j];
+                if (location.getPiece() != null && location.getPiece().getColour() == Colour.BLACK) {
+                    blackFound = true;
+                } else if (location.getPiece() != null && location.getPiece().getColour() == Colour.WHITE) {
+                    whiteFound = true;
+                }
             }
         }
         return !whiteFound || !blackFound;
     }
 
-
+    /**
+     * Metodo che eseguirà una mossa.
+     * @param move mossa da eseguire
+     * @throws Exception se la mossa non è valida
+     */
+    @Override
     public void move(Move move) throws Exception {
         if(status != GameState.RUNNING){
-            throw new Exception("Partita terminata. Impossibile effettuare alcuna mossa.");
+            System.out.println("Partita terminata. Impossibile effettuare alcuna mossa.");
         }
         //Prendi la pedina
         Piece pezzo = move.getStart().getPiece();
@@ -58,9 +66,9 @@ public class CheckersGame implements Game{
         if(pezzo.getColour() == gameFrameCorrente.getActualTurn()){
             List<Move> possibleMoves = gameFrameCorrente.allPossibleMoves(gameFrameCorrente, gameFrameCorrente.getActualTurn());
             if( !possibleMoves.contains(move)){
-                throw new Exception("Mossa non valida");
+                System.out.println("Mossa non valida");
             }
-        } else throw new Exception("Il pezzo che stai provando a muovere non appartiene al giocatore corrente.");
+        } else System.out.println("Il pezzo che stai provando a muovere non appartiene al giocatore corrente.");
         //sposto la pedina
         if( board.apply(move) ){
             Piece captured = gameFrameCorrente.getTheBoard().getIntermediateLocation(move.getStart(), move.getDestination()).getPiece();
@@ -78,7 +86,7 @@ public class CheckersGame implements Game{
         gameFrameCorrente = nuovoGameFrame;
     }
 
-    public void capturePieceWithPiece(Piece pezzo, Piece captured) {
+    private void capturePieceWithPiece(Piece pezzo, Piece captured) {
         if(captured.getColour() == Colour.BLACK && pezzo.getColour() == Colour.WHITE){
             gameFrameCorrente.getBlackPieces().remove(captured);
         } else if(captured.getColour() == Colour.WHITE && pezzo.getColour() == Colour.BLACK) {
