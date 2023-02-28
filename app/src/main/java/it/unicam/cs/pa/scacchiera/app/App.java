@@ -5,7 +5,9 @@ package it.unicam.cs.pa.scacchiera.app;
 
 
 import it.unicam.cs.pa.scacchiera.list.*;
+import it.unicam.cs.pa.scacchiera.list.Checkers.Pawn;
 import it.unicam.cs.pa.scacchiera.list.pieces.Piece;
+import it.unicam.cs.pa.scacchiera.list.player.ComputerPlayer;
 import it.unicam.cs.pa.scacchiera.list.player.Player;
 import it.unicam.cs.pa.scacchiera.list.util.Colour;
 
@@ -19,28 +21,66 @@ public class App {
 
     public static void main(String[] args) throws Exception {
         Board<Piece, Location> board = new CheckersBoard(ROW,COLUMN);
-        Player p1 = new Player("p1", Colour.WHITE);
-        Player p2 = new Player("p2", Colour.BLACK);
+        Player player1 = new Player("Player 1", Colour.WHITE);
+        Player computer = new ComputerPlayer("Computer", Colour.BLACK);
         GameFrame<Piece, Location> first = new CheckersFrame(null, WHITE, board);
-        Game game = new CheckersGame(p1, p2, board, first);
+        Game game = new CheckersGame(player1, computer, board, first);
 
         Scanner sc = new Scanner(System.in);
 
-        //affinchè il gioco non è terminale
+        game.getGameFrame().printBoardFrame();
+        //affinchè il gioco non è terminato
         while (!game.isTerminal()){
             System.out.println("Turno di "+game.getGameFrame().getActualTurn());
             System.out.println("----------------------");
-//            game.getGameFrame().printBoardFrame();
+
+            if(game.getGameFrame().getActualTurn() == WHITE){
+                requestMoveToUser(sc, game, game.getGameFrame());
+            }
+            else {
+                Move computerMove = computer.play(game.getGameFrame());
+                game.move(computerMove);
+            }
+            askForLocation(sc, game.getGameFrame());
         }
-
-
-
-        System.out.println("000-------------------------000");
-        System.out.println(game.getGameFrame().printBoardFrame());
-
-
-
     }
+
+    private static void requestMoveToUser(Scanner sc, Game game, GameFrame<Piece, Location> frame) throws Exception {
+        System.out.print("Inserisci la posizione di partenza: ");
+        Location startLocation = askForLocation(sc, frame);
+        System.out.print("Inserisci la posizione di arrivo: ");
+        Location endLocation = askForLocation(sc, frame);
+        game.move(new Move(startLocation, endLocation));
+    }
+    public static Location askForLocation(Scanner sc, GameFrame<Piece, Location> frame) {
+        while (true) {
+            String input = sc.nextLine();
+            // l'input è del tipo "x y"
+            String[] parts = input.split(" ");
+            int x = Integer.parseInt(parts[0]);
+            int y = Integer.parseInt(parts[1]);
+            if (x < 1 || x > ROW) {
+                System.out.println("Valore di x non valido");
+                continue;
+            }
+            if (y < 1 || y > COLUMN) {
+                System.out.println("Valore di y non valido");
+                continue;
+            }
+            //pezzo che voglio muovere
+            Piece pawn = new Pawn(frame.getTheBoard().getSchema()[x][y], frame.getActualTurn());
+            Colour colour = pawn.getColour();
+            //il pezzo che voglio muovere deve essere del colore del giocatore che sta giocando
+            if(colour == frame.getActualTurn()){
+                return frame.getTheBoard().getSchema()[x][y];
+            } else {
+                System.out.println("Non puoi muovere questo pezzo");
+            }
+
+        }
+    }
+
+
 
 
 }
