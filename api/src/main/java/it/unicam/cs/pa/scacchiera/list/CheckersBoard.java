@@ -27,7 +27,7 @@ public class CheckersBoard implements Board<Piece, Location> {
         schema = new Location[ROW_VALUE][COLUMN_VALUE];
 
         /* Creare la scacchiera della Dama con colori alternati */
-        boolean lastColor = false;
+        boolean lastColor = true;
         for(int i = 0; i < row; i++) {
             for (int j = 0; j < column; j++) {
 
@@ -61,7 +61,7 @@ public class CheckersBoard implements Board<Piece, Location> {
      */
     @Override
     public boolean isInsideBoard(Location location) {
-        return location.getX() < ROW_VALUE && location.getY() < COLUMN_VALUE && location.getX() >= 0 && location.getY() >= 0;
+        return location.getColumn() < ROW_VALUE && location.getRow() < COLUMN_VALUE && location.getColumn() >= 0 && location.getRow() >= 0;
     }
 
 
@@ -73,11 +73,13 @@ public class CheckersBoard implements Board<Piece, Location> {
         List<Location> locations = new ArrayList<>();
         for (int x = 0; x < ROW_VALUE; x++) {
             for (int y = 0; y < COLUMN_VALUE; y++) {
-                locations.add(new LocationImpl(x, y));
+                locations.add(this.schema[x][y]);
             }
         }
         return locations;
     }
+
+
 
 
     /**
@@ -88,10 +90,11 @@ public class CheckersBoard implements Board<Piece, Location> {
      */
     public List<Location> getAllLocationsOfPlayer(Colour colour) {
         List<Location> locations = new ArrayList<>();
-        for (Location loc : allLocations()) {
-            Piece piece = loc.getPiece();
-            if (piece.getColour() == colour) {
-                locations.add(loc);
+        for(int i = 0; i < ROW_VALUE; i++) {
+            for (int j = 0; j < COLUMN_VALUE; j++) {
+                if(schema[i][j].getPiece() != null && schema[i][j].getPiece().getColour() == colour){
+                    locations.add(schema[i][j]);
+                }
             }
         }
         return locations;
@@ -110,18 +113,18 @@ public class CheckersBoard implements Board<Piece, Location> {
         if (!isDiagonal(loc1, loc2)) {
             throw new IllegalArgumentException("Le due posizioni fornite non sono diagonalmente adiacenti tra loro.");
         }
-        int dx = Math.abs(loc2.getX() - loc1.getX());
-        int dy = Math.abs(loc2.getY() - loc1.getY());
+        int dx = Math.abs(loc2.getColumn() - loc1.getColumn());
+        int dy = Math.abs(loc2.getRow() - loc1.getRow());
 
         //TODO: considerare il caso di dover rimuovere questa eccezione. Potrebbe bastare controllare il caso opposto
         if (dx != 2 || dy != 2) {
             throw new IllegalArgumentException("Le due posizioni fornite non hanno un displacement diagonale di 2");
         }
 
-        int x = (loc1.getX() + loc2.getX()) / 2;
-        int y = (loc1.getY() + loc2.getY()) / 2;
+        int x = (loc1.getColumn() + loc2.getColumn()) / 2;
+        int y = (loc1.getRow() + loc2.getRow()) / 2;
 
-        return new LocationImpl(x, y);
+        return new LocationImpl(y, x);
     }
 
     /**
@@ -133,8 +136,8 @@ public class CheckersBoard implements Board<Piece, Location> {
      */
     @Override
     public boolean isDiagonal(Location loc, Location check) {
-        int xDiff = Math.abs(loc.getX() - check.getX());
-        int yDiff = Math.abs(loc.getY() - check.getY());
+        int xDiff = Math.abs(loc.getColumn() - check.getColumn());
+        int yDiff = Math.abs(loc.getRow() - check.getRow());
         return xDiff == yDiff;
     }
 
@@ -164,7 +167,7 @@ public class CheckersBoard implements Board<Piece, Location> {
      */
     @Override
     public Piece getPiece(Location location) {
-        return this.schema[location.getX()][location.getY()].getPiece();
+        return this.schema[location.getColumn()][location.getRow()].getPiece();
     }
 
 
@@ -178,11 +181,16 @@ public class CheckersBoard implements Board<Piece, Location> {
         if (location != null && isInsideBoard(location)) {
 
             /* Toglie il pezzo dalla posizione di partenza */
-            this.schema[old.getX()][old.getY()] = null;
+            this.schema[old.getColumn()][old.getRow()] = null;
             /* Setta il pezzo nella nuova posizione */
-            this.schema[location.getX()][location.getY()].setPiece(piece);
+            this.schema[location.getColumn()][location.getRow()].setPiece(piece);
         } else
             throw new Exception("locazione non definita, o fuori i range della scacchiera.");
+    }
+
+    @Override
+    public Location[][] getSchema() {
+        return this.schema;
     }
 
 
@@ -195,10 +203,10 @@ public class CheckersBoard implements Board<Piece, Location> {
      * @return locazione diagonalmente successiva alla diagonale considerata
      */
     public Location getNextDiagonalSpot(Location current, Location diagonallyAdjacent) {
-        int x = diagonallyAdjacent.getX() - current.getX();
-        int y = diagonallyAdjacent.getY() - current.getY();
-        int deltaX = diagonallyAdjacent.getX() + x;
-        int deltaY = diagonallyAdjacent.getY() + y;
+        int x = diagonallyAdjacent.getColumn() - current.getColumn();
+        int y = diagonallyAdjacent.getRow() - current.getRow();
+        int deltaX = diagonallyAdjacent.getColumn() + x;
+        int deltaY = diagonallyAdjacent.getRow() + y;
         Location nextDiagonal = new LocationImpl(deltaX, deltaY);
         if (isInsideBoard(nextDiagonal)) {
             return this.schema[deltaX][deltaY];
@@ -234,10 +242,10 @@ public class CheckersBoard implements Board<Piece, Location> {
      * @return displacement massimo dello spostamento tra due locazioni
      */
     public int getMoveDisplacement(Move move) {
-        int startRow = move.getStart().getX();
-        int endRow = move.getDestination().getX();
-        int startColumn = move.getStart().getY();
-        int endColumn = move.getDestination().getY();
+        int startRow = move.getStart().getColumn();
+        int endRow = move.getDestination().getColumn();
+        int startColumn = move.getStart().getRow();
+        int endColumn = move.getDestination().getRow();
 
         int displacementRow = Math.abs(endRow - startRow);
         int displacementColumn = Math.abs(endColumn - startColumn);
