@@ -173,24 +173,16 @@ public class CheckersFrame implements GameFrame<Piece, Location> {
      * @param piece
      */
     public void kingify(Piece piece){
-        List<Location> roccaforteNeri = this.getTheBoard().allLocations().stream()
-                .filter(loc -> loc.getX() == 0 && loc.getBgColor() == BackgroundColor.DARK)
-                .collect(Collectors.toList());
-        List<Location> roccaforteBianchi = this.getTheBoard().allLocations().stream()
-                .filter(loc -> loc.getX() == 7 && loc.getBgColor() == BackgroundColor.DARK)
-                .collect(Collectors.toList());
+        //tutti i pezzi bianchi nella riga con indice 0 diventano dama
+        //tutti i pezzi neri nella riga con indice 7 diventano dama
         Pawn pawn = new Pawn(piece.getLocation(), piece.getColour());
-
-            if(pawn.getColour() == Colour.WHITE) {    /* Se il pezzo è bianco ed è nella fila con indice 0, ovvero la roccaforte dei neri, diventerà una dama.*/
-                if (roccaforteNeri.contains(pawn)) {
-                    pawn.becomeKing();
-                }
-            } else if (pawn.getColour() == Colour.BLACK) {  /* Se il pezzo è nero ed è nella fila con indice 7, ovvero la roccaforte dei bianchi, diventerà una dama.*/
-                if (roccaforteBianchi.contains(pawn)) {
-                    pawn.becomeKing();
-                }
+        for(int i = 0; i < theBoard.getROW_VALUE(); i++){
+            if(piece.getColour() == Colour.WHITE && piece.getLocation().getRow() == 0){
+                pawn.becomeKing();
+            } else if(piece.getColour() == Colour.BLACK && piece.getLocation().getRow() == 7){
+                pawn.becomeKing();
             }
-
+        }
     }
 
     public void setFuture(GameFrame<Piece, Location> future) {
