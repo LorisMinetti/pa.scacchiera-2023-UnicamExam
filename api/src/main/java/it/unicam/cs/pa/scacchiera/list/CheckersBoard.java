@@ -47,7 +47,7 @@ public class CheckersBoard implements Board<Piece, Location> {
                 /* Toggle per il colore della casella adiacente */
                 lastColor = !lastColor;
             }
-            /*Shifta di 1 il colore per la riga successiva*/
+            /*Shifta di UNO il colore per la riga successiva*/
             lastColor = !lastColor;
         }
     }
@@ -72,9 +72,7 @@ public class CheckersBoard implements Board<Piece, Location> {
     public List<Location> allLocations() {
         List<Location> locations = new ArrayList<>();
         for (int x = 0; x < ROW_VALUE; x++) {
-            for (int y = 0; y < COLUMN_VALUE; y++) {
-                locations.add(this.schema[x][y]);
-            }
+            locations.addAll(Arrays.asList(this.schema[x]).subList(0, COLUMN_VALUE));
         }
         return locations;
     }
@@ -102,7 +100,7 @@ public class CheckersBoard implements Board<Piece, Location> {
 
 
     /**
-     * Locazione intermedia in un movimento con un displacement diagonale uguale a 2.
+     * Locazione intermedia in un movimento con un displacement diagonale uguale a DUE.
      *
      * @param loc1 locazione di partenza
      * @param loc2 locazione di destinazione distante 2
@@ -128,7 +126,7 @@ public class CheckersBoard implements Board<Piece, Location> {
     }
 
     /**
-     * Locazione è diagonalmente adiacente ad un'altra locazione
+     * Locazione è diagonalmente adiacente a un'altra locazione
      *
      * @param loc   locazione
      * @param check locazione su cui verificare adiacenza
@@ -142,7 +140,7 @@ public class CheckersBoard implements Board<Piece, Location> {
     }
 
     /**
-     * Lista delle posizioni diagonali ed adiacenti ad uno specifico pezzo.
+     * Lista delle posizioni diagonali e adiacenti a uno specifico pezzo.
      *
      * @param piece
      * @return Lista
@@ -181,9 +179,9 @@ public class CheckersBoard implements Board<Piece, Location> {
         if (location != null && isInsideBoard(location)) {
 
             /* Toglie il pezzo dalla posizione di partenza */
-            this.schema[old.getColumn()][old.getRow()] = null;
+            this.schema[old.getRow()][old.getColumn()].setPiece(null);
             /* Setta il pezzo nella nuova posizione */
-            this.schema[location.getColumn()][location.getRow()].setPiece(piece);
+            this.schema[location.getRow()][location.getColumn()].setPiece(piece);
         } else
             throw new Exception("locazione non definita, o fuori i range della scacchiera.");
     }
@@ -195,7 +193,7 @@ public class CheckersBoard implements Board<Piece, Location> {
 
 
     /**
-     * Ritorna la locazione diagnalmente distante 2 posizioni. Questa locazione dovrà essere presente all'interno della scacchiera
+     * Ritorna la locazione diagnalmente distante DUE posizioni. Questa locazione dovrà essere presente all'interno della scacchiera
      * per poter essere occupabile. Necessaria per le operazioni di "mangiata" o JUMP.
      *
      * @param current
@@ -218,21 +216,29 @@ public class CheckersBoard implements Board<Piece, Location> {
      * Applica una determinata mossa.
      *
      * @param move mossa da applicare.
-     * @return true se la mossa ha un displacement maggiore di 1.
+     * @return true se la mossa ha un displacement maggiore di UNO.
      * @throws Exception se la mossa non può essere applicabile
      */
     public boolean apply(Move move) throws Exception {
+        //per applicare una mossa devo prima controllare che la mossa appartenga alla scacchiera
+        //e che la locazione di partenza contenga un pezzo
+        //e che la locazione di destinazione non contenga un pezzo
+        //e che la mossa sia valida per il pezzo
+        //Se la mossa è una mangiata, ovvero ha un displacement maggiore di UNO, allora aggiorno un booleano        
+        
         boolean captureMove = false;
         if (move != null && move.belongsToBoard(this)) {
             Piece piece = this.schema [move.getStart().getColumn()] [move.getStart().getColumn()]
                             .getPiece().orElse(null);
             /* Controllo se il pezzo che voglio muovere esiste */
-            if (move.getStart().getPiece() != null) {
-                setPiece(move.getDestination(), move.getStart().getPiece());
-            }
+            if (piece == null) 
+                throw new AssertionError();
+            setPiece(move.getDestination(), piece);
+            
             if (this.getMoveDisplacement(move) > 1) {
                 captureMove = true;
             }
+            
         }
         return captureMove;
     }
@@ -262,13 +268,13 @@ public class CheckersBoard implements Board<Piece, Location> {
         CheckersBoard board = (CheckersBoard) o;
         return ROW_VALUE == board.ROW_VALUE &&
                 COLUMN_VALUE == board.COLUMN_VALUE &&
-                Arrays.equals(schema, board.schema);
+                Arrays.deepEquals(schema, board.schema);
     }
 
     @Override
     public int hashCode() {
         int result = Objects.hash(ROW_VALUE, COLUMN_VALUE);
-        result = 31 * result + Arrays.hashCode(schema);
+        result = 31 * result + Arrays.deepHashCode(schema);
         return result;
     }
 

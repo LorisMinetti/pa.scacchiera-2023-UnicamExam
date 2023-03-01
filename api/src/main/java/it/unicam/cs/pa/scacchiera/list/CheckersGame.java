@@ -62,8 +62,10 @@ public class CheckersGame implements Game{
         if(status != GameState.RUNNING){
             System.out.println("Partita terminata. Impossibile effettuare alcuna mossa.");
         }
-        //Prendi la pedina
-        Piece pezzo = move.getStart().getPiece();
+        Location loc = move.getStart();
+        //Prendi la pedina che si trova nella posizione di partenza
+
+        Piece pezzo = this.gameFrameCorrente.getTheBoard().getPiece(loc.getRow(), loc.getColumn());
         //controllo che la pedina sia del giocatore corrente, a quel punto controllo la validità della mossa
         if(pezzo.getColour() == gameFrameCorrente.getActualTurn()){
             List<Move> possibleMoves = gameFrameCorrente.allPossibleMoves(gameFrameCorrente, gameFrameCorrente.getActualTurn());
@@ -73,7 +75,7 @@ public class CheckersGame implements Game{
         } else System.out.println("Il pezzo che stai provando a muovere non appartiene al giocatore corrente.");
         //sposto la pedina
         if( board.apply(move) ){
-            Piece captured = gameFrameCorrente.getTheBoard().getIntermediateLocation(move.getStart(), move.getDestination()).getPiece();
+            Piece captured = gameFrameCorrente.getTheBoard().getIntermediateLocation(move.getStart(), move.getDestination()).getPiece().get();
             capturePieceWithPiece(pezzo, captured);
             gameFrameCorrente.kingify(pezzo);
         }
