@@ -40,9 +40,11 @@ public class CheckersGame implements Game{
         for(int i=0; i< board.getROW_VALUE(); i++){
             for(int j=0; j< board.getCOLUMN_VALUE(); j++){
                 Location location = board.getSchema()[i][j];
-                if (location.getPiece() != null && location.getPiece().getColour() == Colour.BLACK) {
+                if (location.getPiece().isPresent()
+                        && location.getPiece().orElse(null).getColour() == Colour.BLACK) {
                     blackFound = true;
-                } else if (location.getPiece() != null && location.getPiece().getColour() == Colour.WHITE) {
+                } else if (location.getPiece().isPresent()
+                        && location.getPiece().orElse(null).getColour() == Colour.WHITE) {
                     whiteFound = true;
                 }
             }

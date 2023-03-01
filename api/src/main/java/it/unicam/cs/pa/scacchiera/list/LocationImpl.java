@@ -3,6 +3,8 @@ package it.unicam.cs.pa.scacchiera.list;
 import it.unicam.cs.pa.scacchiera.list.pieces.Piece;
 import it.unicam.cs.pa.scacchiera.list.util.BackgroundColor;
 
+import java.util.Optional;
+
 
 public class LocationImpl implements Location{
 
@@ -66,12 +68,8 @@ public class LocationImpl implements Location{
      * @return the piece value if non-null
      */
     @Override
-    public Piece getPiece(){
-        try{
-            return piece;
-        } catch (Exception e){
-            throw e;
-        }
+    public Optional<Piece> getPiece(){
+        return Optional.ofNullable(this.piece);
     }
 
 

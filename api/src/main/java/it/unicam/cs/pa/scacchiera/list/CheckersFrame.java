@@ -33,8 +33,9 @@ public class CheckersFrame implements GameFrame<Piece, Location> {
     public List<Piece> fillPieceList(Colour colour) {
         List<Piece> result = new ArrayList<>();
         for (Location loc : theBoard.allLocations()) {
-            if (loc.getPiece() != null && loc.getPiece().getColour() == colour) {
-                result.add(loc.getPiece());
+            if (loc.getPiece().isPresent()
+                    && loc.getPiece().orElse(null).getColour() == colour) {
+                result.add(loc.getPiece().get());
             }
         }
         return result;
@@ -112,7 +113,7 @@ public class CheckersFrame implements GameFrame<Piece, Location> {
     public List<Move> allPossibleMoves(GameFrame<Piece, Location> state, Colour colour) {
         List<Move> possibleMoves = new ArrayList<>();
         for (Location loc : getTheBoard().getAllLocationsOfPlayer(colour)) {
-            Piece pz = loc.getPiece();
+            Piece pz = loc.getPiece().get();
             /* Concateno tutte le mosse per ogni pezzo per ottenere tutte le mosse di uno specifico giocatore */
             possibleMoves.addAll(allPieceMoves(this, colour, pz));
         }

@@ -3,6 +3,8 @@ package it.unicam.cs.pa.scacchiera.list;
 import it.unicam.cs.pa.scacchiera.list.pieces.Piece;
 import it.unicam.cs.pa.scacchiera.list.util.BackgroundColor;
 
+import java.util.Optional;
+
 public interface  Location {
     /**
      * @return row
@@ -23,7 +25,7 @@ public interface  Location {
     /**
      * @return il pezzo presente, se presente.
      */
-    Piece getPiece();
+    Optional<Piece> getPiece();
 
     /**
      * setta il pezzo specificato nella posizione corrente

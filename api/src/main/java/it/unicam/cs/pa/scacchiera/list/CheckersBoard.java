@@ -92,7 +92,7 @@ public class CheckersBoard implements Board<Piece, Location> {
         List<Location> locations = new ArrayList<>();
         for(int i = 0; i < ROW_VALUE; i++) {
             for (int j = 0; j < COLUMN_VALUE; j++) {
-                if(schema[i][j].getPiece() != null && schema[i][j].getPiece().getColour() == colour){
+                if (schema[i][j].getPiece().isPresent() && schema[i][j].getPiece().get().getColour() == colour) {
                     locations.add(schema[i][j]);
                 }
             }
@@ -167,7 +167,7 @@ public class CheckersBoard implements Board<Piece, Location> {
      */
     @Override
     public Piece getPiece(Location location) {
-        return this.schema[location.getColumn()][location.getRow()].getPiece();
+        return this.schema[location.getColumn()][location.getRow()].getPiece().orElse(null);
     }
 
 
@@ -224,6 +224,8 @@ public class CheckersBoard implements Board<Piece, Location> {
     public boolean apply(Move move) throws Exception {
         boolean captureMove = false;
         if (move != null && move.belongsToBoard(this)) {
+            Piece piece = this.schema [move.getStart().getColumn()] [move.getStart().getColumn()]
+                            .getPiece().orElse(null);
             /* Controllo se il pezzo che voglio muovere esiste */
             if (move.getStart().getPiece() != null) {
                 setPiece(move.getDestination(), move.getStart().getPiece());
@@ -282,7 +284,7 @@ public class CheckersBoard implements Board<Piece, Location> {
 
     @Override
     public Piece getPiece(int row, int col) {
-        return this.schema[row][col].getPiece();
+        return this.schema[row][col].getPiece().orElse(null);
     }
 
     @Override
