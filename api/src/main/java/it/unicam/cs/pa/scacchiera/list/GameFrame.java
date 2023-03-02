@@ -20,10 +20,10 @@ public interface GameFrame<P, L> {
     /**
      * Tutte le possibili mosse per un giocatore durante un determinato momento della partita.
      *
-     * @param state, colour
+     * @param colour
      * @return lista delle mosse possibili.
      */
-    List<Move> allPossibleMoves(GameFrame<P, L> state, Colour colour);
+    List<Move> allPossibleMoves(Colour colour);
 
     /**
      * Stampa a console la scacchiera.

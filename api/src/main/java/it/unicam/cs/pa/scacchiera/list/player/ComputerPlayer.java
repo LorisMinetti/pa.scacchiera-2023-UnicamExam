@@ -21,7 +21,7 @@ public class ComputerPlayer extends Player{
     * Faccia una mossa random tra tutte le mosse disponibili.
     */
     public Move play(GameFrame<Piece, Location> frame) {
-        List<Move> moves = frame.allPossibleMoves(frame, this.getColour());
+        List<Move> moves = frame.allPossibleMoves(this.getColour());
         Random random = new Random();
         int randomIndex = random.nextInt(moves.size());
         return moves.get(randomIndex);
