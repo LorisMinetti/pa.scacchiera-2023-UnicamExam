@@ -68,8 +68,7 @@ public class CheckersGame implements Game{
         Piece pezzo = this.gameFrameCorrente.getTheBoard().getPiece(loc.getRow(), loc.getColumn());
         //controllo che la pedina sia del giocatore corrente, a quel punto controllo la validità della mossa
         if(pezzo.getColour() == gameFrameCorrente.getActualTurn()){
-            List<Move> possibleMoves = gameFrameCorrente.allPossibleMoves(gameFrameCorrente, gameFrameCorrente.getActualTurn());
-            if( !possibleMoves.contains(move)){
+            List<Move> possibleMoves = gameFrameCorrente.allPossibleMoves( gameFrameCorrente.getActualTurn());            if( !possibleMoves.contains(move)){
                 System.out.println("Mossa non valida");
             }
         } else System.out.println("Il pezzo che stai provando a muovere non appartiene al giocatore corrente.");
