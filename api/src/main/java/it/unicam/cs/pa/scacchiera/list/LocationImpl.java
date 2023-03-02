@@ -59,7 +59,7 @@ public class LocationImpl implements Location{
      */
     @Override
     public boolean isFree() {
-        return true;
+        return getPiece().isPresent() ? false : true;
     }
 
 
