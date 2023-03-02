@@ -4,9 +4,13 @@ import it.unicam.cs.pa.scacchiera.list.Checkers.Pawn;
 import it.unicam.cs.pa.scacchiera.list.pieces.Piece;
 import it.unicam.cs.pa.scacchiera.list.util.BackgroundColor;
 import it.unicam.cs.pa.scacchiera.list.util.Colour;
+import it.unicam.cs.pa.scacchiera.list.util.Displacement;
 
 import java.util.*;
 import java.util.List;
+
+import static it.unicam.cs.pa.scacchiera.list.util.Colour.BLACK;
+import static it.unicam.cs.pa.scacchiera.list.util.Colour.WHITE;
 
 
 public class CheckersBoard implements Board<Piece, Location> {
@@ -36,10 +40,10 @@ public class CheckersBoard implements Board<Piece, Location> {
                 if (lastColor) {
                     schema[i][j] = new LocationImpl(i, j, BackgroundColor.DARK);       /* Nelle celle di colore scuro ci saranno tutti i pezzi*/
                     if(darkRowsPlayer){
-                        schema[i][j].setPiece(new Pawn( schema[i][j], Colour.BLACK));     //I pezzi scuri dell'avversario saranno nelle prime tre righe dall'alto
+                        schema[i][j].setPiece(new Pawn( schema[i][j], BLACK));     //I pezzi scuri dell'avversario saranno nelle prime tre righe dall'alto
                     }
                     if(lightRowsPlayer){
-                        schema[i][j].setPiece(new Pawn( schema[i][j], Colour.WHITE));     // I pezzi chiari del giocatore principale saranno nelle prime tre righe dal basso.
+                        schema[i][j].setPiece(new Pawn( schema[i][j], WHITE));     // I pezzi chiari del giocatore principale saranno nelle prime tre righe dal basso.
                     }
                 } else {
                     schema[i][j] = new LocationImpl(i, j, BackgroundColor.LIGHT);    // Celle bianche che non verranno mai occupate durante la partita.
@@ -136,7 +140,7 @@ public class CheckersBoard implements Board<Piece, Location> {
     public boolean isDiagonal(Location loc, Location check) {
         int xDiff = Math.abs(loc.getColumn() - check.getColumn());
         int yDiff = Math.abs(loc.getRow() - check.getRow());
-        return xDiff == yDiff;
+        return (xDiff == 1 && yDiff == 1) || (xDiff == 0 && yDiff == 0) || xDiff == yDiff;
     }
 
     /**
@@ -148,14 +152,31 @@ public class CheckersBoard implements Board<Piece, Location> {
     @Override
     public List<Location> getDiagonalAdjacentLocationsOfPiece(Piece piece) {
         List<Location> adjacents = new ArrayList<>();
-        for (Location loc : allLocations()) {
-            Location pieceLocum = piece.getLocation();
-            if (isDiagonal(pieceLocum, loc) && isInsideBoard(loc)) {
-                adjacents.add(pieceLocum);
+        if(piece != null ){
+            for(Location loc : allLocations()){
+                //Posizioni diagonali
+                boolean isFrontLeft = loc.getRow() == piece.getLocation().getRow() -1 && loc.getColumn() == piece.getLocation().getColumn() -1 ;
+                boolean isFrontRight = loc.getRow() == piece.getLocation().getRow() -1 && loc.getColumn() == piece.getLocation().getColumn() + 1 ;
+                boolean isBackLeft = loc.getRow() == piece.getLocation().getRow() +1 && loc.getColumn() == piece.getLocation().getColumn() -1 ;
+                boolean isBackRight = loc.getRow() == piece.getLocation().getRow() +1 && loc.getColumn() == piece.getLocation().getColumn() +1 ;
+
+                if(isInsideBoard(loc)) {            //location valida
+                    if( ! ((Pawn) piece).isKing() ) {      //se il pezzo non è un re
+                        if( piece.getColour() == WHITE && (isFrontRight || isFrontLeft)){ //ed è del giocatore bianco
+                            adjacents.add(loc);
+                        }
+                        else if( piece.getColour() == BLACK && (isBackRight || isBackLeft)) { //o è del giocatore nero
+                            adjacents.add(loc);
+                        }
+                    } else if( ((Pawn) piece).isKing() && ( isBackRight || isBackLeft || isFrontRight || isFrontLeft ))
+                        //se il pezzo è un re deve poter muovere in tutte le direzioni
+                        adjacents.add(loc);
+                }
             }
         }
         return adjacents;
     }
+
 
     /**
      * Restituisce il pezzo presente in una determinata casella.
@@ -309,7 +330,7 @@ public class CheckersBoard implements Board<Piece, Location> {
 
                 // Aggiunge alla stringa il simbolo della pedina (X per le pedine nere, O per le pedine bianche)
                 if (piece != null) {
-                    sb.append(piece.getColour() == Colour.BLACK ? "X " : "O ");
+                    sb.append(piece.getColour() == BLACK ? "X " : "O ");
                 } else {
                     sb.append("  ");
                 }
