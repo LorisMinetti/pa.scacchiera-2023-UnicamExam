@@ -18,23 +18,14 @@ public class ChekersFrameTest {
     public void fillPieceList() throws Exception {
         // Setup
         Board<Piece, Location> board = new CheckersBoard(8, 8);
-        Piece whitePiece = new Pawn( board.getSchema()[0][0], Colour.WHITE);
-        board.setPiece(whitePiece.getLocation(), whitePiece);
-        Piece blackPiece = new Pawn(new LocationImpl(1, 1), Colour.BLACK);
-        board.setPiece(blackPiece.getLocation(), blackPiece);
 
         CheckersFrame checkersFrame = new CheckersFrame(null, Colour.WHITE, board);
 
-        // Test
-        List<Piece> whitePieces = checkersFrame.fillPieceList(Colour.WHITE);
-        List<Piece> blackPieces = checkersFrame.fillPieceList(Colour.BLACK);
-
         // Verify
-        assertEquals(1, whitePieces.size());
-        assertEquals(1, blackPieces.size());
-        assertTrue(whitePieces.contains(whitePiece));
-        assertTrue(blackPieces.contains(blackPiece));
+        assertEquals(12, checkersFrame.getWhitePieces().size());
+        assertEquals(12, checkersFrame.getBlackPieces().size());
     }
+
 
     @Test
     public void allPieceMoves() throws Exception {

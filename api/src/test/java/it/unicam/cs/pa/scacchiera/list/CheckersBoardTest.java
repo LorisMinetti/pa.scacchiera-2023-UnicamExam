@@ -51,6 +51,17 @@ public class CheckersBoardTest {
         Location intermediateLocation = board.getIntermediateLocation(loc1, loc2);
         Assertions.assertEquals(3, intermediateLocation.getRow());
         Assertions.assertEquals(3, intermediateLocation.getColumn());
+        Location loc3 = new LocationImpl(6, 2, BackgroundColor.DARK);
+        Location loc4 = new LocationImpl(4, 4, BackgroundColor.DARK);
+        Location intermediateLocation2 = board.getIntermediateLocation(loc3, loc4);
+        Assertions.assertEquals(5, intermediateLocation2.getRow());
+        Assertions.assertEquals(3, intermediateLocation2.getColumn());
+        Location loc5 = new LocationImpl(5, 3, BackgroundColor.DARK);
+        Location loc6 = new LocationImpl(7, 5, BackgroundColor.DARK);
+        Location intermediateLocation3 = board.getIntermediateLocation(loc5, loc6);
+        Assertions.assertEquals(6, intermediateLocation3.getRow());
+        Assertions.assertEquals(4, intermediateLocation3.getColumn());
+
     }
 
     @Test
