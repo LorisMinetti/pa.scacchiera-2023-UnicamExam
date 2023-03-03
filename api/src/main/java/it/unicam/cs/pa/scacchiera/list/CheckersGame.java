@@ -4,6 +4,7 @@ import it.unicam.cs.pa.scacchiera.list.pieces.Piece;
 import it.unicam.cs.pa.scacchiera.list.player.Player;
 import it.unicam.cs.pa.scacchiera.list.util.Colour;
 import it.unicam.cs.pa.scacchiera.list.util.GameState;
+import it.unicam.cs.pa.scacchiera.list.util.MoveResult;
 
 import java.util.List;
 

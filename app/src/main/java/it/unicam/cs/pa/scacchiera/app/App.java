@@ -10,6 +10,7 @@ import it.unicam.cs.pa.scacchiera.list.pieces.Piece;
 import it.unicam.cs.pa.scacchiera.list.player.ComputerPlayer;
 import it.unicam.cs.pa.scacchiera.list.player.Player;
 import it.unicam.cs.pa.scacchiera.list.util.Colour;
+import it.unicam.cs.pa.scacchiera.list.util.MoveResult;
 
 import java.util.Scanner;
 
@@ -48,7 +49,7 @@ public class App {
     private static void requestMoveToUser(Scanner sc, Game game, GameFrame<Piece, Location> frame) throws Exception {
         Location startLocation = askForLocation(sc, frame, "Inserisci la posizione di partenza");
         Location endLocation = askForLocation(sc, frame, "Inserisci la posizione di arrivo");
-        Game.MoveResult result = game.move(new Move(startLocation, endLocation));
+        MoveResult result = game.move(new Move(startLocation, endLocation));
 
         switch (result) {
             case OK:
@@ -57,12 +58,13 @@ public class App {
             case START_LOCATION_EMPTY:
                 System.out.println("Nessuna pedina nella posizione di partenza");
                 break;
-            case OK:
-                System.out.println("Mossa effettuata con successo");
+            case START_LOCATION_OTHER_PLAYER:
+                System.out.println("il pezzo che stai cercando di muovere non è tuo");
                 break;
-            case START_LOCATION_EMPTY:
-                System.out.println("Nessuna pedina nella posizione di partenza");
+            case MOVE_NOT_VALID:
+                System.out.println("Mossa non valida");
                 break;
+
         }
     }
 
@@ -79,8 +81,8 @@ public class App {
             }
             int x, y;
             try{
-                int x = Integer.parseInt(parts[0]);
-                int y = Integer.parseInt(parts[1]);
+                x = Integer.parseInt(parts[0]);
+                y = Integer.parseInt(parts[1]);
             } catch (NumberFormatException e){
                 System.out.println("Input non valido, scrivi la posizione nel formato 'x y'");
                 continue;
