@@ -81,8 +81,8 @@ public class App {
             }
             int x, y;
             try{
-                x = Integer.parseInt(parts[0]);
-                y = Integer.parseInt(parts[1]);
+                x = Integer.parseInt(parts[0]) - 1;
+                y = Integer.parseInt(parts[1]) - 1;
             } catch (NumberFormatException e){
                 System.out.println("Input non valido, scrivi la posizione nel formato 'x y'");
                 continue;
