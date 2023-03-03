@@ -1,5 +1,7 @@
 package it.unicam.cs.pa.scacchiera.list;
 
+import java.util.Objects;
+
 public class Move {
 
     private Location start, destination;
@@ -12,6 +14,20 @@ public class Move {
         destination = dest;
         capture = false;
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Move move = (Move) o;
+        return capture == move.capture && start.equals(move.start) && destination.equals(move.destination);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(start, destination, capture);
+    }
+
     public Move(Location start, Location dest, boolean capture) {
         this.start = start;
         destination = dest;

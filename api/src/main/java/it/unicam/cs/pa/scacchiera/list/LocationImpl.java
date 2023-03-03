@@ -3,6 +3,7 @@ package it.unicam.cs.pa.scacchiera.list;
 import it.unicam.cs.pa.scacchiera.list.pieces.Piece;
 import it.unicam.cs.pa.scacchiera.list.util.BackgroundColor;
 
+import java.util.Objects;
 import java.util.Optional;
 
 
@@ -59,7 +60,7 @@ public class LocationImpl implements Location{
      */
     @Override
     public boolean isFree() {
-        return getPiece().isPresent() ? false : true;
+        return getPiece().isEmpty();
     }
 
 
@@ -72,6 +73,19 @@ public class LocationImpl implements Location{
         return Optional.ofNullable(this.piece);
     }
 
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof LocationImpl)) return false;
+        LocationImpl location = (LocationImpl) o;
+        return column == location.column && row == location.row && free == location.free && bgColor == location.bgColor && piece.equals(location.piece);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(bgColor, column, row, free, piece);
+    }
 
     public void setPiece(Piece piece){
         if(piece != null){
