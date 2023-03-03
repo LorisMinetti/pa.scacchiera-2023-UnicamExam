@@ -58,7 +58,7 @@ public class CheckersGame implements Game{
      * @throws Exception se la mossa non è valida
      */
     @Override
-    public void move(Move move) throws Exception {
+    public MoveResult move(Move move) throws Exception {
         if(status != GameState.RUNNING){
             System.out.println("Partita terminata. Impossibile effettuare alcuna mossa.");
         }
@@ -66,12 +66,18 @@ public class CheckersGame implements Game{
         //Prendi la pedina che si trova nella posizione di partenza
 
         Piece pezzo = this.gameFrameCorrente.getTheBoard().getPiece(loc.getRow(), loc.getColumn());
+
+        if(pezzo == null){
+           return MoveResult.START_LOCATION_EMPTY;
+        }
+
         //controllo che la pedina sia del giocatore corrente, a quel punto controllo la validità della mossa
         if(pezzo.getColour() == gameFrameCorrente.getActualTurn()){
-            List<Move> possibleMoves = gameFrameCorrente.allPossibleMoves( gameFrameCorrente.getActualTurn());            if( !possibleMoves.contains(move)){
-                System.out.println("Mossa non valida");
+            List<Move> possibleMoves = gameFrameCorrente.allPieceMoves(gameFrameCorrente, gameFrameCorrente.getActualTurn(), pezzo);
+            if( !possibleMoves.contains(move)){
+                return MoveResult.MOVE_NOT_VALID;
             }
-        } else System.out.println("Il pezzo che stai provando a muovere non appartiene al giocatore corrente.");
+        } else return MoveResult.START_LOCATION_OTHER_PLAYER;
         //sposto la pedina
         if( board.apply(move) ){
             Piece captured = gameFrameCorrente.getTheBoard().getIntermediateLocation(move.getStart(), move.getDestination()).getPiece().get();
@@ -87,6 +93,7 @@ public class CheckersGame implements Game{
         GameFrame<Piece, Location> nuovoGameFrame = new CheckersFrame(gameFrameCorrente, turn, board);
         gameFrameCorrente.setFuture(nuovoGameFrame);
         gameFrameCorrente = nuovoGameFrame;
+        return MoveResult.OK;
     }
 
     private void capturePieceWithPiece(Piece pezzo, Piece captured) {

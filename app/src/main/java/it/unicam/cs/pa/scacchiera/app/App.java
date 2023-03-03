@@ -20,7 +20,7 @@ public class App {
     static final int COLUMN = 8;
 
     public static void main(String[] args) throws Exception {
-        Board<Piece, Location> board = new CheckersBoard(ROW,COLUMN);
+        Board<Piece, Location> board = new CheckersBoard(ROW, COLUMN);
         Player player1 = new Player("Player 1", Colour.WHITE);
         Player computer = new ComputerPlayer("Computer", Colour.BLACK);
         GameFrame<Piece, Location> first = new CheckersFrame(null, WHITE, board);
@@ -30,40 +30,69 @@ public class App {
 
         game.getGameFrame().printBoardFrame();
         //affinchè il gioco non è terminato
-        while (!game.isTerminal()){
-            System.out.println("Turno di "+game.getGameFrame().getActualTurn());
+        while (!game.isTerminal()) {
+            System.out.println("Turno di " + game.getGameFrame().getActualTurn());
+            System.out.println("----------------------");
+            System.out.println(game.getGameFrame().printBoardFrame());
             System.out.println("----------------------");
 
-            if(game.getGameFrame().getActualTurn() == WHITE){
+            if (game.getGameFrame().getActualTurn() == WHITE) {
                 requestMoveToUser(sc, game, game.getGameFrame());
-            }
-            else {
+            } else {
                 Move computerMove = computer.play(game.getGameFrame());
                 game.move(computerMove);
             }
-            askForLocation(sc, game.getGameFrame());
         }
     }
 
     private static void requestMoveToUser(Scanner sc, Game game, GameFrame<Piece, Location> frame) throws Exception {
-        System.out.print("Inserisci la posizione di partenza: ");
-        Location startLocation = askForLocation(sc, frame);
-        System.out.print("Inserisci la posizione di arrivo: ");
-        Location endLocation = askForLocation(sc, frame);
-        game.move(new Move(startLocation, endLocation));
+        Location startLocation = askForLocation(sc, frame, "Inserisci la posizione di partenza");
+        Location endLocation = askForLocation(sc, frame, "Inserisci la posizione di arrivo");
+        Game.MoveResult result = game.move(new Move(startLocation, endLocation));
+
+        switch (result) {
+            case OK:
+                System.out.println("Mossa effettuata con successo");
+                break;
+            case START_LOCATION_EMPTY:
+                System.out.println("Nessuna pedina nella posizione di partenza");
+                break;
+            case OK:
+                System.out.println("Mossa effettuata con successo");
+                break;
+            case START_LOCATION_EMPTY:
+                System.out.println("Nessuna pedina nella posizione di partenza");
+                break;
+        }
     }
-    public static Location askForLocation(Scanner sc, GameFrame<Piece, Location> frame) {
+
+    public static Location askForLocation(Scanner sc, GameFrame<Piece, Location> frame, String message) {
         while (true) {
+            System.out.println(message);
             String input = sc.nextLine();
             // l'input è del tipo "x y"
             String[] parts = input.split(" ");
-            int x = Integer.parseInt(parts[0]);
-            int y = Integer.parseInt(parts[1]);
-            if (x < 1 || x > ROW) {
+
+            if(parts.length != 2){
+                System.out.println("Input non valido, scrivi la posizione nel formato 'x y'");
+                continue;
+            }
+            int x, y;
+            try{
+                int x = Integer.parseInt(parts[0]);
+                int y = Integer.parseInt(parts[1]);
+            } catch (NumberFormatException e){
+                System.out.println("Input non valido, scrivi la posizione nel formato 'x y'");
+                continue;
+            }
+
+            //Ora l'input, ed i suoi relativi contrlli, deve essere inteso
+            // come valori da 1 a 8
+            if (x < 0 || x >= ROW) {
                 System.out.println("Valore di x non valido");
                 continue;
             }
-            if (y < 1 || y > COLUMN) {
+            if (y < 0 || y >= COLUMN) {
                 System.out.println("Valore di y non valido");
                 continue;
             }
@@ -71,7 +100,7 @@ public class App {
             Piece pawn = new Pawn(frame.getTheBoard().getSchema()[x][y], frame.getActualTurn());
             Colour colour = pawn.getColour();
             //il pezzo che voglio muovere deve essere del colore del giocatore che sta giocando
-            if(colour == frame.getActualTurn()){
+            if (colour == frame.getActualTurn()) {
                 return frame.getTheBoard().getSchema()[x][y];
             } else {
                 System.out.println("Non puoi muovere questo pezzo");
@@ -79,8 +108,6 @@ public class App {
 
         }
     }
-
-
 
 
 }

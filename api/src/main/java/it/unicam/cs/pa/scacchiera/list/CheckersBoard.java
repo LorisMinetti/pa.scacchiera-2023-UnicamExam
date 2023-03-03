@@ -203,6 +203,8 @@ public class CheckersBoard implements Board<Piece, Location> {
             this.schema[old.getRow()][old.getColumn()].setPiece(null);
             /* Setta il pezzo nella nuova posizione */
             this.schema[location.getRow()][location.getColumn()].setPiece(piece);
+            /*Aggiorna la posizione del pezzo*/
+            piece.setLocation(location);
         } else
             throw new Exception("locazione non definita, o fuori i range della scacchiera.");
     }
