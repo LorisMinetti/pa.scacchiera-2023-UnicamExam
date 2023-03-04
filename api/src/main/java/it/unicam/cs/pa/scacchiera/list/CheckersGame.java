@@ -1,5 +1,6 @@
 package it.unicam.cs.pa.scacchiera.list;
 
+import it.unicam.cs.pa.scacchiera.list.Checkers.Pawn;
 import it.unicam.cs.pa.scacchiera.list.pieces.Piece;
 import it.unicam.cs.pa.scacchiera.list.player.Player;
 import it.unicam.cs.pa.scacchiera.list.util.Colour;
@@ -7,6 +8,7 @@ import it.unicam.cs.pa.scacchiera.list.util.GameState;
 import it.unicam.cs.pa.scacchiera.list.util.MoveResult;
 
 import java.util.List;
+import java.util.Objects;
 
 public class CheckersGame implements Game{
 
@@ -63,10 +65,8 @@ public class CheckersGame implements Game{
         if(status != GameState.RUNNING){
             System.out.println("Partita terminata. Impossibile effettuare alcuna mossa.");
         }
-        Location loc = move.getStart();
-        //Prendi la pedina che si trova nella posizione di partenza
 
-        Piece pezzo = this.gameFrameCorrente.getTheBoard().getPiece(loc.getRow(), loc.getColumn());
+        Pawn pezzo = (Pawn) move.getStart().getPiece().get();
 
         if(pezzo == null){
            return MoveResult.START_LOCATION_EMPTY;
@@ -75,21 +75,43 @@ public class CheckersGame implements Game{
         //controllo che la pedina sia del giocatore corrente, a quel punto controllo la validità della mossa
         if(pezzo.getColour() == gameFrameCorrente.getActualTurn()){
             List<Move> possibleMoves = gameFrameCorrente.allPieceMoves(gameFrameCorrente, gameFrameCorrente.getActualTurn(), pezzo);
+            //controllo se la mossa che voglio effettuare è contenuta tra le mosse possibili del pezzo
             if( !possibleMoves.contains(move)){
                 return MoveResult.MOVE_NOT_VALID;
+
             }
+            System.out.println("il pezzo da mangiare lo vedo"); //togliere da qui ... non sempre la lista delle mosse contiene la mossa mangiante
+            if(possibleMoves.contains(move)){
+                if(board.apply(move)) {
+                    //mossa mangiante
+                    if(gameFrameCorrente.getTheBoard().getIntermediateLocation(move.getStart(), move.getDestination()).getPiece().isPresent()
+                        &&  move.isCapture()){
+
+                        if( gameFrameCorrente.getTheBoard().getIntermediateLocation(move.getStart(), move.getDestination()).isFree() ){ //prova
+                            System.out.println("mi dice che qui in mezzo non c'è nulla");
+                        }
+
+                        Piece captured = gameFrameCorrente.getTheBoard().getIntermediateLocation(move.getStart(), move.getDestination()).getPiece().get();
+                        capturePieceWithPiece(captured, pezzo);
+
+                    }
+                    if(pezzo.getColour() == Colour.WHITE && move.getDestination().getRow() == 0){
+                        pezzo.becomeKing();
+                    } else if(pezzo.getColour() == Colour.BLACK && move.getDestination().getRow() == 7){
+                        pezzo.becomeKing();
+                    }
+                }
+            }
+
         } else return MoveResult.START_LOCATION_OTHER_PLAYER;
         //sposto la pedina
-        if( board.apply(move) ){
-            Piece captured = gameFrameCorrente.getTheBoard().getIntermediateLocation(move.getStart(), move.getDestination()).getPiece().get();
-            capturePieceWithPiece(pezzo, captured);
-            gameFrameCorrente.kingify(pezzo);
-        }
+
 
         //aggiorno lo stato del gioco
         this.updateStatus();
         //cambio turno
         this.turn = turn.opponent();
+        this.gameFrameCorrente.setActualTurn(turn);
         //nuovo game frame
         GameFrame<Piece, Location> nuovoGameFrame = new CheckersFrame(gameFrameCorrente, turn, board);
         gameFrameCorrente.setFuture(nuovoGameFrame);
@@ -97,22 +119,33 @@ public class CheckersGame implements Game{
         return MoveResult.OK;
     }
 
-    private void capturePieceWithPiece(Piece pezzo, Piece captured) {
+    private void capturePieceWithPiece(Piece pezzo, Piece captured) throws Exception {
+        //lo rimuovo dalla lista dei pezzi del giocatore avversario
         if(captured.getColour() == Colour.BLACK && pezzo.getColour() == Colour.WHITE){
             gameFrameCorrente.getBlackPieces().remove(captured);
         } else if(captured.getColour() == Colour.WHITE && pezzo.getColour() == Colour.BLACK) {
             gameFrameCorrente.getWhitePieces().remove(captured);
         }
+        //e lo rimuovo dalla board
+        this.getGameFrame().getTheBoard().getSchema()[captured.getLocation().getRow()][captured.getLocation().getColumn()].setPiece(null);
     }
 
     @Override
     public void updateStatus(){
-        if( ! this.isTerminal() ) {
+        if( this.isTerminal() ) {
             if( turn == Colour.WHITE ) {
                 status = GameState.PLAYER_1_WINS;
             } else {
                 status = GameState.PLAYER_2_WINS;
             }
+        } else if (gameFrameCorrente.allPossibleMoves(turn.opponent()).isEmpty()){
+            if( turn == Colour.WHITE ) {
+                status = GameState.PLAYER_1_WINS;
+            } else {
+                status = GameState.PLAYER_2_WINS;
+            }
+        } else {
+            status = GameState.RUNNING;
         }
     }
 
@@ -125,5 +158,20 @@ public class CheckersGame implements Game{
         return this.gameFrameCorrente;
     }
 
+    public void setTurn(Colour turn) {
+        this.turn = turn;
+    }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof CheckersGame)) return false;
+        CheckersGame that = (CheckersGame) o;
+        return Objects.equals(player1, that.player1) && Objects.equals(player2, that.player2) && status == that.status && Objects.equals(board, that.board) && turn == that.turn && Objects.equals(gameFrameCorrente, that.gameFrameCorrente);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(player1, player2, status, board, turn, gameFrameCorrente);
+    }
 }

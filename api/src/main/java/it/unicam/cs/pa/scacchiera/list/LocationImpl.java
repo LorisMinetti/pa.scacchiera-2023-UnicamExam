@@ -70,7 +70,7 @@ public class LocationImpl implements Location{
      */
     @Override
     public Optional<Piece> getPiece(){
-        return Optional.ofNullable(this.piece);
+        return Optional.ofNullable(piece);
     }
 
 
@@ -79,7 +79,7 @@ public class LocationImpl implements Location{
         if (this == o) return true;
         if (!(o instanceof LocationImpl)) return false;
         LocationImpl location = (LocationImpl) o;
-        return column == location.column && row == location.row && free == location.free && bgColor == location.bgColor && piece.equals(location.piece);
+        return column == location.column && row == location.row && free == location.free && bgColor == location.bgColor && Objects.equals(piece, location.piece);
     }
 
     @Override

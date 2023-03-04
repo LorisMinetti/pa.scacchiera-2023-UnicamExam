@@ -126,8 +126,9 @@ public class CheckersBoard implements Board<Piece, Location> {
         int x = (loc1.getColumn() + loc2.getColumn()) / 2;
         int y = (loc1.getRow() + loc2.getRow()) / 2;
 
-        return new LocationImpl(y, x);
+        return this.schema[y][x];
     }
+
 
     /**
      * Locazione è diagonalmente adiacente a un'altra locazione
@@ -186,7 +187,7 @@ public class CheckersBoard implements Board<Piece, Location> {
      */
     @Override
     public Piece getPiece(Location location) {
-        return this.schema[location.getColumn()][location.getRow()].getPiece().orElse(null);
+        return this.schema[location.getRow()][location.getColumn()].getPiece().orElse(null);
     }
 
 
@@ -228,30 +229,31 @@ public class CheckersBoard implements Board<Piece, Location> {
         int y = diagonallyAdjacent.getRow() - current.getRow();
         int deltaX = diagonallyAdjacent.getColumn() + x;
         int deltaY = diagonallyAdjacent.getRow() + y;
-        Location nextDiagonal = new LocationImpl(deltaX, deltaY);
-        if (isInsideBoard(nextDiagonal)) {
-            return this.schema[deltaX][deltaY];
+        try{
+            if(isInsideBoard( this.schema [deltaY] [deltaX])) {
+                return this.schema [deltaY] [deltaX];
+            }
+            else
+                return null;
+        } catch (ArrayIndexOutOfBoundsException e){
+            System.out.println("Metodo getNextDiagonalSpot: ArrayIndexOutOfBoundsException");
+            throw e;
+
         }
-        return null;
+
     }
 
     /**
      * Applica una determinata mossa.
      *
      * @param move mossa da applicare.
-     * @return true se la mossa ha un displacement maggiore di UNO.
+     * @return true se la mossa ha un displacement maggiore di UNO, dunque mangia.
      * @throws Exception se la mossa non può essere applicabile
      */
     public boolean apply(Move move) throws Exception {
-        //per applicare una mossa devo prima controllare che la mossa appartenga alla scacchiera
-        //e che la locazione di partenza contenga un pezzo
-        //e che la locazione di destinazione non contenga un pezzo
-        //e che la mossa sia valida per il pezzo
-        //Se la mossa è una mangiata, ovvero ha un displacement maggiore di UNO, allora aggiorno un booleano        
-        
         boolean captureMove = false;
         if (move != null && move.belongsToBoard(this)) {
-            Piece piece = this.schema [move.getStart().getColumn()] [move.getStart().getColumn()]
+            Piece piece = this.schema [move.getStart().getRow()] [move.getStart().getColumn()]
                             .getPiece().orElse(null);
             /* Controllo se il pezzo che voglio muovere esiste */
             if (piece == null) 
@@ -259,9 +261,9 @@ public class CheckersBoard implements Board<Piece, Location> {
             setPiece(move.getDestination(), piece);
             
             if (this.getMoveDisplacement(move) > 1) {
+                move.becomeCaptureMove();
                 captureMove = true;
             }
-            
         }
         return captureMove;
     }
@@ -281,7 +283,10 @@ public class CheckersBoard implements Board<Piece, Location> {
         int displacementRow = Math.abs(endRow - startRow);
         int displacementColumn = Math.abs(endColumn - startColumn);
 
-        return Math.max(displacementRow, displacementColumn);
+        int displ = Math.max(displacementRow, displacementColumn);
+        int a = 0;
+        int u = 05;
+        return displ;
     }
 
     @Override

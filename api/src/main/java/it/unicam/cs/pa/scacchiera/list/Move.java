@@ -20,12 +20,12 @@ public class Move {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Move move = (Move) o;
-        return capture == move.capture && start.equals(move.start) && destination.equals(move.destination);
+        return start.equals(move.start) && destination.equals(move.destination);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(start, destination, capture);
+        return Objects.hash(start, destination);
     }
 
     public Move(Location start, Location dest, boolean capture) {
@@ -45,5 +45,13 @@ public class Move {
     public boolean belongsToBoard(Board board) {
         return (board != null &&
                 (board.isInsideBoard(start) && board.isInsideBoard(destination)));
+    }
+
+    public boolean isCapture() {
+        return capture==true ? true : false;
+    }
+
+    public void becomeCaptureMove() {
+        this.capture = true;
     }
 }

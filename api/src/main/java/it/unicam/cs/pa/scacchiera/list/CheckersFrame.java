@@ -9,7 +9,7 @@ import java.util.List;
 
 
 public class CheckersFrame implements GameFrame<Piece, Location> {
-    private static int frameNumber = 0;
+    private int frameNumber = 0;
     private GameFrame<Piece, Location> future, previous;
     private Colour actualTurn;
     private final List<Piece> whitePieces, blackPieces;
@@ -22,6 +22,16 @@ public class CheckersFrame implements GameFrame<Piece, Location> {
         whitePieces = fillPieceList(Colour.WHITE);
         blackPieces = fillPieceList(Colour.BLACK);
         frameNumber++;
+        frameNumber = prev == null ? 1 : prev.getFrameNumber() + 1;
+
+    }
+    public CheckersFrame(GameFrame<Piece,Location> prev, Colour turn, Board<Piece, Location> board, int frameNumber, List<Piece> whitePieces, List<Piece> blackPieces){
+        actualTurn = turn;
+        previous = prev;
+        theBoard = board;
+        this.whitePieces = whitePieces;
+        this.blackPieces = blackPieces;
+        this.frameNumber = frameNumber;
     }
 
     /**
@@ -39,6 +49,11 @@ public class CheckersFrame implements GameFrame<Piece, Location> {
             }
         }
         return result;
+    }
+
+    @Override
+    public int getFrameNumber() {
+        return frameNumber;
     }
 
     public GameFrame<Piece, Location> getFuture() {
@@ -60,15 +75,14 @@ public class CheckersFrame implements GameFrame<Piece, Location> {
         * si trova davanti a una cattura è obbligato a eseguirla. Non verranno dunque più prese in considerazione le altre.  */
         List<Move> captureList = new ArrayList<>();
         List<Location> diagonalSpots = getTheBoard().getDiagonalAdjacentLocationsOfPiece(piece);
-        Pawn pawn = new Pawn(piece.getLocation(), piece.getColour());
         for(Location loc : diagonalSpots){
             if(loc.getPiece().isPresent()){   //controllo se c'è un pezzo in una delle caselle diagonali
-                if(loc.getPiece().get().getColour() != pawn.getColour()     //controllo se il pezzo è dell'altro giocatore
-                        && getTheBoard().getNextDiagonalSpot(pawn.getLocation(), loc).isFree()){    //e parallelamente se la cella diagonalmente successiva è libera
-                        captureList.add(new Move(pawn.getLocation(), getTheBoard().getNextDiagonalSpot(pawn.getLocation(), loc), true));
+                if(loc.getPiece().get().getColour() != piece.getColour()     //controllo se il pezzo è dell'altro giocatore
+                        && getTheBoard().getNextDiagonalSpot(piece.getLocation(), loc).isFree()){    //e parallelamente se la cella diagonalmente successiva è libera
+                        captureList.add(new Move(piece.getLocation(), getTheBoard().getNextDiagonalSpot(piece.getLocation(), loc), true));
                 }
             } else { //non c'è nessun altro pezzo presente
-                moveList.add(new Move(pawn.getLocation(), loc));
+                moveList.add(new Move(piece.getLocation(), loc));
             }
         }
         return switchList(moveList, captureList);
@@ -86,54 +100,6 @@ public class CheckersFrame implements GameFrame<Piece, Location> {
         } else
             return moveList;
     }
-
-//    /**
-//     * metodo che controlla se si tratta di una pedina o di un re.
-//     * @param col
-//     * @param moveList
-//     * @param diagonalSpots
-//     * @param pawn
-//     */
-//    private void pawnOrKing(Colour col, List<Move> moveList, List<Location> diagonalSpots, Pawn pawn) {
-//        for (Location loc : diagonalSpots) {
-//            /* Check nella cell destinataria c'è un pezzo avversario */
-//            if (pawn.getColour() != col) {
-//                if(pawn.isKing()) {     /* Caso in cui la pedina è un re. Può muovere ovunque senza restrizioni*/
-//                    Location nextDiagonalSpot = getTheBoard().getNextDiagonalSpot(pawn.getLocation(), loc);
-//                    moveList.add(new Move(pawn.getLocation(), nextDiagonalSpot));
-//                }
-//                else {   /* Caso in cui la pedina non è re*/
-//                    unidriectionalPawnMove(moveList, loc, pawn);
-//                }
-//            }
-//            /* Check se la casella destinataria è vuota ed è nella scacchiera */
-//                moveList.add(new Move(pawn.getLocation(), loc));
-//        }
-//    }
-//
-//    /**
-//     * Metodo che gestisce i movimenti delle pedine semplici di ogni giocatore nell'unica direzione possibile in base alla loro posizione di partenza.
-//     * @param moveList
-//     * @param loc
-//     * @param pawn
-//     */
-//    private void unidriectionalPawnMove(List<Move> moveList, Location loc, Pawn pawn) {
-//        int increment = (pawn.getColour() == Colour.BLACK) ? 1 : -1;         /* costante che incrementa o decrementa la riga in base al colore */
-//        int eatIncrement = (pawn.getColour() == Colour.BLACK) ? 2 : -2;      /* costante di controllo per una cattura */
-//        if(pawn.getColour() == Colour.BLACK){                                       /* Se è nera può solo andare verso il basso*/
-//            boolean canMove = ((loc.getRow() - pawn.getLocation().getRow()) == increment )    /* Check se l'incremento verticale */
-//                    || ((loc.getRow() - pawn.getLocation().getRow()) == eatIncrement );
-//            if(canMove && getTheBoard().isInsideBoard(loc)){                    /* Se la distanza tra le due coordinate  */
-//                moveList.add(new Move(pawn.getLocation(), loc));
-//            }
-//        } else if( pawn.getColour() == Colour.WHITE){   /* Se è bianca può solo andare verso l'alto */
-//            boolean canMove = (loc.getRow() - pawn.getLocation().getRow()) == increment
-//                    || ((loc.getRow() - pawn.getLocation().getRow()) == eatIncrement );
-//            if(canMove && getTheBoard().isInsideBoard(loc)){
-//                moveList.add(new Move(pawn.getLocation(), loc));
-//            }
-//        }
-//    }
 
     /**
      * Tutte le possibili mosse per un giocatore durante un determinato momento della partita.

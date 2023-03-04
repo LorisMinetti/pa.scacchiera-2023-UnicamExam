@@ -56,4 +56,6 @@ public interface GameFrame<P, L> {
     List<Piece> unblockedPieces();
 
     void kingify(P pezzo);
+
+    int getFrameNumber();
 }
