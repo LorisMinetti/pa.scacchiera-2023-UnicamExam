@@ -1,42 +1,93 @@
 package it.unicam.cs.pa.scacchiera.list;
 
-import it.unicam.cs.pa.scacchiera.list.Pieces.Piece;
-import it.unicam.cs.pa.scacchiera.list.player.Player;
+import it.unicam.cs.pa.scacchiera.list.pieces.Piece;
+import it.unicam.cs.pa.scacchiera.list.util.Colour;
 
 import java.util.List;
-import java.util.Optional;
 
 /**
  * Gestisce la scacchiera. Ci saranno già determinati pezzi in determinate posizioni una volta scelto a
  * che gioco giocare.
  */
-public interface Board {
+public interface Board<P extends Piece, L extends Location> {
 
     /**
-     * Metodo che controlla se una determinata cella rientra nelle coordinate della scacchiera.
-     * @param c cella da controllare
-     * @return true se la cella rientra nelle coordinate della scacchiera, false oppure
+     * Metodo che controlla se una determinata locazione rientra nelle coordinate della scacchiera.
+     * @param l locazione da controllare
+     * @return true se la locazione rientra nelle coordinate della scacchiera, false oppure
      */
-    boolean isValid(Cell c);
+    boolean isInsideBoard(L l);
 
     /**
-     * Dato un giocatore, il suo schema momentaneo dei pezzi che ha, ed il pezzo che vuole muovere, questo
-     * metodo restituisce la lista di tutte le celle che possono essere occupate, deve quindi verificare
-     * le possibilità di movimento del pezzo e che la cella di destinazione sia libera.
-     * @param actaul schema dei pezzi momentaneo
-     * @param pz pezzo da muovere
-     * @param p giocatore
-     * @return Lista di possibili celle di destinazione
+     * Lista di tutte le locazioni della board.
      */
-//    List<Cell> possibleMoves(Schema actaul, Piece pz, Player p);
-//
+    List<L> allLocations();
+
+    /**
+     * Le quattro locazioni diagonali al pezzo passato in input
+     * @param piece pezzo considerato
+     * @return locazioni diagonali
+     */
+    List<Location> getDiagonalAdjacentLocationsOfPiece(Piece piece);
+
+    /**
+     * Ritorna la locazione diagonale subito dopo la locazione diagonale trovata rispetto ad una locazione.
+     * Si fa dunque un salto distanza 2 dalla locazione 'current'.
+     * @param current
+     * @param diagonallyAdjacent
+     * @return
+     */
+    Location getNextDiagonalSpot(Location current, Location diagonallyAdjacent);
+
+    /**
+     * Restituisce tutte le locazioni di uno specifico giocatore nel quale è presente un pezzo.
+     * @param colour
+     * @return
+     */
+    List<Location> getAllLocationsOfPlayer(Colour colour);
+
+    /**
+     * Locazione intermedia in un movimento con un displacement diagonale uguale a 2.
+     * @param loc1 locazione di partenza
+     * @param loc2 locazione di destinazione distante 2
+     * @return locazione intermedia
+     */
+    Location getIntermediateLocation(Location loc1, Location loc2);
+
+    /**
+     * Locazione è diagonalmente adiacente ad un'altra locazione
+     * @param loc locazione
+     * @param check locazione su cui verificare adiacenza
+     * @return true se locazioni sono diagonali
+     */
+    boolean isDiagonal(Location loc, Location check);
+
+
     /**
      * Restituisce il pezzo presente in una determinata casella.
-     * @param cell la cella data
+     * @param location la locazione data
      * @return P pezzo desiderato
      */
-    Optional<Piece> getP(Cell cell);
+    P getPiece(Location location);
 
+    /**
+     * Applica una mossa.
+     * @param move mossa
+     * @return true se la mossa mangia una pedina avversaria, false altrimenti
+     */
+    boolean apply(Move move) throws Exception;
 
+    /**
+     *
+     * @param location locazione
+     * @param newPiece nuovo pezzo
+     */
+    void setPiece(L location, P newPiece) throws Exception;
 
+    Location[][] getSchema();
+
+    int getROW_VALUE();
+    int getCOLUMN_VALUE();
+
+    P getPiece(int row, int col);
 }

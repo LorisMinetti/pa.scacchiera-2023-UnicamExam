@@ -3,17 +3,112 @@
  */
 package it.unicam.cs.pa.scacchiera.app;
 
-import it.unicam.cs.pa.scacchiera.list.Game;
+
+import it.unicam.cs.pa.scacchiera.list.*;
+import it.unicam.cs.pa.scacchiera.list.Checkers.Pawn;
+import it.unicam.cs.pa.scacchiera.list.pieces.Piece;
+import it.unicam.cs.pa.scacchiera.list.player.ComputerPlayer;
+import it.unicam.cs.pa.scacchiera.list.player.Player;
+import it.unicam.cs.pa.scacchiera.list.util.Colour;
+import it.unicam.cs.pa.scacchiera.list.util.MoveResult;
+
+import java.util.Scanner;
+
+import static it.unicam.cs.pa.scacchiera.list.util.Colour.WHITE;
 
 public class App {
-    public static void main(String[] args) {
-        Game game = new Game(8);
-        System.out.println(game);
-        System.out.println(game.getBoardSize());
-        System.out.println(game.getDefaultSchema());
+    static final int ROW = 8;
+    static final int COLUMN = 8;
 
+    public static void main(String[] args) throws Exception {
+        Board<Piece, Location> board = new CheckersBoard(ROW, COLUMN);
+        Player player1 = new Player("Player 1", Colour.WHITE);
+        Player computer = new ComputerPlayer("Computer", Colour.BLACK);
+        GameFrame<Piece, Location> first = new CheckersFrame(null, WHITE, board);
+        Game game = new CheckersGame(player1, computer, board, first);
 
+        Scanner sc = new Scanner(System.in);
 
+        game.getGameFrame().printBoardFrame();
+        //affinchè il gioco non è terminato
+        while (!game.isTerminal()) {
+            System.out.println("Turno di " + game.getGameFrame().getActualTurn());
+            System.out.println("----------------------");
+            System.out.println(game.getGameFrame().printBoardFrame());
+            System.out.println("----------------------");
+
+            if (game.getGameFrame().getActualTurn() == WHITE) {
+                requestMoveToUser(sc, game, game.getGameFrame());
+            } else {
+                Move computerMove = computer.play(game.getGameFrame());
+                game.move(computerMove);
+            }
+        }
+    }
+
+    private static void requestMoveToUser(Scanner sc, Game game, GameFrame<Piece, Location> frame) throws Exception {
+        Location startLocation = askForLocation(sc, frame, "Inserisci la posizione di partenza");
+        Location endLocation = askForLocation(sc, frame, "Inserisci la posizione di arrivo");
+        MoveResult result = game.move(new Move(startLocation, endLocation));
+
+        switch (result) {
+            case OK:
+                System.out.println("Mossa effettuata con successo");
+                break;
+            case START_LOCATION_EMPTY:
+                System.out.println("Nessuna pedina nella posizione di partenza");
+                break;
+            case START_LOCATION_OTHER_PLAYER:
+                System.out.println("il pezzo che stai cercando di muovere non è tuo");
+                break;
+            case MOVE_NOT_VALID:
+                System.out.println("Mossa non valida");
+                break;
+
+        }
+    }
+
+    public static Location askForLocation(Scanner sc, GameFrame<Piece, Location> frame, String message) {
+        while (true) {
+            System.out.println(message);
+            String input = sc.nextLine();
+            // l'input è del tipo "x y"
+            String[] parts = input.split(" ");
+
+            if(parts.length != 2){
+                System.out.println("Input non valido, scrivi la posizione nel formato 'x y'");
+                continue;
+            }
+            int x, y;
+            try{
+                x = Integer.parseInt(parts[0]) - 1;
+                y = Integer.parseInt(parts[1]) - 1;
+            } catch (NumberFormatException e){
+                System.out.println("Input non valido, scrivi la posizione nel formato 'x y'");
+                continue;
+            }
+
+            //Ora l'input, ed i suoi relativi contrlli, deve essere inteso
+            // come valori da 1 a 8
+            if (x < 0 || x >= ROW) {
+                System.out.println("Valore di x non valido");
+                continue;
+            }
+            if (y < 0 || y >= COLUMN) {
+                System.out.println("Valore di y non valido");
+                continue;
+            }
+            //pezzo che voglio muovere
+            Piece pawn = new Pawn(frame.getTheBoard().getSchema()[x][y], frame.getActualTurn());
+            Colour colour = pawn.getColour();
+            //il pezzo che voglio muovere deve essere del colore del giocatore che sta giocando
+            if (colour == frame.getActualTurn()) {
+                return frame.getTheBoard().getSchema()[x][y];
+            } else {
+                System.out.println("Non puoi muovere questo pezzo");
+            }
+
+        }
     }
 
 

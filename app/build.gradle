@@ -15,3 +15,7 @@ application {
     // Define the main class for the application.
     mainClass = 'it.unicam.cs.pa.scacchiera.app.App'
 }
+
+run{
+    standardInput = System.in;
+}
