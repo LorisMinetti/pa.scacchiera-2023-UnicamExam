@@ -66,8 +66,10 @@ public class CheckersGame implements Game{
             System.out.println("Partita terminata. Impossibile effettuare alcuna mossa.");
         }
 
-        Pawn pezzo = (Pawn) move.getStart().getPiece().get();
-
+        Pawn pezzo = null;
+        if(move.getStart().getPiece().isPresent()){
+            pezzo = (Pawn) move.getStart().getPiece().get();
+        }
         if(pezzo == null){
            return MoveResult.START_LOCATION_EMPTY;
         }
@@ -92,7 +94,7 @@ public class CheckersGame implements Game{
                         }
 
                         Piece captured = gameFrameCorrente.getTheBoard().getIntermediateLocation(move.getStart(), move.getDestination()).getPiece().get();
-                        capturePieceWithPiece(captured, pezzo);
+                        capturePieceWithPiece(pezzo, captured);
 
                     }
                     if(pezzo.getColour() == Colour.WHITE && move.getDestination().getRow() == 0){

@@ -65,7 +65,7 @@ public class CheckersBoard implements Board<Piece, Location> {
      */
     @Override
     public boolean isInsideBoard(Location location) {
-        return location.getColumn() < ROW_VALUE && location.getRow() < COLUMN_VALUE && location.getColumn() >= 0 && location.getRow() >= 0;
+        return location.getRow() < ROW_VALUE && location.getColumn() < COLUMN_VALUE && location.getColumn() >= 0 && location.getRow() >= 0;
     }
 
 
@@ -229,18 +229,11 @@ public class CheckersBoard implements Board<Piece, Location> {
         int y = diagonallyAdjacent.getRow() - current.getRow();
         int deltaX = diagonallyAdjacent.getColumn() + x;
         int deltaY = diagonallyAdjacent.getRow() + y;
-        try{
-            if(isInsideBoard( this.schema [deltaY] [deltaX])) {
-                return this.schema [deltaY] [deltaX];
-            }
-            else
-                return null;
-        } catch (ArrayIndexOutOfBoundsException e){
-            System.out.println("Metodo getNextDiagonalSpot: ArrayIndexOutOfBoundsException");
-            throw e;
-
+        Location nextLoc = null ;
+        if(deltaY < ROW_VALUE && deltaY >= 0 && deltaX < COLUMN_VALUE && deltaX >= 0 ) {
+            nextLoc = this.schema [deltaY] [deltaX];
         }
-
+        return nextLoc;
     }
 
     /**
