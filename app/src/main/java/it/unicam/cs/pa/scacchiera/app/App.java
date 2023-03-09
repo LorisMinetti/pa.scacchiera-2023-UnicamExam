@@ -44,6 +44,7 @@ public class App {
                 game.move(computerMove);
             }
         }
+        System.out.println("--------------------\nPartita terminata: " + game.getGameFrame().getActualTurn() + " è il vincitore.");
     }
 
     private static void requestMoveToUser(Scanner sc, Game game, GameFrame<Piece, Location> frame) throws Exception {
