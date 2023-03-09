@@ -9,6 +9,7 @@ import it.unicam.cs.pa.scacchiera.list.util.Colour;
 
 import java.util.List;
 import java.util.Random;
+import java.util.concurrent.ThreadLocalRandom;
 
 public class ComputerPlayer extends Player{
 
@@ -22,9 +23,9 @@ public class ComputerPlayer extends Player{
     */
     public Move play(GameFrame<Piece, Location> frame) {
         List<Move> moves = frame.allPossibleMoves(this.getColour());
-        Random random = new Random();
-        int randomIndex = random.nextInt(moves.size());
-        return moves.get(randomIndex);
+//        Random random = new Random();
+//        int randomIndex = random.nextInt(0, moves.size());
+        return moves.get(ThreadLocalRandom.current().nextInt(0, moves.size()));
 
     }
 }
