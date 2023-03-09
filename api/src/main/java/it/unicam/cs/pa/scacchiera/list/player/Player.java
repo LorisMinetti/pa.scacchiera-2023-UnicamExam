@@ -12,7 +12,7 @@ import it.unicam.cs.pa.scacchiera.list.util.Colour;
  */
 public class Player {
     private final String name;
-    private Colour colour;
+    private final Colour colour;
     /**
     * Costruttore della classe Player.
      * @param name Nome del giocatore.

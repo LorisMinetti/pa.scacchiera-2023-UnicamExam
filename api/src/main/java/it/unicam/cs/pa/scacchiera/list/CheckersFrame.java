@@ -59,9 +59,9 @@ public class CheckersFrame implements GameFrame<Piece, Location> {
     public GameFrame<Piece, Location> getFuture() {
         return future;
     }
+
     /**
-     * Lista di tutte le posibili mosse che un pezzo, appartenente ad un giocatore specifico, può effettuare
-     *
+     * Lista di tutte le posibili mosse che un pezzo, appartenente a un giocatore specifico, può effettuare
      * ATTENZIONE: se questa lista torna vuota la partita deve terminare !!
      * @param state
      * @param col
@@ -71,15 +71,17 @@ public class CheckersFrame implements GameFrame<Piece, Location> {
     @Override
     public List<Move> allPieceMoves(GameFrame<Piece, Location> state, Colour col, Piece piece) {
         List<Move> moveList = new ArrayList<>();
-        /*questa è una lista "speciale" ovvero la lista delle sole mosse di cattura, poichè se un pezzo sia re o pedina che sia,
+        /* Questa è una lista "speciale" ovvero la lista delle sole mosse di cattura, poichè se un pezzo sia re o pedina che sia,
         * si trova davanti a una cattura è obbligato a eseguirla. Non verranno dunque più prese in considerazione le altre.  */
         List<Move> captureList = new ArrayList<>();
         List<Location> diagonalSpots = getTheBoard().getDiagonalAdjacentLocationsOfPiece(piece);
         for(Location loc : diagonalSpots){
             if(loc.getPiece().isPresent()){   //controllo se c'è un pezzo in una delle caselle diagonali
                 if(loc.getPiece().get().getColour() != piece.getColour()     //controllo se il pezzo è dell'altro giocatore
-                        && getTheBoard().getNextDiagonalSpot(piece.getLocation(), loc).isFree()){    //e parallelamente se la cella diagonalmente successiva è libera
+                        && getTheBoard().getNextDiagonalSpot(piece.getLocation(), loc) != null){    //e parallelamente se la cella diagonalmente successiva esiste
+                    if(getTheBoard().getNextDiagonalSpot(piece.getLocation(), loc).isFree()){     //e parallelamente se la cella diagonalmente successiva è libera
                         captureList.add(new Move(piece.getLocation(), getTheBoard().getNextDiagonalSpot(piece.getLocation(), loc), true));
+                    }
                 }
             } else { //non c'è nessun altro pezzo presente
                 moveList.add(new Move(piece.getLocation(), loc));
@@ -171,16 +173,15 @@ public class CheckersFrame implements GameFrame<Piece, Location> {
 
     /**
      * Da semplice pedina a Dama.
-     * @param piece
+     * @param pawn
      */
-    public void kingify(Piece piece){
+    public void kingify(Pawn pawn){
         //tutti i pezzi bianchi nella riga con indice 0 diventano dama
         //tutti i pezzi neri nella riga con indice 7 diventano dama
-        Pawn pawn = new Pawn(piece.getLocation(), piece.getColour());
         for(int i = 0; i < theBoard.getROW_VALUE(); i++){
-            if(piece.getColour() == Colour.WHITE && piece.getLocation().getRow() == 0){
+            if(pawn.getColour() == Colour.WHITE && pawn.getLocation().getRow() == 0){
                 pawn.becomeKing();
-            } else if(piece.getColour() == Colour.BLACK && piece.getLocation().getRow() == 7){
+            } else if(pawn.getColour() == Colour.BLACK && pawn.getLocation().getRow() == 7){
                 pawn.becomeKing();
             }
         }

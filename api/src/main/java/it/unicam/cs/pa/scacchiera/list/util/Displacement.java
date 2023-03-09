@@ -10,8 +10,8 @@ public enum Displacement {
         Right(0, +1),
         Left(0, -1);
 
-        private int rowDisplacement;
-        private int columnDisplacement;
+        private final int rowDisplacement;
+        private final int columnDisplacement;
 
         Displacement(int rowDispl, int columnDispl) {
             rowDisplacement = rowDispl;

@@ -52,19 +52,10 @@ public class App {
         MoveResult result = game.move(new Move(startLocation, endLocation));
 
         switch (result) {
-            case OK:
-                System.out.println("Mossa effettuata con successo");
-                break;
-            case START_LOCATION_EMPTY:
-                System.out.println("Nessuna pedina nella posizione di partenza");
-                break;
-            case START_LOCATION_OTHER_PLAYER:
-                System.out.println("il pezzo che stai cercando di muovere non è tuo");
-                break;
-            case MOVE_NOT_VALID:
-                System.out.println("Mossa non valida");
-                break;
-
+            case OK -> System.out.println("Mossa effettuata con successo");
+            case START_LOCATION_EMPTY -> System.out.println("Nessuna pedina nella posizione di partenza");
+            case START_LOCATION_OTHER_PLAYER -> System.out.println("il pezzo che stai cercando di muovere non è tuo");
+            case MOVE_NOT_VALID -> System.out.println("Mossa non valida");
         }
     }
 

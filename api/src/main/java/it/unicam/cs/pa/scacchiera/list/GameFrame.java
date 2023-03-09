@@ -5,7 +5,7 @@ import it.unicam.cs.pa.scacchiera.list.util.Colour;
 
 import java.util.List;
 
-public interface GameFrame<P, L> {
+public interface GameFrame<P extends Piece, L> {
 
     /**
      * Tutte le mosse di uno specifico pezzo di un determinato giocatore.
@@ -54,8 +54,6 @@ public interface GameFrame<P, L> {
     void setTheBoard(Board<Piece, Location> theBoard);
 
     List<Piece> unblockedPieces();
-
-    void kingify(P pezzo);
 
     int getFrameNumber();
 }

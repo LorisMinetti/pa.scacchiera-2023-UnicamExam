@@ -12,7 +12,7 @@ import java.util.Objects;
 
 public class CheckersGame implements Game{
 
-    private Player player1, player2;
+    private final Player player1, player2;
     private GameState status;
     private Board<Piece, Location> board;
     private Colour turn;
@@ -82,26 +82,17 @@ public class CheckersGame implements Game{
                 return MoveResult.MOVE_NOT_VALID;
 
             }
-            System.out.println("il pezzo da mangiare lo vedo"); //togliere da qui ... non sempre la lista delle mosse contiene la mossa mangiante
             if(possibleMoves.contains(move)){
                 if(board.apply(move)) {
                     //mossa mangiante
                     if(gameFrameCorrente.getTheBoard().getIntermediateLocation(move.getStart(), move.getDestination()).getPiece().isPresent()
                         &&  move.isCapture()){
 
-                        if( gameFrameCorrente.getTheBoard().getIntermediateLocation(move.getStart(), move.getDestination()).isFree() ){ //prova
-                            System.out.println("mi dice che qui in mezzo non c'è nulla");
-                        }
-
                         Piece captured = gameFrameCorrente.getTheBoard().getIntermediateLocation(move.getStart(), move.getDestination()).getPiece().get();
                         capturePieceWithPiece(pezzo, captured);
 
                     }
-                    if(pezzo.getColour() == Colour.WHITE && move.getDestination().getRow() == 0){
-                        pezzo.becomeKing();
-                    } else if(pezzo.getColour() == Colour.BLACK && move.getDestination().getRow() == 7){
-                        pezzo.becomeKing();
-                    }
+                    kingify(move, pezzo);
                 }
             }
 
@@ -121,7 +112,25 @@ public class CheckersGame implements Game{
         return MoveResult.OK;
     }
 
-    private void capturePieceWithPiece(Piece pezzo, Piece captured) throws Exception {
+    /**
+     * Metodo che rende re una pedina che arriva nella base avversaria.
+     * @param move
+     * @param pezzo
+     */
+    private static void kingify(Move move, Pawn pezzo) {
+        if(pezzo.getColour() == Colour.WHITE && move.getDestination().getRow() == 0){
+            pezzo.becomeKing();
+        } else if(pezzo.getColour() == Colour.BLACK && move.getDestination().getRow() == 7){
+            pezzo.becomeKing();
+        }
+    }
+
+    /**
+     * Metodo che cattura un pezzo con un altro. Rimuove il pezzo dalla lista dei pezzi del giocatore avversario e dalla board.
+     * @param pezzo
+     * @param captured
+     */
+    private void capturePieceWithPiece(Piece pezzo, Piece captured){
         //lo rimuovo dalla lista dei pezzi del giocatore avversario
         if(captured.getColour() == Colour.BLACK && pezzo.getColour() == Colour.WHITE){
             gameFrameCorrente.getBlackPieces().remove(captured);
@@ -132,6 +141,9 @@ public class CheckersGame implements Game{
         this.getGameFrame().getTheBoard().getSchema()[captured.getLocation().getRow()][captured.getLocation().getColumn()].setPiece(null);
     }
 
+    /**
+     * Metodo che aggiorna lo stato del gioco.
+     */
     @Override
     public void updateStatus(){
         if( this.isTerminal() ) {

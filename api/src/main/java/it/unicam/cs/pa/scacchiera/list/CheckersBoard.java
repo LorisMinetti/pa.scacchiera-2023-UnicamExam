@@ -4,10 +4,8 @@ import it.unicam.cs.pa.scacchiera.list.Checkers.Pawn;
 import it.unicam.cs.pa.scacchiera.list.pieces.Piece;
 import it.unicam.cs.pa.scacchiera.list.util.BackgroundColor;
 import it.unicam.cs.pa.scacchiera.list.util.Colour;
-import it.unicam.cs.pa.scacchiera.list.util.Displacement;
 
 import java.util.*;
-import java.util.List;
 
 import static it.unicam.cs.pa.scacchiera.list.util.Colour.BLACK;
 import static it.unicam.cs.pa.scacchiera.list.util.Colour.WHITE;
@@ -146,7 +144,6 @@ public class CheckersBoard implements Board<Piece, Location> {
 
     /**
      * Lista delle posizioni diagonali e adiacenti a uno specifico pezzo.
-     *
      * @param piece
      * @return Lista
      */
@@ -192,6 +189,7 @@ public class CheckersBoard implements Board<Piece, Location> {
 
 
     /**
+     * Setta un pezzo in una posizione specifica.
      * @param location
      * @param piece
      */
@@ -276,10 +274,7 @@ public class CheckersBoard implements Board<Piece, Location> {
         int displacementRow = Math.abs(endRow - startRow);
         int displacementColumn = Math.abs(endColumn - startColumn);
 
-        int displ = Math.max(displacementRow, displacementColumn);
-        int a = 0;
-        int u = 05;
-        return displ;
+        return Math.max(displacementRow, displacementColumn);
     }
 
     @Override

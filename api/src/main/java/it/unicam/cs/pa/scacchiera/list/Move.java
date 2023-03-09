@@ -1,10 +1,12 @@
 package it.unicam.cs.pa.scacchiera.list;
 
+import it.unicam.cs.pa.scacchiera.list.pieces.Piece;
+
 import java.util.Objects;
 
 public class Move {
 
-    private Location start, destination;
+    private final Location start, destination;
     private boolean capture;
 
     public Move(Location start, Location dest) {
@@ -40,13 +42,13 @@ public class Move {
         return this.destination;
     }
 
-    public boolean belongsToBoard(Board board) {
+    public boolean belongsToBoard(Board<Piece, Location> board) {
         return (board != null &&
                 (board.isInsideBoard(start) && board.isInsideBoard(destination)));
     }
 
     public boolean isCapture() {
-        return capture==true ? true : false;
+        return capture;
     }
 
     public void becomeCaptureMove() {
