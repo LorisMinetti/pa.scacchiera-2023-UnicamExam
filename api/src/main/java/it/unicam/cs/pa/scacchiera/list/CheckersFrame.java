@@ -1,6 +1,5 @@
 package it.unicam.cs.pa.scacchiera.list;
 
-import it.unicam.cs.pa.scacchiera.list.Checkers.Pawn;
 import it.unicam.cs.pa.scacchiera.list.pieces.Piece;
 import it.unicam.cs.pa.scacchiera.list.util.Colour;
 
@@ -169,22 +168,6 @@ public class CheckersFrame implements GameFrame<Piece, Location> {
     public String toString() {
         return "Frame n° " + frameNumber +
                 "\n\n" + theBoard;
-    }
-
-    /**
-     * Da semplice pedina a Dama.
-     * @param pawn
-     */
-    public void kingify(Pawn pawn){
-        //tutti i pezzi bianchi nella riga con indice 0 diventano dama
-        //tutti i pezzi neri nella riga con indice 7 diventano dama
-        for(int i = 0; i < theBoard.getROW_VALUE(); i++){
-            if(pawn.getColour() == Colour.WHITE && pawn.getLocation().getRow() == 0){
-                pawn.becomeKing();
-            } else if(pawn.getColour() == Colour.BLACK && pawn.getLocation().getRow() == 7){
-                pawn.becomeKing();
-            }
-        }
     }
 
     public void setFuture(GameFrame<Piece, Location> future) {
