@@ -144,7 +144,7 @@ public class CheckersBoard implements Board<Piece, Location> {
 
     /**
      * Lista delle posizioni diagonali e adiacenti a uno specifico pezzo.
-     * @param piece
+     * @param piece pezzo
      * @return Lista
      */
     @Override
@@ -190,8 +190,8 @@ public class CheckersBoard implements Board<Piece, Location> {
 
     /**
      * Setta un pezzo in una posizione specifica.
-     * @param location
-     * @param piece
+     * @param location locazione da occupare
+     * @param piece pezzo
      */
     @Override
     public void setPiece(Location location, Piece piece) throws Exception {
@@ -217,9 +217,8 @@ public class CheckersBoard implements Board<Piece, Location> {
     /**
      * Ritorna la locazione diagnalmente distante DUE posizioni. Questa locazione dovrà essere presente all'interno della scacchiera
      * per poter essere occupabile. Necessaria per le operazioni di "mangiata" o JUMP.
-     *
-     * @param current
-     * @param diagonallyAdjacent
+     * @param current locazione considerata
+     * @param diagonallyAdjacent locazione diagonalmente adiacente
      * @return locazione diagonalmente successiva alla diagonale considerata
      */
     public Location getNextDiagonalSpot(Location current, Location diagonallyAdjacent) {
@@ -321,11 +320,15 @@ public class CheckersBoard implements Board<Piece, Location> {
 
             // Ciclo sulle colonne della scacchiera
             for (int col = 0; col < COLUMN_VALUE; col++) {
-                Piece piece = getPiece(row, col);
+                Pawn piece = (Pawn) getPiece(row, col);
 
                 // Aggiunge alla stringa il simbolo della pedina (X per le pedine nere, O per le pedine bianche)
                 if (piece != null) {
-                    sb.append(piece.getColour() == BLACK ? "X " : "O ");
+                    if(piece.isKing()){
+                        sb.append(piece.getColour() == BLACK ? "♔" : "♚");
+                    } else{
+                        sb.append(piece.getColour() == BLACK ? "△ " : "■ ");
+                    }
                 } else {
                     sb.append("  ");
                 }

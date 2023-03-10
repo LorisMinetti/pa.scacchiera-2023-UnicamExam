@@ -10,6 +10,7 @@ import it.unicam.cs.pa.scacchiera.list.pieces.Piece;
 import it.unicam.cs.pa.scacchiera.list.player.ComputerPlayer;
 import it.unicam.cs.pa.scacchiera.list.player.Player;
 import it.unicam.cs.pa.scacchiera.list.util.Colour;
+import it.unicam.cs.pa.scacchiera.list.util.GameState;
 import it.unicam.cs.pa.scacchiera.list.util.MoveResult;
 
 import java.util.Scanner;
@@ -32,7 +33,8 @@ public class App {
         game.getGameFrame().printBoardFrame();
         //affinchè il gioco non è terminato
         while (!game.isTerminal()) {
-            System.out.println("Turno di " + game.getGameFrame().getActualTurn());
+            System.out.print("Turno di " + game.getGameFrame().getActualTurn() + "  |  ");
+            game.getGameFrame().printUnblockedPieces();
             System.out.println("----------------------");
             System.out.println(game.getGameFrame().printBoardFrame());
             System.out.println("----------------------");
@@ -44,7 +46,13 @@ public class App {
                 game.move(computerMove);
             }
         }
-        System.out.println("--------------------\nPartita terminata: " + game.getGameFrame().getActualTurn() + " è il vincitore.");
+        if(game.getStatus() == GameState.PLAYER_1_WINS){
+            System.out.println("Vittoria! Complimenti giocatore 1");
+        } else if(game.getStatus() == GameState.PLAYER_2_WINS){
+            System.out.println("Vittoria! Complimenti giocatore 2");
+        } else if(game.getStatus() == GameState.DRAW){
+            System.out.println("Pareggio!");
+        }
     }
 
     private static void requestMoveToUser(Scanner sc, Game game, GameFrame<Piece, Location> frame) throws Exception {

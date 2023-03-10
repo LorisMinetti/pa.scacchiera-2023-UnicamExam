@@ -10,6 +10,9 @@ import it.unicam.cs.pa.scacchiera.list.util.MoveResult;
 import java.util.List;
 import java.util.Objects;
 
+import static it.unicam.cs.pa.scacchiera.list.util.Colour.BLACK;
+import static it.unicam.cs.pa.scacchiera.list.util.Colour.WHITE;
+
 public class CheckersGame implements Game{
 
     private final Player player1, player2;
@@ -25,7 +28,7 @@ public class CheckersGame implements Game{
         this.board = board;
         this.player1 = player1;
         this.player2 = player2;
-        turn = Colour.WHITE;
+        turn = WHITE;
         gameFrameCorrente = frame;
 
     }
@@ -40,14 +43,19 @@ public class CheckersGame implements Game{
     public boolean isTerminal() {
         boolean whiteFound = false;
         boolean blackFound = false;
+
+        if(gameFrameCorrente.allPossibleMoves(turn.opponent()).isEmpty()){
+            return true;
+        }
+
         for(int i=0; i< board.getROW_VALUE(); i++){
             for(int j=0; j< board.getCOLUMN_VALUE(); j++){
                 Location location = board.getSchema()[i][j];
                 if (location.getPiece().isPresent()
-                        && location.getPiece().orElse(null).getColour() == Colour.BLACK) {
+                        && location.getPiece().orElse(null).getColour() == BLACK) {
                     blackFound = true;
                 } else if (location.getPiece().isPresent()
-                        && location.getPiece().orElse(null).getColour() == Colour.WHITE) {
+                        && location.getPiece().orElse(null).getColour() == WHITE) {
                     whiteFound = true;
                 }
             }
@@ -65,76 +73,88 @@ public class CheckersGame implements Game{
         if(status != GameState.RUNNING){
             System.out.println("Partita terminata. Impossibile effettuare alcuna mossa.");
         }
-
-        Pawn pezzo = null;
-        if(move.getStart().getPiece().isPresent()){
-            pezzo = (Pawn) move.getStart().getPiece().get();
+        //Se la mossa sarà null equivale a dire che il giocatore attuale non avrà più alcuna mossa da effettuare.
+        if(move == null){
+            this.updateStatus();
         }
-        if(pezzo == null){
-           return MoveResult.START_LOCATION_EMPTY;
-        }
-
-        //controllo che la pedina sia del giocatore corrente, a quel punto controllo la validità della mossa
-        if(pezzo.getColour() == gameFrameCorrente.getActualTurn()){
-            List<Move> possibleMoves = gameFrameCorrente.allPieceMoves(gameFrameCorrente, gameFrameCorrente.getActualTurn(), pezzo);
-            //controllo se la mossa che voglio effettuare è contenuta tra le mosse possibili del pezzo
-            if( !possibleMoves.contains(move)){
-                return MoveResult.MOVE_NOT_VALID;
-
+        else {
+            Pawn pezzo = null;
+            if(move.getStart().getPiece().isPresent()){
+                pezzo = (Pawn) move.getStart().getPiece().get();
             }
-            if(possibleMoves.contains(move)){
-                if(board.apply(move)) {
-                    //mossa mangiante
-                    if(gameFrameCorrente.getTheBoard().getIntermediateLocation(move.getStart(), move.getDestination()).getPiece().isPresent()
-                        &&  move.isCapture()){
+            if(pezzo == null){
+                return MoveResult.START_LOCATION_EMPTY;
+            }
 
-                        Piece captured = gameFrameCorrente.getTheBoard().getIntermediateLocation(move.getStart(), move.getDestination()).getPiece().get();
-                        capturePieceWithPiece(pezzo, captured);
+            //controllo che la pedina sia del giocatore corrente, a quel punto controllo la validità della mossa
+            if(pezzo.getColour() == gameFrameCorrente.getActualTurn()){
+                List<Move> possibleMoves = gameFrameCorrente.allPieceMoves(gameFrameCorrente, gameFrameCorrente.getActualTurn(), pezzo);
+                //controllo se la mossa che voglio effettuare è contenuta tra le mosse possibili del pezzo
+                if( !possibleMoves.contains(move)){
+                    return MoveResult.MOVE_NOT_VALID;
+                } else {
+                    if(board.apply(move)) {
+                        //mossa mangiante
+                        if(gameFrameCorrente.getTheBoard().getIntermediateLocation(move.getStart(), move.getDestination()).getPiece().isPresent()
+                                &&  move.isCapture()){
 
+                            Piece captured = gameFrameCorrente.getTheBoard().getIntermediateLocation(move.getStart(), move.getDestination()).getPiece().get();
+                            capturePieceWithPiece(pezzo, captured);
+
+                        }
                     }
                     kingify(move, pezzo);
+                    this.updateStatus();
                 }
-            }
 
-        } else return MoveResult.START_LOCATION_OTHER_PLAYER;
-        //sposto la pedina
+            } else return MoveResult.START_LOCATION_OTHER_PLAYER;
 
 
-        //aggiorno lo stato del gioco
-        this.updateStatus();
-        //cambio turno
-        this.turn = turn.opponent();
-        this.gameFrameCorrente.setActualTurn(turn);
-        //nuovo game frame
-        GameFrame<Piece, Location> nuovoGameFrame = new CheckersFrame(gameFrameCorrente, turn, board);
-        gameFrameCorrente.setFuture(nuovoGameFrame);
-        gameFrameCorrente = nuovoGameFrame;
+            //aggiorno lo stato del gioco
+            //cambio turno
+            this.turn = turn.opponent();
+            this.gameFrameCorrente.setActualTurn(turn);
+            //nuovo game frame
+            GameFrame<Piece, Location> nuovoGameFrame = new CheckersFrame(gameFrameCorrente, turn, board);
+            gameFrameCorrente.setFuture(nuovoGameFrame);
+            gameFrameCorrente = nuovoGameFrame;
+
+        }
         return MoveResult.OK;
     }
 
     /**
+     * Ritorna lo stato del gioco
+     * @return
+     */
+    @Override
+    public GameState getStatus() {
+        return this.status;
+    }
+
+    /**
      * Metodo che rende re una pedina che arriva nella base avversaria.
-     * @param move
-     * @param pezzo
+     * @param move che rende re una pedina
+     * @param pezzo che diventa re
      */
     private static void kingify(Move move, Pawn pezzo) {
-        if(pezzo.getColour() == Colour.WHITE && move.getDestination().getRow() == 0){
+        if(pezzo.getColour() == WHITE && move.getDestination().getRow() == 0){
             pezzo.becomeKing();
-        } else if(pezzo.getColour() == Colour.BLACK && move.getDestination().getRow() == 7){
+        } else if(pezzo.getColour() == BLACK && move.getDestination().getRow() == 7){
             pezzo.becomeKing();
         }
     }
 
     /**
      * Metodo che cattura un pezzo con un altro. Rimuove il pezzo dalla lista dei pezzi del giocatore avversario e dalla board.
-     * @param pezzo
-     * @param captured
+     * @param pezzo che cattura
+     * @param captured pezzo che viene catturato
      */
     private void capturePieceWithPiece(Piece pezzo, Piece captured){
         //lo rimuovo dalla lista dei pezzi del giocatore avversario
-        if(captured.getColour() == Colour.BLACK && pezzo.getColour() == Colour.WHITE){
+        if(captured.getColour() == BLACK && pezzo.getColour() == WHITE){
             gameFrameCorrente.getBlackPieces().remove(captured);
-        } else if(captured.getColour() == Colour.WHITE && pezzo.getColour() == Colour.BLACK) {
+        } else if(captured.getColour() == WHITE && pezzo.getColour() == BLACK) {
             gameFrameCorrente.getWhitePieces().remove(captured);
         }
         //e lo rimuovo dalla board
@@ -147,13 +167,13 @@ public class CheckersGame implements Game{
     @Override
     public void updateStatus(){
         if( this.isTerminal() ) {
-            if( turn == Colour.WHITE ) {
+            if( turn == WHITE ) {
                 status = GameState.PLAYER_1_WINS;
             } else {
                 status = GameState.PLAYER_2_WINS;
             }
         } else if (gameFrameCorrente.allPossibleMoves(turn.opponent()).isEmpty()){
-            if( turn == Colour.WHITE ) {
+            if( turn == WHITE ) {
                 status = GameState.PLAYER_1_WINS;
             } else {
                 status = GameState.PLAYER_2_WINS;
@@ -165,15 +185,11 @@ public class CheckersGame implements Game{
 
     /**
      * Frazione di gioco corrente.
-     * @return
+     * @return gameframe
      */
     @Override
     public GameFrame<Piece, Location> getGameFrame() {
         return this.gameFrameCorrente;
-    }
-
-    public void setTurn(Colour turn) {
-        this.turn = turn;
     }
 
     @Override
