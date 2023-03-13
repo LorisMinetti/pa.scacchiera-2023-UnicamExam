@@ -22,40 +22,53 @@ public class App {
     static final int COLUMN = 8;
 
     public static void main(String[] args) throws Exception {
-        Board<Piece, Location> board = new CheckersBoard(ROW, COLUMN);
-        Player player1 = new Player("Player 1", Colour.WHITE);
-        Player computer = new ComputerPlayer("Computer", Colour.BLACK);
-        GameFrame<Piece, Location> first = new CheckersFrame(null, WHITE, board);
-        Game game = new CheckersGame(player1, computer, board, first);
+        Scanner scanner = new Scanner(System.in);
+        boolean playAgain = true;
+        System.out.println("- DAMA ITALIANA -\nBuona fortuna!\n\n");
 
-        Scanner sc = new Scanner(System.in);
+        while (playAgain) {
+            Board<Piece, Location> board = new CheckersBoard(ROW, COLUMN);
+            Player player1 = new Player("Player 1", Colour.WHITE);
+            Player computer = new ComputerPlayer("Computer", Colour.BLACK);
+            GameFrame<Piece, Location> first = new CheckersFrame(null, WHITE, board);
+            Game game = new CheckersGame(player1, computer, board, first);
 
-        game.getGameFrame().printBoardFrame();
-        //affinchè il gioco non è terminato
-        while (!game.isTerminal()) {
-            System.out.print("Turno di " + game.getGameFrame().getActualTurn() + "  |  ");
-            game.getGameFrame().printUnblockedPieces();
-            System.out.println("----------------------");
-            System.out.println(game.getGameFrame().printBoardFrame());
-            System.out.println("----------------------");
+            Scanner sc = new Scanner(System.in);
 
-            if (game.getGameFrame().getActualTurn() == WHITE) {
-                requestMoveToUser(sc, game, game.getGameFrame());
-            } else {
-                Move computerMove = computer.play(game.getGameFrame());
-                game.move(computerMove);
+            game.getGameFrame().printBoardFrame();
+            //affinchè il gioco non è terminato
+            while (!game.isTerminal()) {
+                System.out.print("Turno di " + game.getGameFrame().getActualTurn() + "  |  ");
+                System.out.println("----------------------");
+                System.out.println(game.getGameFrame().printBoardFrame());
+                System.out.println("----------------------");
+
+                if (game.getGameFrame().getActualTurn() == WHITE) {
+                    requestMoveToUser(sc, game, game.getGameFrame());
+                } else {
+                    Move computerMove = computer.play(game.getGameFrame());
+                    game.move(computerMove);
+                }
+            }
+            if (game.getStatus() == GameState.PLAYER_1_WINS) {
+                System.out.println("Vittoria! Complimenti giocatore 1");
+            } else if (game.getStatus() == GameState.PLAYER_2_WINS) {
+                System.out.println("Vittoria! Complimenti giocatore 2");
+            } else if (game.getStatus() == GameState.DRAW) {
+                System.out.println("Pareggio!");
+            }
+
+            System.out.println("Vuoi giocare di nuovo? (SI / NO)");
+            if (scanner.nextLine().equalsIgnoreCase("no")) {
+                playAgain = false;
             }
         }
-        if(game.getStatus() == GameState.PLAYER_1_WINS){
-            System.out.println("Vittoria! Complimenti giocatore 1");
-        } else if(game.getStatus() == GameState.PLAYER_2_WINS){
-            System.out.println("Vittoria! Complimenti giocatore 2");
-        } else if(game.getStatus() == GameState.DRAW){
-            System.out.println("Pareggio!");
-        }
+
+
     }
 
-    private static void requestMoveToUser(Scanner sc, Game game, GameFrame<Piece, Location> frame) throws Exception {
+    private static void requestMoveToUser(Scanner sc, Game game, GameFrame<Piece, Location> frame) throws
+            Exception {
         Location startLocation = askForLocation(sc, frame, "Inserisci la posizione di partenza");
         Location endLocation = askForLocation(sc, frame, "Inserisci la posizione di arrivo");
         MoveResult result = game.move(new Move(startLocation, endLocation));
@@ -75,15 +88,15 @@ public class App {
             // l'input è del tipo "x y"
             String[] parts = input.split(" ");
 
-            if(parts.length != 2){
+            if (parts.length != 2) {
                 System.out.println("Input non valido, scrivi la posizione nel formato 'x y'");
                 continue;
             }
             int x, y;
-            try{
+            try {
                 x = Integer.parseInt(parts[0]) - 1;
                 y = Integer.parseInt(parts[1]) - 1;
-            } catch (NumberFormatException e){
+            } catch (NumberFormatException e) {
                 System.out.println("Input non valido, scrivi la posizione nel formato 'x y'");
                 continue;
             }
@@ -110,6 +123,5 @@ public class App {
 
         }
     }
-
-
 }
+
