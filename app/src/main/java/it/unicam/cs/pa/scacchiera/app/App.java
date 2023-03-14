@@ -26,6 +26,9 @@ public class App {
         boolean playAgain = true;
         System.out.println("\n\nDAMA ITALIANA -\nBuona fortuna!\n\n");
 
+        /*
+        Partita completa
+         */
         while (playAgain) {
             Board<Piece, Location> board = new CheckersBoard(ROW, COLUMN);
             Player player1 = new Player("Player 1", Colour.WHITE);

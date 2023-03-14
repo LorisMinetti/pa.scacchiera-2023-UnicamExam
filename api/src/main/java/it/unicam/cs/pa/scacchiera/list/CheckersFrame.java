@@ -7,6 +7,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 
+/**
+ * Questa classe rappresenta un frame della partita, ovvero uno stato della scacchiera.
+ * @author Loris Minetti
+ */
 public class CheckersFrame implements GameFrame<Piece, Location> {
     private int frameNumber = 0;
     private GameFrame<Piece, Location> future, previous;
@@ -24,20 +28,11 @@ public class CheckersFrame implements GameFrame<Piece, Location> {
         frameNumber = prev == null ? 1 : prev.getFrameNumber() + 1;
 
     }
-    public CheckersFrame(GameFrame<Piece,Location> prev, Colour turn, Board<Piece, Location> board, int frameNumber, List<Piece> whitePieces, List<Piece> blackPieces){
-        actualTurn = turn;
-        previous = prev;
-        theBoard = board;
-        this.whitePieces = whitePieces;
-        this.blackPieces = blackPieces;
-        this.frameNumber = frameNumber;
-    }
 
     /**
      * Crea una lista di pezzi di un certo colore
-     *
-     * @param colour
-     * @return
+     * @param colour giocatore
+     * @return lista di pezzi del giocatore
      */
     public List<Piece> fillPieceList(Colour colour) {
         List<Piece> result = new ArrayList<>();
@@ -62,9 +57,9 @@ public class CheckersFrame implements GameFrame<Piece, Location> {
     /**
      * Lista di tutte le posibili mosse che un pezzo, appartenente a un giocatore specifico, può effettuare
      * ATTENZIONE: se questa lista torna vuota la partita deve terminare !!
-     * @param state
-     * @param col
-     * @param piece
+     * @param state gameframe corrente
+     * @param col colore del giocatore
+     * @param piece pezzo di cui si vogliono conoscere le mosse
      * @return Lista delle mosse effettuabili da un pezzo.
      */
     @Override
@@ -104,7 +99,7 @@ public class CheckersFrame implements GameFrame<Piece, Location> {
 
     /**
      * Tutte le possibili mosse per un giocatore durante un determinato momento della partita.
-     * @param colour
+     * @param colour giocatore
      * @return lista delle mosse possibili.
      */
     @Override

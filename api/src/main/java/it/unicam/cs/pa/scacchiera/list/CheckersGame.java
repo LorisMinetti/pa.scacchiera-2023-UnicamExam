@@ -13,6 +13,10 @@ import java.util.Objects;
 import static it.unicam.cs.pa.scacchiera.list.util.Colour.BLACK;
 import static it.unicam.cs.pa.scacchiera.list.util.Colour.WHITE;
 
+/**
+ * Questa classe identifica un gioco generico di Dama italiana.
+ * @author Loris Minetti
+ */
 public class CheckersGame implements Game{
 
     private final Player player1, player2;
