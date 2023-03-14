@@ -24,7 +24,7 @@ public class App {
     public static void main(String[] args) throws Exception {
         Scanner scanner = new Scanner(System.in);
         boolean playAgain = true;
-        System.out.println("- DAMA ITALIANA -\nBuona fortuna!\n\n");
+        System.out.println("\n\nDAMA ITALIANA -\nBuona fortuna!\n\n");
 
         while (playAgain) {
             Board<Piece, Location> board = new CheckersBoard(ROW, COLUMN);
@@ -34,22 +34,11 @@ public class App {
             Game game = new CheckersGame(player1, computer, board, first);
 
             Scanner sc = new Scanner(System.in);
-
             game.getGameFrame().printBoardFrame();
-            //affinchè il gioco non è terminato
-            while (!game.isTerminal()) {
-                System.out.print("Turno di " + game.getGameFrame().getActualTurn() + "  |  ");
-                System.out.println("----------------------");
-                System.out.println(game.getGameFrame().printBoardFrame());
-                System.out.println("----------------------");
 
-                if (game.getGameFrame().getActualTurn() == WHITE) {
-                    requestMoveToUser(sc, game, game.getGameFrame());
-                } else {
-                    Move computerMove = computer.play(game.getGameFrame());
-                    game.move(computerMove);
-                }
-            }
+            //Inizio la partita, fino al suo termine
+            gaming(computer, game, sc);
+
             if (game.getStatus() == GameState.PLAYER_1_WINS) {
                 System.out.println("Vittoria! Complimenti giocatore 1");
             } else if (game.getStatus() == GameState.PLAYER_2_WINS) {
@@ -59,6 +48,7 @@ public class App {
             }
 
             System.out.println("Vuoi giocare di nuovo? (SI / NO)");
+
             if (scanner.nextLine().equalsIgnoreCase("no")) {
                 playAgain = false;
             }
@@ -67,6 +57,36 @@ public class App {
 
     }
 
+    /**
+     * Costruzione di ogni gameFrame della partita. Mossa del giocatore, mossa del computer. Fino al terminare della partita.
+     * @param computer computer player
+     * @param game game
+     * @param sc scanner
+     * @throws Exception exc
+     */
+    private static void gaming(Player computer, Game game, Scanner sc) throws Exception {
+        while (!game.isTerminal()) {
+            System.out.print("Turno di " + game.getGameFrame().getActualTurn() + "  |  ");
+            System.out.println("----------------------");
+            System.out.println(game.getGameFrame().printBoardFrame());
+            System.out.println("----------------------");
+
+            if (game.getGameFrame().getActualTurn() == WHITE) {
+                requestMoveToUser(sc, game, game.getGameFrame());
+            } else {
+                Move computerMove = computer.play(game.getGameFrame());
+                game.move(computerMove);
+            }
+        }
+    }
+
+    /**
+     * Presa in carico della mossa dopo aver inserito le due locazioni. Restituzione a console di un risultato causato dalla mossa.
+     * @param sc scanner
+     * @param game game
+     * @param frame gameframe
+     * @throws Exception exc
+     */
     private static void requestMoveToUser(Scanner sc, Game game, GameFrame<Piece, Location> frame) throws
             Exception {
         Location startLocation = askForLocation(sc, frame, "Inserisci la posizione di partenza");
@@ -81,6 +101,14 @@ public class App {
         }
     }
 
+
+    /**
+     * Richiesta del valore numerico collegato alla casella della forma 'x y'
+     * @param sc scanner
+     * @param frame gameframe
+     * @param message messaggio di partenza
+     * @return locazione selezionata
+     */
     public static Location askForLocation(Scanner sc, GameFrame<Piece, Location> frame, String message) {
         while (true) {
             System.out.println(message);
@@ -101,16 +129,7 @@ public class App {
                 continue;
             }
 
-            //Ora l'input, ed i suoi relativi contrlli, deve essere inteso
-            // come valori da 1 a 8
-            if (x < 0 || x >= ROW) {
-                System.out.println("Valore di x non valido");
-                continue;
-            }
-            if (y < 0 || y >= COLUMN) {
-                System.out.println("Valore di y non valido");
-                continue;
-            }
+            if (isOneToEight(x, y)) continue;
             //pezzo che voglio muovere
             Piece pawn = new Pawn(frame.getTheBoard().getSchema()[x][y], frame.getActualTurn());
             Colour colour = pawn.getColour();
@@ -122,6 +141,26 @@ public class App {
             }
 
         }
+    }
+
+    /**
+     * Configurazione "umana" degli input di scacchiera.
+     * Controllo sulla numerazione delle caselle da 1 a 8, invece che da 0 a 7
+     * @param x righe
+     * @param y colonne
+     * @return true
+     */
+    private static boolean isOneToEight(int x, int y) {
+
+        if (x < 0 || x >= ROW) {
+            System.out.println("Valore di x non valido");
+            return true;
+        }
+        if (y < 0 || y >= COLUMN) {
+            System.out.println("Valore di y non valido");
+            return true;
+        }
+        return false;
     }
 }
 
