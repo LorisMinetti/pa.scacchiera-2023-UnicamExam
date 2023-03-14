@@ -17,7 +17,7 @@ public class CheckersGame implements Game{
 
     private final Player player1, player2;
     private GameState status;
-    private Board<Piece, Location> board;
+    private final Board<Piece, Location> board;
     private Colour turn;
     private GameFrame<Piece, Location> gameFrameCorrente;
 
@@ -111,21 +111,25 @@ public class CheckersGame implements Game{
 
 
             //aggiorno lo stato del gioco
-            //cambio turno
-            this.turn = turn.opponent();
-            this.gameFrameCorrente.setActualTurn(turn);
-            //nuovo game frame
-            GameFrame<Piece, Location> nuovoGameFrame = new CheckersFrame(gameFrameCorrente, turn, board);
-            gameFrameCorrente.setFuture(nuovoGameFrame);
-            gameFrameCorrente = nuovoGameFrame;
-
+            threeCardGame();
         }
         return MoveResult.OK;
     }
 
+    private void threeCardGame() {
+        //in questo modo setto il gameFrame precedente solo dal secondo in poi
+
+        this.turn = turn.opponent();
+        this.gameFrameCorrente.setActualTurn(turn);
+        //nuovo game frame
+        GameFrame<Piece, Location> nuovoGameFrame = new CheckersFrame(gameFrameCorrente, turn, board);
+        gameFrameCorrente.setFuture(nuovoGameFrame);
+        gameFrameCorrente = nuovoGameFrame;
+    }
+
     /**
      * Ritorna lo stato del gioco
-     * @return
+     * @return status
      */
     @Override
     public GameState getStatus() {
@@ -133,7 +137,7 @@ public class CheckersGame implements Game{
     }
 
     /**
-     * Metodo che rende re una pedina che arriva nella base avversaria.
+     * Rende re una pedina che arriva nella base avversaria.
      * @param move che rende re una pedina
      * @param pezzo che diventa re
      */
@@ -146,7 +150,7 @@ public class CheckersGame implements Game{
     }
 
     /**
-     * Metodo che cattura un pezzo con un altro. Rimuove il pezzo dalla lista dei pezzi del giocatore avversario e dalla board.
+     * Cattura un pezzo con un altro. Rimuove il pezzo dalla lista dei pezzi del giocatore avversario e dalla board.
      * @param pezzo che cattura
      * @param captured pezzo che viene catturato
      */
