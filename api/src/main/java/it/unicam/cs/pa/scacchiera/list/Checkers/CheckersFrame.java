@@ -1,6 +1,10 @@
-package it.unicam.cs.pa.scacchiera.list;
+package it.unicam.cs.pa.scacchiera.list.Checkers;
 
-import it.unicam.cs.pa.scacchiera.list.pieces.Piece;
+import it.unicam.cs.pa.scacchiera.list.Board;
+import it.unicam.cs.pa.scacchiera.list.GameFrame;
+import it.unicam.cs.pa.scacchiera.list.Location;
+import it.unicam.cs.pa.scacchiera.list.Move;
+import it.unicam.cs.pa.scacchiera.list.Piece;
 import it.unicam.cs.pa.scacchiera.list.util.Colour;
 
 import java.util.ArrayList;
@@ -16,7 +20,7 @@ public class CheckersFrame implements GameFrame<Piece, Location> {
     private GameFrame<Piece, Location> future, previous;
     private Colour actualTurn;
     private final List<Piece> whitePieces, blackPieces;
-    private Board<Piece, Location> theBoard;
+    private final Board<Piece, Location> theBoard;
 
     public CheckersFrame(GameFrame<Piece, Location> prev, Colour turn, Board<Piece, Location> board) {
         actualTurn = turn;
@@ -135,19 +139,6 @@ public class CheckersFrame implements GameFrame<Piece, Location> {
         return unblockedPieces;
     }
 
-    /**
-     * Stampa a console i pezzi non bloccati.
-     * @return pezzi non bloccati
-     */
-    @Override
-    public String printUnblockedPieces(){
-        StringBuilder sb = new StringBuilder();
-        sb.append("Pezzi disponibili da muovere: ");
-        for(Piece piece : unblockedPieces()){
-            sb.append(piece).append(" - ");
-        }
-        return sb.toString();
-    }
 
     /**
      * Stampa a console la scacchiera.
@@ -173,10 +164,6 @@ public class CheckersFrame implements GameFrame<Piece, Location> {
         return previous;
     }
 
-    public void setPrevious(GameFrame<Piece, Location> previous) {
-        this.previous = previous;
-    }
-
     public Colour getActualTurn() {
         return actualTurn;
     }
@@ -195,9 +182,5 @@ public class CheckersFrame implements GameFrame<Piece, Location> {
 
     public Board<Piece, Location> getTheBoard() {
         return theBoard;
-    }
-
-    public void setTheBoard(Board<Piece, Location> theBoard) {
-        this.theBoard = theBoard;
     }
 }

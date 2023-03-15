@@ -1,7 +1,7 @@
-package it.unicam.cs.pa.scacchiera.list;
+package it.unicam.cs.pa.scacchiera.list.Checkers;
 
-import it.unicam.cs.pa.scacchiera.list.Checkers.Pawn;
-import it.unicam.cs.pa.scacchiera.list.pieces.Piece;
+import it.unicam.cs.pa.scacchiera.list.*;
+import it.unicam.cs.pa.scacchiera.list.Piece;
 import it.unicam.cs.pa.scacchiera.list.player.Player;
 import it.unicam.cs.pa.scacchiera.list.util.Colour;
 import it.unicam.cs.pa.scacchiera.list.util.GameState;
@@ -17,7 +17,7 @@ import static it.unicam.cs.pa.scacchiera.list.util.Colour.WHITE;
  * Questa classe identifica un gioco generico di Dama italiana.
  * @author Loris Minetti
  */
-public class CheckersGame implements Game{
+public class CheckersGame implements Game {
 
     private final Player player1, player2;
     private GameState status;
@@ -113,7 +113,6 @@ public class CheckersGame implements Game{
 
             } else return MoveResult.START_LOCATION_OTHER_PLAYER;
 
-
             //aggiorno lo stato del gioco
             threeCardGame();
         }
@@ -140,6 +139,7 @@ public class CheckersGame implements Game{
         return this.status;
     }
 
+
     /**
      * Rende re una pedina che arriva nella base avversaria.
      * @param move che rende re una pedina
@@ -152,6 +152,7 @@ public class CheckersGame implements Game{
             pezzo.becomeKing();
         }
     }
+
 
     /**
      * Cattura un pezzo con un altro. Rimuove il pezzo dalla lista dei pezzi del giocatore avversario e dalla board.
@@ -168,6 +169,7 @@ public class CheckersGame implements Game{
         //e lo rimuovo dalla board
         this.getGameFrame().getTheBoard().getSchema()[captured.getLocation().getRow()][captured.getLocation().getColumn()].setPiece(null);
     }
+
 
     /**
      * Metodo che aggiorna lo stato del gioco.
@@ -191,6 +193,7 @@ public class CheckersGame implements Game{
         }
     }
 
+
     /**
      * Frazione di gioco corrente.
      * @return gameframe
@@ -200,6 +203,7 @@ public class CheckersGame implements Game{
         return this.gameFrameCorrente;
     }
 
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -207,6 +211,7 @@ public class CheckersGame implements Game{
         CheckersGame that = (CheckersGame) o;
         return Objects.equals(player1, that.player1) && Objects.equals(player2, that.player2) && status == that.status && Objects.equals(board, that.board) && turn == that.turn && Objects.equals(gameFrameCorrente, that.gameFrameCorrente);
     }
+
 
     @Override
     public int hashCode() {

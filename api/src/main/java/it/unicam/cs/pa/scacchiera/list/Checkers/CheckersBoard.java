@@ -1,7 +1,10 @@
-package it.unicam.cs.pa.scacchiera.list;
+package it.unicam.cs.pa.scacchiera.list.Checkers;
 
-import it.unicam.cs.pa.scacchiera.list.Checkers.Pawn;
-import it.unicam.cs.pa.scacchiera.list.pieces.Piece;
+import it.unicam.cs.pa.scacchiera.list.Board;
+import it.unicam.cs.pa.scacchiera.list.Location;
+import it.unicam.cs.pa.scacchiera.list.LocationImpl;
+import it.unicam.cs.pa.scacchiera.list.Move;
+import it.unicam.cs.pa.scacchiera.list.Piece;
 import it.unicam.cs.pa.scacchiera.list.util.BackgroundColor;
 import it.unicam.cs.pa.scacchiera.list.util.Colour;
 
