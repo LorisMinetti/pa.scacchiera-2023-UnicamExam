@@ -1,7 +1,5 @@
 package it.unicam.cs.pa.scacchiera.list;
 
-import it.unicam.cs.pa.scacchiera.list.pieces.Piece;
-
 import java.util.Objects;
 
 /**
@@ -41,11 +39,11 @@ public class Move {
     }
 
 
-    Location getStart() {
+    public Location getStart() {
         return this.start;
     }
 
-    Location getDestination() {
+    public Location getDestination() {
         return this.destination;
     }
 
