@@ -13,7 +13,10 @@ import java.util.*;
 import static it.unicam.cs.pa.scacchiera.list.util.Colour.BLACK;
 import static it.unicam.cs.pa.scacchiera.list.util.Colour.WHITE;
 
-
+/**
+ * @author Loris Minetti
+ * Classe che rappresenta una damiera di gioco della dama italiana.
+ */
 public class CheckersBoard implements Board<Piece, Location> {
     private final Location[][] schema;
     private final int ROW_VALUE, COLUMN_VALUE;

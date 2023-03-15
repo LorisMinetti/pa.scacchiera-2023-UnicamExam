@@ -5,6 +5,7 @@ import it.unicam.cs.pa.scacchiera.list.Location;
 import it.unicam.cs.pa.scacchiera.list.Piece;
 
 /**
+ * @author Loris Minetti
  * Pedina.
  * Pezzo fondamentale per il gioco della DAMA
  */
@@ -59,14 +60,9 @@ public class Pawn implements Piece {
     public String toString() {
         StringBuilder sb = new StringBuilder();
         if(this.isKing()){
-            sb.append("DAMA " +
-                    location +
-                    ", colore =" + colour);
+            sb.append("DAMA ").append(location).append(", colore =").append(colour);
         } else {
-            sb.append(
-                    "PEDINA" +
-                    location +
-                    ", colore" + colour);
+            sb.append("PEDINA").append(location).append(", colore").append(colour);
         }
         return sb.toString();
     }

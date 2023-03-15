@@ -4,6 +4,11 @@ import it.unicam.cs.pa.scacchiera.list.util.Colour;
 
 import java.util.List;
 
+/**
+ * Interfaccia che rappresenta un frame generico di gioco.
+ * @param <P> pezzo
+ * @param <L> location
+ */
 public interface GameFrame<P extends Piece, L> {
 
     /**

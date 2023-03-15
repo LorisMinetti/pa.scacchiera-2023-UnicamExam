@@ -20,6 +20,9 @@ import java.util.Scanner;
 
 import static it.unicam.cs.pa.scacchiera.list.util.Colour.WHITE;
 
+/**
+ * @author Loris Minetti
+ */
 public class App {
     static final int ROW = 8;
     static final int COLUMN = 8;

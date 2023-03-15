@@ -13,7 +13,6 @@ import java.util.List;
 
 /**
  * Questa classe rappresenta un frame della partita, ovvero uno stato della scacchiera.
- *
  * @author Loris Minetti
  */
 public class CheckersFrame implements GameFrame<Piece, Location> {
@@ -138,10 +137,6 @@ public class CheckersFrame implements GameFrame<Piece, Location> {
 
     public void setFuture(GameFrame<Piece, Location> future) {
         this.future = future;
-    }
-
-    public GameFrame<Piece, Location> getPrevious() {
-        return previous;
     }
 
     public Colour getActualTurn() {

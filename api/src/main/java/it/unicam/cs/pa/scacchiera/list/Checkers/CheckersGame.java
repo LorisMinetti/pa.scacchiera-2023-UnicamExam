@@ -120,6 +120,9 @@ public class CheckersGame implements Game {
         return MoveResult.OK;
     }
 
+    /**
+     * Metodo che passa al game frame successivo.
+     */
     private void threeCardGame() {
         //in questo modo setto il gameFrame precedente solo dal secondo in poi
 

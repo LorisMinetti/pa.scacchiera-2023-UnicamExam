@@ -38,11 +38,16 @@ public class Move {
         return Objects.hash(start, destination);
     }
 
-
+    /**
+     * @return la posizione iniziale della mossa
+     */
     public Location getStart() {
         return this.start;
     }
 
+    /**
+     * @return la posizione finale della mossa
+     */
     public Location getDestination() {
         return this.destination;
     }
@@ -57,6 +62,9 @@ public class Move {
                 (board.isInsideBoard(start) && board.isInsideBoard(destination)));
     }
 
+    /**
+     * @return true se la mossa è una cattura
+     */
     public boolean isCapture() {
         return capture;
     }

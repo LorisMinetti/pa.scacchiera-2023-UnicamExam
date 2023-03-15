@@ -3,6 +3,9 @@ package it.unicam.cs.pa.scacchiera.list;
 import it.unicam.cs.pa.scacchiera.list.util.GameState;
 import it.unicam.cs.pa.scacchiera.list.util.MoveResult;
 
+/**
+ * Interfaccia che rappresenta un gioco generico.
+ */
 public interface Game {
 
     /**
