@@ -5,8 +5,11 @@ package it.unicam.cs.pa.scacchiera.app;
 
 
 import it.unicam.cs.pa.scacchiera.list.*;
+import it.unicam.cs.pa.scacchiera.list.Checkers.CheckersBoard;
+import it.unicam.cs.pa.scacchiera.list.Checkers.CheckersFrame;
+import it.unicam.cs.pa.scacchiera.list.Checkers.CheckersGame;
 import it.unicam.cs.pa.scacchiera.list.Checkers.Pawn;
-import it.unicam.cs.pa.scacchiera.list.pieces.Piece;
+import it.unicam.cs.pa.scacchiera.list.Piece;
 import it.unicam.cs.pa.scacchiera.list.player.ComputerPlayer;
 import it.unicam.cs.pa.scacchiera.list.player.Player;
 import it.unicam.cs.pa.scacchiera.list.util.Colour;
@@ -36,8 +39,8 @@ public class App {
             GameFrame<Piece, Location> first = new CheckersFrame(null, WHITE, board);
             Game game = new CheckersGame(player1, computer, board, first);
 
-            Scanner sc = new Scanner(System.in);
             game.getGameFrame().printBoardFrame();
+            Scanner sc = new Scanner(System.in);
 
             //Inizio la partita, fino al suo termine
             gaming(computer, game, sc);
@@ -50,9 +53,12 @@ public class App {
                 System.out.println("Pareggio!");
             }
 
-            System.out.println("Vuoi giocare di nuovo? (SI / NO)");
-
-            if (scanner.nextLine().equalsIgnoreCase("no")) {
+            if (scanner.nextLine().equals("no") || scanner.nextLine().equals("NO") || scanner.nextLine().equals("SI") || scanner.nextLine().equals("si")) {
+                if(scanner.nextLine().equals("no") || scanner.nextLine().equals("NO")) {
+                    playAgain = false;
+                }
+            } else {
+                System.out.println("Risposta non valida. La partita termina.");
                 playAgain = false;
             }
         }
