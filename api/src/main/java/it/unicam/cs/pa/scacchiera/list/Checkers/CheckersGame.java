@@ -107,6 +107,7 @@ public class CheckersGame implements Game {
 
                         }
                     }
+                    //rende una pedina re se arriva nella base avversaria
                     kingify(move, pezzo);
                     this.updateStatus();
                 }
