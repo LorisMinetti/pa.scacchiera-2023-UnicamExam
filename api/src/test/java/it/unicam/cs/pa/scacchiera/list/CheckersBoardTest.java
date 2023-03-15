@@ -1,5 +1,6 @@
 package it.unicam.cs.pa.scacchiera.list;
 
+import it.unicam.cs.pa.scacchiera.list.Checkers.CheckersBoard;
 import it.unicam.cs.pa.scacchiera.list.util.BackgroundColor;
 import it.unicam.cs.pa.scacchiera.list.util.Colour;
 import org.junit.jupiter.api.Test;

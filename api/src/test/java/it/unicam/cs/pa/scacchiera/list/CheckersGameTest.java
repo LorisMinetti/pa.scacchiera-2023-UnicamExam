@@ -1,6 +1,8 @@
 package it.unicam.cs.pa.scacchiera.list;
 
-import it.unicam.cs.pa.scacchiera.list.pieces.Piece;
+import it.unicam.cs.pa.scacchiera.list.Checkers.CheckersBoard;
+import it.unicam.cs.pa.scacchiera.list.Checkers.CheckersFrame;
+import it.unicam.cs.pa.scacchiera.list.Checkers.CheckersGame;
 import it.unicam.cs.pa.scacchiera.list.player.Player;
 import it.unicam.cs.pa.scacchiera.list.util.Colour;
 import it.unicam.cs.pa.scacchiera.list.util.MoveResult;
