@@ -1,13 +1,8 @@
 package it.unicam.cs.pa.scacchiera.list;
-import it.unicam.cs.pa.scacchiera.list.Checkers.Pawn;
-import it.unicam.cs.pa.scacchiera.list.pieces.Piece;
-import it.unicam.cs.pa.scacchiera.list.util.BackgroundColor;
+import it.unicam.cs.pa.scacchiera.list.Checkers.CheckersBoard;
+import it.unicam.cs.pa.scacchiera.list.Checkers.CheckersFrame;
 import it.unicam.cs.pa.scacchiera.list.util.Colour;
 import org.junit.jupiter.api.Test;
-
-import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.BeforeEach;
-
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -24,6 +19,12 @@ public class ChekersFrameTest {
         // Verify
         assertEquals(12, checkersFrame.getWhitePieces().size());
         assertEquals(12, checkersFrame.getBlackPieces().size());
+
+        assertEquals(Colour.WHITE, checkersFrame.getTheBoard().getPiece(5, 1).getColour());
+        assertEquals(Colour.WHITE, checkersFrame.getTheBoard().getPiece(6, 2).getColour());
+        assertEquals(Colour.BLACK, checkersFrame.getTheBoard().getPiece(0, 0).getColour());
+        assertEquals(Colour.BLACK, checkersFrame.getTheBoard().getPiece(1, 1).getColour());
+
     }
 
 
@@ -44,18 +45,25 @@ public class ChekersFrameTest {
         List<Move> moves3 = checkersFrame.allPieceMoves(checkersFrame, Colour.WHITE, pezzo3);
         List<Move> moves4 = checkersFrame.allPieceMoves(checkersFrame, Colour.WHITE, pezzo4);
 
-        // Verify
+        // Verify number of moves
         assertEquals(2, moves1.size());
         assertEquals(2, moves4.size());
         assertEquals(1, moves2.size());
         assertEquals(1, moves3.size());
 
-        Location l1 = new LocationImpl(5, 1);
-        Location l2 = new LocationImpl(5, 7);
-        Location l3 = new LocationImpl(2, 0);
-        Location l4 = new LocationImpl(2, 4);
-        assertTrue(moves1.contains( new Move(l1, board.getSchema()[4][0] )));
-        assertTrue(moves1.contains( new Move(l1, board.getSchema()[4][2] )));
+        Location loc = checkersFrame.getTheBoard().getSchema()[5][1];
+        Location loc1 = checkersFrame.getTheBoard().getSchema()[5][7];
+        Location loc2 = checkersFrame.getTheBoard().getSchema()[2][0];
+        Location loc3 = checkersFrame.getTheBoard().getSchema()[2][4];
+
+        //Verify all moves
+        assertTrue(moves1.contains( new Move(loc, board.getSchema()[4][0] )));
+        assertTrue(moves1.contains( new Move(loc, board.getSchema()[4][2] )));
+        assertTrue(moves2.contains( new Move(loc1, board.getSchema()[4][6] )));
+        assertTrue(moves3.contains( new Move(loc2, board.getSchema()[3][1] )));
+        assertTrue(moves4.contains( new Move(loc3, board.getSchema()[3][3] )));
+        assertTrue(moves4.contains( new Move(loc3, board.getSchema()[3][5] )));
+
 
     }
 
@@ -66,11 +74,13 @@ public class ChekersFrameTest {
         CheckersFrame checkersFrame = new CheckersFrame(null, Colour.WHITE, board);
 
         // Test
-        List<Move> moves = checkersFrame.allPossibleMoves(Colour.WHITE);
+        List<Move> whitemoves = checkersFrame.allPossibleMoves(Colour.WHITE);
         List<Move>  blackMoves = checkersFrame.allPossibleMoves(Colour.BLACK);
-
         // Verify
-        assertEquals(7, moves.size());
+        assertEquals(7, whitemoves.size());
         assertEquals(7, blackMoves.size());
+
     }
+
+
 }

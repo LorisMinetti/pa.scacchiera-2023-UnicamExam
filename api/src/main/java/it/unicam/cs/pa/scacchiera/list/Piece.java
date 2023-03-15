@@ -1,7 +1,6 @@
-package it.unicam.cs.pa.scacchiera.list.pieces;
+package it.unicam.cs.pa.scacchiera.list;
 
 import it.unicam.cs.pa.scacchiera.list.util.Colour;
-import it.unicam.cs.pa.scacchiera.list.Location;
 
 public interface Piece {
 

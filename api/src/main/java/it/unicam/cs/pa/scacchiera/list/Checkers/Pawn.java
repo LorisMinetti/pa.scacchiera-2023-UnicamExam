@@ -2,7 +2,12 @@ package it.unicam.cs.pa.scacchiera.list.Checkers;
 
 import it.unicam.cs.pa.scacchiera.list.util.Colour;
 import it.unicam.cs.pa.scacchiera.list.Location;
-import it.unicam.cs.pa.scacchiera.list.pieces.Piece;
+import it.unicam.cs.pa.scacchiera.list.Piece;
+
+/**
+ * Pedina.
+ * Pezzo fondamentale per il gioco della DAMA
+ */
 
 public class Pawn implements Piece {
 
@@ -48,5 +53,21 @@ public class Pawn implements Piece {
     @Override
     public void setColour(Colour colour) {
         this.colour=colour;
+    }
+
+    @Override
+    public String toString() {
+        StringBuilder sb = new StringBuilder();
+        if(this.isKing()){
+            sb.append("DAMA " +
+                    location +
+                    ", colore =" + colour);
+        } else {
+            sb.append(
+                    "PEDINA" +
+                    location +
+                    ", colore" + colour);
+        }
+        return sb.toString();
     }
 }

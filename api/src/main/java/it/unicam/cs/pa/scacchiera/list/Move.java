@@ -2,17 +2,27 @@ package it.unicam.cs.pa.scacchiera.list;
 
 import java.util.Objects;
 
+/**
+ * @author Loris Minetti
+ * Classe che ha la responsabilità di rappresentare il concetto di mossa, inteso come un semplice movimento da una posizione iniziale a una posizione finale.
+ * Può avere anche l'effetto di generare un cambiamento nello stato del gioco, nel nostro caso una cattura.
+ */
 public class Move {
 
-    private Location start, destination;
+    private final Location start, destination;
     private boolean capture;
-    //TODO: per implementare il comportamento di dover mangiare obbligatoriamente quando c'è n'è la possibilità,
-    //implmentare un booleano implicito all'oogetto che tiene conto se la mossa è di cattura.
 
     public Move(Location start, Location dest) {
         this.start = start;
         destination = dest;
         capture = false;
+    }
+
+
+    public Move(Location start, Location dest, boolean capture) {
+        this.start = start;
+        destination = dest;
+        this.capture = capture;
     }
 
     @Override
@@ -28,29 +38,32 @@ public class Move {
         return Objects.hash(start, destination);
     }
 
-    public Move(Location start, Location dest, boolean capture) {
-        this.start = start;
-        destination = dest;
-        this.capture = capture;
-    }
 
-    Location getStart() {
+    public Location getStart() {
         return this.start;
     }
 
-    Location getDestination() {
+    public Location getDestination() {
         return this.destination;
     }
 
-    public boolean belongsToBoard(Board board) {
+    /**
+     * Verifica che la mossa sia nei limiti massimi della scacchiera.
+     * @param board scacchiera
+     * @return true if move is valid
+     */
+    public boolean belongsToBoard(Board<Piece, Location> board) {
         return (board != null &&
                 (board.isInsideBoard(start) && board.isInsideBoard(destination)));
     }
 
     public boolean isCapture() {
-        return capture==true ? true : false;
+        return capture;
     }
 
+    /**
+     * Metodo che aggiorna il flag capture, se una mossa effettua una cattura oltre che il suo movimento stesso
+     */
     public void becomeCaptureMove() {
         this.capture = true;
     }

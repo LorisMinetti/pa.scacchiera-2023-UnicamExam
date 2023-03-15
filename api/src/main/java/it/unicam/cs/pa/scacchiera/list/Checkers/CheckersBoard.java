@@ -1,13 +1,14 @@
-package it.unicam.cs.pa.scacchiera.list;
+package it.unicam.cs.pa.scacchiera.list.Checkers;
 
-import it.unicam.cs.pa.scacchiera.list.Checkers.Pawn;
-import it.unicam.cs.pa.scacchiera.list.pieces.Piece;
+import it.unicam.cs.pa.scacchiera.list.Board;
+import it.unicam.cs.pa.scacchiera.list.Location;
+import it.unicam.cs.pa.scacchiera.list.LocationImpl;
+import it.unicam.cs.pa.scacchiera.list.Move;
+import it.unicam.cs.pa.scacchiera.list.Piece;
 import it.unicam.cs.pa.scacchiera.list.util.BackgroundColor;
 import it.unicam.cs.pa.scacchiera.list.util.Colour;
-import it.unicam.cs.pa.scacchiera.list.util.Displacement;
 
 import java.util.*;
-import java.util.List;
 
 import static it.unicam.cs.pa.scacchiera.list.util.Colour.BLACK;
 import static it.unicam.cs.pa.scacchiera.list.util.Colour.WHITE;
@@ -65,7 +66,7 @@ public class CheckersBoard implements Board<Piece, Location> {
      */
     @Override
     public boolean isInsideBoard(Location location) {
-        return location.getColumn() < ROW_VALUE && location.getRow() < COLUMN_VALUE && location.getColumn() >= 0 && location.getRow() >= 0;
+        return location.getRow() < ROW_VALUE && location.getColumn() < COLUMN_VALUE && location.getColumn() >= 0 && location.getRow() >= 0;
     }
 
 
@@ -146,8 +147,7 @@ public class CheckersBoard implements Board<Piece, Location> {
 
     /**
      * Lista delle posizioni diagonali e adiacenti a uno specifico pezzo.
-     *
-     * @param piece
+     * @param piece pezzo
      * @return Lista
      */
     @Override
@@ -192,8 +192,9 @@ public class CheckersBoard implements Board<Piece, Location> {
 
 
     /**
-     * @param location
-     * @param piece
+     * Setta un pezzo in una posizione specifica.
+     * @param location locazione da occupare
+     * @param piece pezzo
      */
     @Override
     public void setPiece(Location location, Piece piece) throws Exception {
@@ -219,9 +220,8 @@ public class CheckersBoard implements Board<Piece, Location> {
     /**
      * Ritorna la locazione diagnalmente distante DUE posizioni. Questa locazione dovrà essere presente all'interno della scacchiera
      * per poter essere occupabile. Necessaria per le operazioni di "mangiata" o JUMP.
-     *
-     * @param current
-     * @param diagonallyAdjacent
+     * @param current locazione considerata
+     * @param diagonallyAdjacent locazione diagonalmente adiacente
      * @return locazione diagonalmente successiva alla diagonale considerata
      */
     public Location getNextDiagonalSpot(Location current, Location diagonallyAdjacent) {
@@ -229,18 +229,11 @@ public class CheckersBoard implements Board<Piece, Location> {
         int y = diagonallyAdjacent.getRow() - current.getRow();
         int deltaX = diagonallyAdjacent.getColumn() + x;
         int deltaY = diagonallyAdjacent.getRow() + y;
-        try{
-            if(isInsideBoard( this.schema [deltaY] [deltaX])) {
-                return this.schema [deltaY] [deltaX];
-            }
-            else
-                return null;
-        } catch (ArrayIndexOutOfBoundsException e){
-            System.out.println("Metodo getNextDiagonalSpot: ArrayIndexOutOfBoundsException");
-            throw e;
-
+        Location nextLoc = null ;
+        if(deltaY < ROW_VALUE && deltaY >= 0 && deltaX < COLUMN_VALUE && deltaX >= 0 ) {
+            nextLoc = this.schema [deltaY] [deltaX];
         }
-
+        return nextLoc;
     }
 
     /**
@@ -283,10 +276,7 @@ public class CheckersBoard implements Board<Piece, Location> {
         int displacementRow = Math.abs(endRow - startRow);
         int displacementColumn = Math.abs(endColumn - startColumn);
 
-        int displ = Math.max(displacementRow, displacementColumn);
-        int a = 0;
-        int u = 05;
-        return displ;
+        return Math.max(displacementRow, displacementColumn);
     }
 
     @Override
@@ -333,11 +323,15 @@ public class CheckersBoard implements Board<Piece, Location> {
 
             // Ciclo sulle colonne della scacchiera
             for (int col = 0; col < COLUMN_VALUE; col++) {
-                Piece piece = getPiece(row, col);
+                Pawn piece = (Pawn) getPiece(row, col);
 
                 // Aggiunge alla stringa il simbolo della pedina (X per le pedine nere, O per le pedine bianche)
                 if (piece != null) {
-                    sb.append(piece.getColour() == BLACK ? "X " : "O ");
+                    if(piece.isKing()){
+                        sb.append(piece.getColour() == BLACK ? "♔" : "♚");
+                    } else{
+                        sb.append(piece.getColour() == BLACK ? "△ " : "■ ");
+                    }
                 } else {
                     sb.append("  ");
                 }

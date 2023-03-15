@@ -1,6 +1,6 @@
 package it.unicam.cs.pa.scacchiera.list;
 
-import it.unicam.cs.pa.scacchiera.list.pieces.Piece;
+import it.unicam.cs.pa.scacchiera.list.util.GameState;
 import it.unicam.cs.pa.scacchiera.list.util.MoveResult;
 
 public interface Game {
@@ -20,14 +20,20 @@ public interface Game {
 
     /**
      * Frazione di gioco corrente.
-     * @return
+     * @return frazione di gioco corrente
      */
     GameFrame<Piece, Location> getGameFrame();
 
     /**
      * Muove una pedina e ne gestisce tutte le possibili conseguenze.
-     * @param move
-     * @throws Exception
+     * @param move mossa da effettuare
+     * @throws Exception errore
      */
     MoveResult move(Move move) throws Exception;
+
+    /**
+     * Ritorna lo stato del gioco
+     * @return stato del gioco attuale
+     */
+    GameState getStatus();
 }

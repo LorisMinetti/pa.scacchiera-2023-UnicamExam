@@ -1,14 +1,13 @@
 package it.unicam.cs.pa.scacchiera.list.player;
 
-import it.unicam.cs.pa.scacchiera.list.Board;
 import it.unicam.cs.pa.scacchiera.list.GameFrame;
 import it.unicam.cs.pa.scacchiera.list.Location;
 import it.unicam.cs.pa.scacchiera.list.Move;
-import it.unicam.cs.pa.scacchiera.list.pieces.Piece;
+import it.unicam.cs.pa.scacchiera.list.Piece;
 import it.unicam.cs.pa.scacchiera.list.util.Colour;
 
 import java.util.List;
-import java.util.Random;
+import java.util.concurrent.ThreadLocalRandom;
 
 public class ComputerPlayer extends Player{
 
@@ -16,15 +15,12 @@ public class ComputerPlayer extends Player{
         super(name, colour);
     }
 
-    /*
-    * Voglio implementare il comportamento del computer in modo che:
-    * Faccia una mossa random tra tutte le mosse disponibili.
-    */
     public Move play(GameFrame<Piece, Location> frame) {
         List<Move> moves = frame.allPossibleMoves(this.getColour());
-        Random random = new Random();
-        int randomIndex = random.nextInt(moves.size());
-        return moves.get(randomIndex);
+        if(moves.isEmpty()){
+            return null;
+        }
+        return moves.get(ThreadLocalRandom.current().nextInt(0, moves.size()));
 
     }
 }
