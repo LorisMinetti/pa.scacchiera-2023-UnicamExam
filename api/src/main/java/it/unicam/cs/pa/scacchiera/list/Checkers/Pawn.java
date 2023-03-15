@@ -2,7 +2,7 @@ package it.unicam.cs.pa.scacchiera.list.Checkers;
 
 import it.unicam.cs.pa.scacchiera.list.util.Colour;
 import it.unicam.cs.pa.scacchiera.list.Location;
-import it.unicam.cs.pa.scacchiera.list.pieces.Piece;
+import it.unicam.cs.pa.scacchiera.list.Piece;
 
 /**
  * Pedina.

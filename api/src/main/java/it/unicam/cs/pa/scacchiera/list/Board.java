@@ -1,6 +1,5 @@
 package it.unicam.cs.pa.scacchiera.list;
 
-import it.unicam.cs.pa.scacchiera.list.pieces.Piece;
 import it.unicam.cs.pa.scacchiera.list.util.Colour;
 
 import java.util.List;
@@ -33,16 +32,16 @@ public interface Board<P extends Piece, L extends Location> {
     /**
      * Ritorna la locazione diagonale subito dopo la locazione diagonale trovata rispetto ad una locazione.
      * Si fa dunque un salto distanza 2 dalla locazione 'current'.
-     * @param current
-     * @param diagonallyAdjacent
-     * @return
+     * @param current locazione di partenza
+     * @param diagonallyAdjacent locazione diagonale adiacente a 'current'
+     * @return locazione diagonale subito dopo 'diagonallyAdjacent'
      */
     Location getNextDiagonalSpot(Location current, Location diagonallyAdjacent);
 
     /**
      * Restituisce tutte le locazioni di uno specifico giocatore nel quale è presente un pezzo.
-     * @param colour
-     * @return
+     * @param colour colore del giocatore
+     * @return lista di locazioni
      */
     List<Location> getAllLocationsOfPlayer(Colour colour);
 
@@ -54,6 +53,7 @@ public interface Board<P extends Piece, L extends Location> {
      */
     Location getIntermediateLocation(Location loc1, Location loc2);
 
+
     /**
      * Locazione è diagonalmente adiacente ad un'altra locazione
      * @param loc locazione
@@ -62,13 +62,6 @@ public interface Board<P extends Piece, L extends Location> {
      */
     boolean isDiagonal(Location loc, Location check);
 
-
-    /**
-     * Restituisce il pezzo presente in una determinata casella.
-     * @param location la locazione data
-     * @return P pezzo desiderato
-     */
-    P getPiece(Location location);
 
     /**
      * Applica una mossa.

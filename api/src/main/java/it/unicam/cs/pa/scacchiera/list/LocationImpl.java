@@ -1,6 +1,5 @@
 package it.unicam.cs.pa.scacchiera.list;
 
-import it.unicam.cs.pa.scacchiera.list.pieces.Piece;
 import it.unicam.cs.pa.scacchiera.list.util.BackgroundColor;
 
 import java.util.Objects;
@@ -40,11 +39,6 @@ public class LocationImpl implements Location{
     @Override
     public int getRow() {
         return this.row;
-    }
-
-    @Override
-    public BackgroundColor getBgColor() {
-        return bgColor;
     }
 
     /**

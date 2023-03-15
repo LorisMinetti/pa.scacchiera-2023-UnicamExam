@@ -1,6 +1,5 @@
 package it.unicam.cs.pa.scacchiera.list;
 
-import it.unicam.cs.pa.scacchiera.list.pieces.Piece;
 import it.unicam.cs.pa.scacchiera.list.util.GameState;
 import it.unicam.cs.pa.scacchiera.list.util.MoveResult;
 
@@ -21,7 +20,7 @@ public interface Game {
 
     /**
      * Frazione di gioco corrente.
-     * @return
+     * @return frazione di gioco corrente
      */
     GameFrame<Piece, Location> getGameFrame();
 
