@@ -2,6 +2,9 @@ package it.unicam.cs.pa.scacchiera.list;
 
 import java.util.Optional;
 
+/**
+ * Interfaccia che rappresenta una posizione generica in un sistema di coordinate.
+ */
 public interface  Location {
     /**
      * @return row

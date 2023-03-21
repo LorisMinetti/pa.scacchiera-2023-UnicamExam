@@ -53,7 +53,7 @@ class CheckersGameTest {
         result = game.move(new Move(schema[3][3], schema[4][4]));
         assertEquals(MoveResult.START_LOCATION_EMPTY, result);
         // Eseguo una mossa valida
-        result = game.move(new Move(schema[6][4], schema[5][3]));
+        result = game.move(new Move(schema[5][3], schema[4][2]));
         assertEquals(MoveResult.OK, result);
     }
 

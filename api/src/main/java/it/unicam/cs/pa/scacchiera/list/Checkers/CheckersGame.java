@@ -107,6 +107,7 @@ public class CheckersGame implements Game {
 
                         }
                     }
+                    //rende una pedina re se arriva nella base avversaria
                     kingify(move, pezzo);
                     this.updateStatus();
                 }
@@ -119,6 +120,9 @@ public class CheckersGame implements Game {
         return MoveResult.OK;
     }
 
+    /**
+     * Metodo che passa al game frame successivo.
+     */
     private void threeCardGame() {
         //in questo modo setto il gameFrame precedente solo dal secondo in poi
 

@@ -13,7 +13,10 @@ import java.util.*;
 import static it.unicam.cs.pa.scacchiera.list.util.Colour.BLACK;
 import static it.unicam.cs.pa.scacchiera.list.util.Colour.WHITE;
 
-
+/**
+ * @author Loris Minetti
+ * Classe che rappresenta una damiera di gioco della dama italiana.
+ */
 public class CheckersBoard implements Board<Piece, Location> {
     private final Location[][] schema;
     private final int ROW_VALUE, COLUMN_VALUE;
@@ -33,18 +36,18 @@ public class CheckersBoard implements Board<Piece, Location> {
 
         /* Creare la scacchiera della Dama con colori alternati */
         boolean lastColor = true;
-        for(int i = 0; i < row; i++) {
+        for (int i = 0; i < row; i++) {
             for (int j = 0; j < column; j++) {
 
-                boolean darkRowsPlayer = i == 0 || i == 1 || i==2;
+                boolean darkRowsPlayer = i == 0 || i == 1 || i == 2;
                 boolean lightRowsPlayer = i == 5 || i == 6 || i == 7;
                 if (lastColor) {
                     schema[i][j] = new LocationImpl(i, j, BackgroundColor.DARK);       /* Nelle celle di colore scuro ci saranno tutti i pezzi*/
-                    if(darkRowsPlayer){
-                        schema[i][j].setPiece(new Pawn( schema[i][j], BLACK));     //I pezzi scuri dell'avversario saranno nelle prime tre righe dall'alto
+                    if (darkRowsPlayer) {
+                        schema[i][j].setPiece(new Pawn(schema[i][j], BLACK));     //I pezzi scuri dell'avversario saranno nelle prime tre righe dall'alto
                     }
-                    if(lightRowsPlayer){
-                        schema[i][j].setPiece(new Pawn( schema[i][j], WHITE));     // I pezzi chiari del giocatore principale saranno nelle prime tre righe dal basso.
+                    if (lightRowsPlayer) {
+                        schema[i][j].setPiece(new Pawn(schema[i][j], WHITE));     // I pezzi chiari del giocatore principale saranno nelle prime tre righe dal basso.
                     }
                 } else {
                     schema[i][j] = new LocationImpl(i, j, BackgroundColor.LIGHT);    // Celle bianche che non verranno mai occupate durante la partita.
@@ -83,8 +86,6 @@ public class CheckersBoard implements Board<Piece, Location> {
     }
 
 
-
-
     /**
      * Lista delle locazioni contenenti pezzi di uno specifico giocatore.
      *
@@ -93,7 +94,7 @@ public class CheckersBoard implements Board<Piece, Location> {
      */
     public List<Location> getAllLocationsOfPlayer(Colour colour) {
         List<Location> locations = new ArrayList<>();
-        for(int i = 0; i < ROW_VALUE; i++) {
+        for (int i = 0; i < ROW_VALUE; i++) {
             for (int j = 0; j < COLUMN_VALUE; j++) {
                 if (schema[i][j].getPiece().isPresent() && schema[i][j].getPiece().get().getColour() == colour) {
                     locations.add(schema[i][j]);
@@ -119,7 +120,6 @@ public class CheckersBoard implements Board<Piece, Location> {
         int dx = Math.abs(loc2.getColumn() - loc1.getColumn());
         int dy = Math.abs(loc2.getRow() - loc1.getRow());
 
-        //TODO: considerare il caso di dover rimuovere questa eccezione. Potrebbe bastare controllare il caso opposto
         if (dx != 2 || dy != 2) {
             throw new IllegalArgumentException("Le due posizioni fornite non hanno un displacement diagonale di 2");
         }
@@ -142,34 +142,34 @@ public class CheckersBoard implements Board<Piece, Location> {
     public boolean isDiagonal(Location loc, Location check) {
         int xDiff = Math.abs(loc.getColumn() - check.getColumn());
         int yDiff = Math.abs(loc.getRow() - check.getRow());
-        return (xDiff == 1 && yDiff == 1) || (xDiff == 0 && yDiff == 0) || xDiff == yDiff;
+        return xDiff == yDiff;
     }
 
     /**
      * Lista delle posizioni diagonali e adiacenti a uno specifico pezzo.
+     *
      * @param piece pezzo
      * @return Lista
      */
     @Override
     public List<Location> getDiagonalAdjacentLocationsOfPiece(Piece piece) {
         List<Location> adjacents = new ArrayList<>();
-        if(piece != null ){
-            for(Location loc : allLocations()){
+        if (piece != null) {
+            for (Location loc : allLocations()) {
                 //Posizioni diagonali
-                boolean isFrontLeft = loc.getRow() == piece.getLocation().getRow() -1 && loc.getColumn() == piece.getLocation().getColumn() -1 ;
-                boolean isFrontRight = loc.getRow() == piece.getLocation().getRow() -1 && loc.getColumn() == piece.getLocation().getColumn() + 1 ;
-                boolean isBackLeft = loc.getRow() == piece.getLocation().getRow() +1 && loc.getColumn() == piece.getLocation().getColumn() -1 ;
-                boolean isBackRight = loc.getRow() == piece.getLocation().getRow() +1 && loc.getColumn() == piece.getLocation().getColumn() +1 ;
+                boolean isFrontLeft = loc.getRow() == piece.getLocation().getRow() - 1 && loc.getColumn() == piece.getLocation().getColumn() - 1;
+                boolean isFrontRight = loc.getRow() == piece.getLocation().getRow() - 1 && loc.getColumn() == piece.getLocation().getColumn() + 1;
+                boolean isBackLeft = loc.getRow() == piece.getLocation().getRow() + 1 && loc.getColumn() == piece.getLocation().getColumn() - 1;
+                boolean isBackRight = loc.getRow() == piece.getLocation().getRow() + 1 && loc.getColumn() == piece.getLocation().getColumn() + 1;
 
-                if(isInsideBoard(loc)) {            //location valida
-                    if( ! ((Pawn) piece).isKing() ) {      //se il pezzo non è un re
-                        if( piece.getColour() == WHITE && (isFrontRight || isFrontLeft)){ //ed è del giocatore bianco
+                if (isInsideBoard(loc)) {            //location valida
+                    if (!((Pawn) piece).isKing()) {      //se il pezzo non è un re
+                        if (piece.getColour() == WHITE && (isFrontRight || isFrontLeft)) { //ed è del giocatore bianco
+                            adjacents.add(loc);
+                        } else if (piece.getColour() == BLACK && (isBackRight || isBackLeft)) { //o è del giocatore nero
                             adjacents.add(loc);
                         }
-                        else if( piece.getColour() == BLACK && (isBackRight || isBackLeft)) { //o è del giocatore nero
-                            adjacents.add(loc);
-                        }
-                    } else if( ((Pawn) piece).isKing() && ( isBackRight || isBackLeft || isFrontRight || isFrontLeft ))
+                    } else if (((Pawn) piece).isKing() && (isBackRight || isBackLeft || isFrontRight || isFrontLeft))
                         //se il pezzo è un re deve poter muovere in tutte le direzioni
                         adjacents.add(loc);
                 }
@@ -180,21 +180,10 @@ public class CheckersBoard implements Board<Piece, Location> {
 
 
     /**
-     * Restituisce il pezzo presente in una determinata casella.
-     *
-     * @param location la locazione data
-     * @return P pezzo desiderato
-     */
-    @Override
-    public Piece getPiece(Location location) {
-        return this.schema[location.getRow()][location.getColumn()].getPiece().orElse(null);
-    }
-
-
-    /**
      * Setta un pezzo in una posizione specifica.
+     *
      * @param location locazione da occupare
-     * @param piece pezzo
+     * @param piece    pezzo
      */
     @Override
     public void setPiece(Location location, Piece piece) throws Exception {
@@ -220,7 +209,8 @@ public class CheckersBoard implements Board<Piece, Location> {
     /**
      * Ritorna la locazione diagnalmente distante DUE posizioni. Questa locazione dovrà essere presente all'interno della scacchiera
      * per poter essere occupabile. Necessaria per le operazioni di "mangiata" o JUMP.
-     * @param current locazione considerata
+     *
+     * @param current            locazione considerata
      * @param diagonallyAdjacent locazione diagonalmente adiacente
      * @return locazione diagonalmente successiva alla diagonale considerata
      */
@@ -229,9 +219,9 @@ public class CheckersBoard implements Board<Piece, Location> {
         int y = diagonallyAdjacent.getRow() - current.getRow();
         int deltaX = diagonallyAdjacent.getColumn() + x;
         int deltaY = diagonallyAdjacent.getRow() + y;
-        Location nextLoc = null ;
-        if(deltaY < ROW_VALUE && deltaY >= 0 && deltaX < COLUMN_VALUE && deltaX >= 0 ) {
-            nextLoc = this.schema [deltaY] [deltaX];
+        Location nextLoc = null;
+        if (deltaY < ROW_VALUE && deltaY >= 0 && deltaX < COLUMN_VALUE && deltaX >= 0) {
+            nextLoc = this.schema[deltaY][deltaX];
         }
         return nextLoc;
     }
@@ -246,13 +236,13 @@ public class CheckersBoard implements Board<Piece, Location> {
     public boolean apply(Move move) throws Exception {
         boolean captureMove = false;
         if (move != null && move.belongsToBoard(this)) {
-            Piece piece = this.schema [move.getStart().getRow()] [move.getStart().getColumn()]
-                            .getPiece().orElse(null);
+            Piece piece = this.schema[move.getStart().getRow()][move.getStart().getColumn()]
+                    .getPiece().orElse(null);
             /* Controllo se il pezzo che voglio muovere esiste */
-            if (piece == null) 
+            if (piece == null)
                 throw new AssertionError();
             setPiece(move.getDestination(), piece);
-            
+
             if (this.getMoveDisplacement(move) > 1) {
                 move.becomeCaptureMove();
                 captureMove = true;
@@ -319,7 +309,7 @@ public class CheckersBoard implements Board<Piece, Location> {
 
         // Ciclo sulle righe della scacchiera
         for (int row = 0; row < ROW_VALUE; row++) {
-            sb.append(row + 1 + "| ");  // Indica la riga
+            sb.append(row + 1).append("| ");  // Indica la riga
 
             // Ciclo sulle colonne della scacchiera
             for (int col = 0; col < COLUMN_VALUE; col++) {
@@ -327,10 +317,10 @@ public class CheckersBoard implements Board<Piece, Location> {
 
                 // Aggiunge alla stringa il simbolo della pedina (X per le pedine nere, O per le pedine bianche)
                 if (piece != null) {
-                    if(piece.isKing()){
-                        sb.append(piece.getColour() == BLACK ? "♔" : "♚");
-                    } else{
-                        sb.append(piece.getColour() == BLACK ? "△ " : "■ ");
+                    if (piece.isKing()) {
+                        sb.append(piece.getColour() == BLACK ? "X " : "0 ");
+                    } else {
+                        sb.append(piece.getColour() == BLACK ? "x " : "o ");
                     }
                 } else {
                     sb.append("  ");

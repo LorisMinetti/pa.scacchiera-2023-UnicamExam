@@ -5,6 +5,7 @@ import it.unicam.cs.pa.scacchiera.list.util.Colour;
 import java.util.List;
 
 /**
+ * @author Loris Minetti
  * Gestisce la scacchiera. Ci saranno già determinati pezzi in determinate posizioni una volta scelto a
  * che gioco giocare.
  */
